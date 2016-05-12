@@ -1,0 +1,11 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Tests/coverage
+.grandmarc
+coverage
+
+# Dependencies
+node_modules
