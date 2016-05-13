@@ -12,18 +12,26 @@ describe('[index]', function() {
 
         expect(index.wait).to.be.a('function')
             .and.to.have.length(2)
-            .and.to.have.all.keys('obj');
+            .and.to.have.all.keys('obj', 'json');
 
         expect(index.wait.obj).to.be.a('function')
             .and.to.have.length(2);
         expect(_.keys(index.wait.obj)).to.have.length(0);
 
+        expect(index.wait.json).to.be.a('function')
+            .and.to.have.length(2);
+        expect(_.keys(index.wait.json)).to.have.length(0);
+
         expect(index.forEach).to.be.a('function')
             .and.to.have.length(3)
-            .and.to.have.all.keys('obj');
+            .and.to.have.all.keys('obj', 'json');
 
         expect(index.forEach.obj).to.be.a('function')
             .and.to.have.length(3);
         expect(_.keys(index.forEach.obj)).to.have.length(0);
+
+        expect(index.forEach.json).to.be.a('function')
+            .and.to.have.length(3);
+        expect(_.keys(index.forEach.json)).to.have.length(0);
     });
 });
