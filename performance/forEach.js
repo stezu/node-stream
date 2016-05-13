@@ -24,9 +24,11 @@ function getReadableStream() {
 }
 
 module.exports = {
+    beforeEach: function(done) {
+        this.stream = getReadableStream();
+        done();
+    },
     test: function(done) {
-        var self = this;
-
-        forEach(getReadableStream(), _.noop, done);
+        forEach(this.stream, _.noop, done);
     }
 };

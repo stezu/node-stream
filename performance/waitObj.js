@@ -23,9 +23,11 @@ function getReadableStream() {
 }
 
 module.exports = {
+    beforeEach: function(done) {
+        this.stream = getReadableStream();
+        done();
+    },
     test: function(done) {
-        var self = this;
-
-        waitObj(getReadableStream(), done);
+        waitObj(this.stream, done);
     }
 };
