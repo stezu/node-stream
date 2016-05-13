@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -R spec",
-    "coverage": "istanbul cover --dir coverage node_modules/mocha/bin/_mocha"
+    "coverage": "istanbul cover --dir coverage node_modules/mocha/bin/_mocha",
+    "grandma": "grandma"
   },
   "repository": {
     "type": "git",
