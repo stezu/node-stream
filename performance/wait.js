@@ -1,30 +1,12 @@
 /* jshint node:true */
 
-var stream = require('stream');
+var getReadableStream = require('./_utilities/getReadableStream.js');
 var wait = require('../index.js').wait;
 var data = ['item1', 'item2', 'item3', 'item4'];
 
-function getReadableStream() {
-    var readableStream = new stream.Readable();
-
-    readableStream._read = (function() {
-        var d = data.slice().concat([12]);
-
-        return function() {
-            if (d.length > 0) {
-                this.push(d.shift());
-            } else {
-                this.push(null);
-            }
-        };
-    })();
-
-    return readableStream;
-}
-
 module.exports = {
     beforeEach: function(done) {
-        this.stream = getReadableStream();
+        this.stream = getReadableStream(data);
         done();
     },
     test: function(done) {
