@@ -81,7 +81,6 @@ describe('[waitJson]', function() {
         waitJson(readableStream, function(err) {
             expect(arguments).to.have.length(1);
             expect(err).to.be.an.instanceof(Error);
-            expect(err.message).to.equal('Unexpected end of JSON input');
             done();
         });
     });
@@ -142,7 +141,6 @@ describe('[waitJson]', function() {
         waitJson(duplexStream, function(err) {
             expect(arguments).to.have.length(1);
             expect(err).to.be.an.instanceof(Error);
-            expect(err.message).to.equal('Unexpected end of JSON input');
             done();
         });
     });

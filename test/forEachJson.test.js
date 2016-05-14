@@ -85,7 +85,6 @@ describe('[forEachJson]', function() {
         forEachJson(readableStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);
             expect(err).to.be.an.instanceof(Error);
-            expect(err.message).to.equal('Unexpected end of JSON input');
             done();
         });
     });
@@ -146,7 +145,6 @@ describe('[forEachJson]', function() {
         forEachJson(duplexStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);
             expect(err).to.be.an.instanceof(Error);
-            expect(err.message).to.equal('Unexpected end of JSON input');
             done();
         });
     });
