@@ -38,7 +38,7 @@ describe('[wait]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, done);
     });
@@ -58,7 +58,7 @@ describe('[wait]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, done);
     });
@@ -76,7 +76,7 @@ describe('[wait]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         wait(readableStream, function(err) {
             expect(arguments).to.have.length(1);
@@ -99,7 +99,7 @@ describe('[wait]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, done);
     });
@@ -119,7 +119,7 @@ describe('[wait]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, done);
     });
@@ -137,7 +137,7 @@ describe('[wait]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         wait(duplexStream, function(err) {
             expect(arguments).to.have.length(1);

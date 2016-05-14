@@ -38,7 +38,7 @@ describe('[waitJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, done);
     });
@@ -58,7 +58,7 @@ describe('[waitJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, done);
     });
@@ -76,7 +76,7 @@ describe('[waitJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         waitJson(readableStream, function(err) {
             expect(arguments).to.have.length(1);
@@ -98,7 +98,7 @@ describe('[waitJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, done);
     });
@@ -118,7 +118,7 @@ describe('[waitJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, done);
     });
@@ -136,7 +136,7 @@ describe('[waitJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         waitJson(duplexStream, function(err) {
             expect(arguments).to.have.length(1);

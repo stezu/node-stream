@@ -52,7 +52,7 @@ describe('[forEachObj]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, false, done);
     });
@@ -72,7 +72,7 @@ describe('[forEachObj]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, true, done);
     });
@@ -90,7 +90,7 @@ describe('[forEachObj]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         forEachObj(readableStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);
@@ -113,7 +113,7 @@ describe('[forEachObj]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, false, done);
     });
@@ -133,7 +133,7 @@ describe('[forEachObj]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, true, done);
     });
@@ -151,7 +151,7 @@ describe('[forEachObj]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         forEachObj(duplexStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);

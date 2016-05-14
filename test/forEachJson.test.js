@@ -42,7 +42,7 @@ describe('[forEachJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, done);
     });
@@ -62,7 +62,7 @@ describe('[forEachJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(readableStream, done);
     });
@@ -80,7 +80,7 @@ describe('[forEachJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         forEachJson(readableStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);
@@ -102,7 +102,7 @@ describe('[forEachJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, done);
     });
@@ -122,7 +122,7 @@ describe('[forEachJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         runTest(duplexStream, done);
     });
@@ -140,7 +140,7 @@ describe('[forEachJson]', function() {
                     this.push(null);
                 }
             };
-        })();
+        }());
 
         forEachJson(duplexStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);

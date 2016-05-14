@@ -15,7 +15,7 @@ function getReadableStream(data) {
                 this.push(null);
             }
         };
-    })();
+    }());
 
     return readableStream;
 }
