@@ -71,6 +71,29 @@ describe('[forEachJson]', function() {
         var readableStream = new stream.Readable();
 
         readableStream._read = (function() {
+            var d = data.slice().concat([12]);
+
+            return function() {
+                if (d.length > 0) {
+                    this.push(d.shift());
+                } else {
+                    this.push(null);
+                }
+            };
+        }());
+
+        forEachJson(readableStream, _.noop, function(err) {
+            expect(arguments).to.have.length(1);
+            expect(err).to.be.an.instanceof(Error);
+            expect(err.message).to.equal('Invalid non-string/buffer chunk');
+            done();
+        });
+    });
+
+    it('returns an error for invalid JSON on a Readable stream', function(done) {
+        var readableStream = new stream.Readable();
+
+        readableStream._read = (function() {
             var d = data.slice().concat(['{"non":"json}']);
 
             return function() {
@@ -85,6 +108,7 @@ describe('[forEachJson]', function() {
         forEachJson(readableStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);
             expect(err).to.be.an.instanceof(Error);
+            expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
             done();
         });
     });
@@ -131,6 +155,29 @@ describe('[forEachJson]', function() {
         var duplexStream = new stream.Duplex();
 
         duplexStream._read = (function() {
+            var d = data.slice().concat([12]);
+
+            return function() {
+                if (d.length > 0) {
+                    this.push(d.shift());
+                } else {
+                    this.push(null);
+                }
+            };
+        }());
+
+        forEachJson(duplexStream, _.noop, function(err) {
+            expect(arguments).to.have.length(1);
+            expect(err).to.be.an.instanceof(Error);
+            expect(err.message).to.equal('Invalid non-string/buffer chunk');
+            done();
+        });
+    });
+
+    it('returns an error for a invalid JSON on a Duplex stream', function(done) {
+        var duplexStream = new stream.Duplex();
+
+        duplexStream._read = (function() {
             var d = data.slice().concat(['{"non":"json}']);
 
             return function() {
@@ -145,6 +192,7 @@ describe('[forEachJson]', function() {
         forEachJson(duplexStream, _.noop, function(err) {
             expect(arguments).to.have.length(1);
             expect(err).to.be.an.instanceof(Error);
+            expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
             done();
         });
     });
