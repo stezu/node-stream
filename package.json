@@ -19,7 +19,7 @@
     "util"
   ],
   "files": [
-    "LICENSE.md",
+    "LICENSE",
     "README.md",
     "index.js",
     "lib/"
