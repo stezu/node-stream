@@ -1,7 +1,9 @@
 /* jshint node:true, mocha: true */
 
-var stream = require('stream');
 var expect = require('chai').expect;
+
+var getReadableStream = require('./_utilities/getReadableStream.js');
+var getDuplexStream = require('./_utilities/getDuplexStream.js');
 var wait = require('../lib/wait.js');
 
 describe('[wait]', function() {
@@ -26,57 +28,21 @@ describe('[wait]', function() {
     }
 
     it('waits for a Readable stream', function(done) {
-        var readableStream = new stream.Readable();
-
-        readableStream._read = (function() {
-            var d = data.slice();
-
-            return function() {
-                if (d.length > 0) {
-                    this.push(d.shift());
-                } else {
-                    this.push(null);
-                }
-            };
-        }());
+        var readableStream = getReadableStream(data);
 
         runTest(readableStream, done);
     });
 
     it('waits for a Readable object stream', function(done) {
-        var readableStream = new stream.Readable({
+        var readableStream = getReadableStream(data, {
             objectMode: true
         });
-
-        readableStream._read = (function() {
-            var d = data.slice();
-
-            return function() {
-                if (d.length > 0) {
-                    this.push(d.shift());
-                } else {
-                    this.push(null);
-                }
-            };
-        }());
 
         runTest(readableStream, done);
     });
 
     it('returns an error for a Readable stream', function(done) {
-        var readableStream = new stream.Readable();
-
-        readableStream._read = (function() {
-            var d = data.slice().concat([12]);
-
-            return function() {
-                if (d.length > 0) {
-                    this.push(d.shift());
-                } else {
-                    this.push(null);
-                }
-            };
-        }());
+        var readableStream = getReadableStream(data.concat([12]));
 
         wait(readableStream, function(err) {
             expect(arguments).to.have.length(1);
@@ -87,57 +53,21 @@ describe('[wait]', function() {
     });
 
     it('waits for a Duplex stream', function(done) {
-        var duplexStream = new stream.Duplex();
-
-        duplexStream._read = (function() {
-            var d = data.slice();
-
-            return function() {
-                if (d.length > 0) {
-                    this.push(d.shift());
-                } else {
-                    this.push(null);
-                }
-            };
-        }());
+        var duplexStream = getDuplexStream(data);
 
         runTest(duplexStream, done);
     });
 
     it('waits for a Duplex object stream', function(done) {
-        var duplexStream = new stream.Duplex({
+        var duplexStream = getDuplexStream(data, {
             objectMode: true
         });
-
-        duplexStream._read = (function() {
-            var d = data.slice();
-
-            return function() {
-                if (d.length > 0) {
-                    this.push(d.shift());
-                } else {
-                    this.push(null);
-                }
-            };
-        }());
 
         runTest(duplexStream, done);
     });
 
     it('returns an error for a Duplex stream', function(done) {
-        var duplexStream = new stream.Duplex();
-
-        duplexStream._read = (function() {
-            var d = data.slice().concat([12]);
-
-            return function() {
-                if (d.length > 0) {
-                    this.push(d.shift());
-                } else {
-                    this.push(null);
-                }
-            };
-        }());
+        var duplexStream = getDuplexStream(data.concat([12]));
 
         wait(duplexStream, function(err) {
             expect(arguments).to.have.length(1);
