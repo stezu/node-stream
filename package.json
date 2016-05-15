@@ -18,6 +18,12 @@
     "forEach",
     "util"
   ],
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "index.js",
+    "lib/"
+  ],
   "author": "Stephen Zuniga <hello@stephenzuniga.com> (http://stephenzuniga.com/)",
   "license": "MIT",
   "bugs": {
