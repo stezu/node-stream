@@ -1,13 +1,21 @@
 language: node_js
 node_js:
-  - "node"
-  - "6.1"
-  - "5.10"
-  - "4.4"
-  - "0.12"
+    - node
+    - '6.1'
+    - '5.10'
+    - '4.4'
+    - '0.12'
 addons:
     code_climate:
         repo_token: 79816a32349b15a909e262a88676bf1d51021ad6848b96706411bb2b829dd5b6
 after_script:
-  - npm run coverage
-  - codeclimate-test-reporter < coverage/lcov.info
+    - npm run coverage
+    - codeclimate-test-reporter < coverage/lcov.info
+deploy:
+    provider: npm
+    email: hello@stephenzuniga.com
+    api_key:
+        secure: funbKF+u3H9wACGkPEoI8x1woIb6ywG8dHGAzI88+SaRSDa9ohNBIusF1p5mB8Ys83QKiNjIiAkTeVLdsPECi+5i323GDVEdKb8cM2lc8Rxayfu+CUFzi76kAaL9g8RQTASYfqqabJLWMiLyRfEk27Fmzt8ScHnYtQKuyA/jOkI2DoaqVAHDR4iKxfaOwEnOKcHR7Fa8CiIfVSlu6/t9V+Eeep5en+KfvVaF9+Op7uDRf9Zkzyx5wnJ/oSrBbKJ+P2uD0Ulj5YB1KD3RBZ4oV0IA04Vm0HkVfqIUNzhoYE89xpkKkMGGbwWIbmkAWezWpqnAVGCg5wiSjn6aZo0o69OmR/izvEC2jAAK9J7mEf1UThMviiF0GGYwqm5LRmLviDEO6/4Zj+0flLD288Ea0O1f+TeQPoaoF8kh3U0qPdBRAft4lcmQRgRNmorwQdtC5bAbfpqgdyWYtFOl2UTlRP5Uk7A1H2a7cFIdFY9ln3rVeMavKRbMwF64/te4LfE+cIbRbSiFzI4wOMsIn0E/162J3iNeKy34IH6NDTmslDiRjt/XyX/ydRVvlhUiQyfrRAa+sUpMPLrE0CzypDnkzgmGoGB0vvMBCjVqdqVtMcr6eDEclfz8Hbgg4E54g7Rrww8QFHTHaRSlbXnK528J22k9t3o+rbE8+YuhCBhaSlM=
+    on:
+        tags: true
+        repo: stezu/node-stream
