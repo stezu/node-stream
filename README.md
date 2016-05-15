@@ -28,12 +28,57 @@ const nodeStream = require('node-stream');
 
 ## Documentation
 
+* [`first`](#first)
+* [`first.obj`](#firstObj)
+* [`first.json`](#firstJson)
 * [`forEach`](#forEach)
 * [`forEach.obj`](#forEachObj)
 * [`forEach.json`](#forEachJson)
 * [`wait`](#wait)
 * [`wait.obj`](#waitObj)
 * [`wait.json`](#waitJson)
+
+<a name="first"></a>
+### first(stream, onEnd)
+Consume the first item in a stream and call a callback with a buffer of that item.
+
+```js
+nodeStream.first(
+    stream,
+    function(err, data) {
+        // err is null or an Error object
+        // data is a Buffer object
+    }
+);
+```
+
+<a name="firstObj"></a>
+### first.obj(stream, onEnd)
+Consume the first item in a stream and call a callback with that item.
+
+```js
+nodeStream.first.obj(
+    stream,
+    function(err, data) {
+        // err is null or an Error object
+        // data is an array
+    }
+);
+```
+
+<a name="firstJson"></a>
+### first.json(stream, onEnd)
+Consume the first item in a stream and call a callback with a JSON parsed object. Stream will error if the consumed data is not parseable.
+
+```js
+nodeStream.first.json(
+    stream,
+    function(err, data) {
+        // err is null or an Error object
+        // data is a JSON parsed object
+    }
+);
+```
 
 <a name="forEach"></a>
 ### forEach(stream, onData, onEnd)
