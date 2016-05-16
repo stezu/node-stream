@@ -1,4 +1,5 @@
-#node-stream
+# Node-Stream
+
 [![Build Status][1]][2] [![Code Climate][3]][4] [![Test Coverage][5]][6]
 
 [1]: https://travis-ci.org/stezu/node-stream.svg?branch=master

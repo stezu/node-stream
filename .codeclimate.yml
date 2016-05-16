@@ -8,8 +8,6 @@ engines:
         enabled: true
     fixme:
         enabled: true
-    markdownlint:
-        enabled: true
 
 # Exclude test directories
 exclude_paths:
