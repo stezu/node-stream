@@ -13,5 +13,11 @@ engines:
 
 # Exclude test directories
 exclude_paths:
-- test/**/*
-- performance/**/*
+- test/**
+- performance/**
+
+ratings:
+    paths:
+        - index.js
+        - lib/**
+        - **.js
