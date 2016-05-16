@@ -20,4 +20,4 @@ ratings:
     paths:
         - index.js
         - lib/**
-        - **.js
+        - "**.js"
