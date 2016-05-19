@@ -8,7 +8,10 @@ describe('[index]', function() {
 
     it('exposes the correct public api', function() {
         expect(index).to.be.an('object')
-            .and.to.have.all.keys('first', 'forEach', 'wait');
+            .and.to.have.all.keys('split', 'first', 'forEach', 'wait');
+
+        expect(index.split).to.be.a('function')
+            .and.to.have.length(3);
 
         expect(index.first).to.be.a('function')
             .and.to.have.length(2)

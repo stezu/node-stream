@@ -1,5 +1,7 @@
 /* jshint node:true */
 
+var split = require('split');
+
 var first = require('./lib/first.js');
 var firstObj = require('./lib/firstObj.js');
 var firstJson = require('./lib/firstJson.js');
@@ -22,6 +24,7 @@ wait.obj = waitObj;
 wait.json = waitJson;
 
 module.exports = {
+    split: split,
     first: first,
     forEach: forEach,
     wait: wait

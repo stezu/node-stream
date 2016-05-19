@@ -29,6 +29,7 @@ const nodeStream = require('node-stream');
 
 ## Documentation
 
+* [`split`](#split)
 * [`first`](#first)
 * [`first.obj`](#firstObj)
 * [`first.json`](#firstJson)
@@ -39,6 +40,21 @@ const nodeStream = require('node-stream');
 * [`wait.obj`](#waitObj)
 * [`wait.json`](#waitJson)
 
+<a name="split"></a>
+### split([matcher = /\r?\n/])
+Split a stream on `matcher`. Useful for splitting files on new lines and JSON parsing each line.
+
+```js
+nodeStream.forEach.json(
+    nodeStream.split(stream),
+    function(chunk) {
+        // chunk will be a JSON parsed object
+    },
+    function(err) {
+        // err is null or an Error object
+    }
+);
+```
 <a name="first"></a>
 ### first(stream, onEnd)
 Consume the first item in a stream and call a callback with a buffer of that item.
