@@ -78,7 +78,7 @@ nodeStream.first.obj(
     stream,
     function(err, data) {
         // err is null or an Error object
-        // data is an array
+        // data can be of any type
     }
 );
 ```
