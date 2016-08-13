@@ -1,4 +1,4 @@
 {
-    "directory": "performance",
-    "threads": 1
+  "directory": "performance",
+  "threads": 1
 }

@@ -24,8 +24,8 @@ wait.obj = waitObj;
 wait.json = waitJson;
 
 module.exports = {
-    split: split,
-    first: first,
-    forEach: forEach,
-    wait: wait
+  split: split,
+  first: first,
+  forEach: forEach,
+  wait: wait
 };

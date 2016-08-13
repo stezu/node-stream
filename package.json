@@ -34,6 +34,10 @@
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.3.1",
     "grandma": "0.0.16",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-mocha": "^3.0.1",
+    "gulp-sequence": "^0.4.5",
     "istanbul": "^0.4.3",
     "lodash": "^4.12.0",
     "mocha": "^2.4.5"
