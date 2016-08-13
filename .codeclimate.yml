@@ -1,13 +1,13 @@
 engines:
-    duplication:
-        enabled: true
-        config:
-            languages:
-                - javascript
-    eslint:
-        enabled: true
-    fixme:
-        enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - javascript
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
 
 # Exclude test directories
 exclude_paths:
@@ -15,7 +15,6 @@ exclude_paths:
 - performance/**
 
 ratings:
-    paths:
-        - index.js
-        - lib/**
-        - "**.js"
+  paths:
+    - lib/**
+    - "**.js"
