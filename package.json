@@ -31,17 +31,17 @@
   },
   "homepage": "https://github.com/stezu/node-stream#readme",
   "devDependencies": {
+    "beeper": "^1.1.0",
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.3.1",
     "grandma": "^0.4.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
+    "gulp-if": "^2.0.1",
     "gulp-istanbul": "^1.0.0",
     "gulp-mocha": "^3.0.1",
     "gulp-sequence": "^0.4.5",
-    "istanbul": "^0.4.3",
-    "lodash": "^4.12.0",
-    "mocha": "^2.4.5"
+    "lodash": "^4.12.0"
   },
   "dependencies": {
     "split": "^1.0.0"
