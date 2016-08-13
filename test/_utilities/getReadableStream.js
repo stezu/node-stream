@@ -1,5 +1,3 @@
-/* jshint node:true */
-
 var stream = require('stream');
 
 function getReadableStream(data, options) {

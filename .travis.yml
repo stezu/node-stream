@@ -8,6 +8,8 @@ node_js:
 addons:
   code_climate:
     repo_token: 79816a32349b15a909e262a88676bf1d51021ad6848b96706411bb2b829dd5b6
+script:
+  - npm run build
 after_script:
   - npm run coverage
   - codeclimate-test-reporter < coverage/lcov.info

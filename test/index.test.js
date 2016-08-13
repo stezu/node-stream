@@ -1,8 +1,6 @@
-/* jshint node:true, mocha: true */
-
 var expect = require('chai').expect;
 var _ = require('lodash');
-var index = require('../index.js');
+var index = require('../lib/index.js');
 
 describe('[index]', function() {
 

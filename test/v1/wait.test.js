@@ -1,54 +1,48 @@
-/* jshint node:true, mocha: true */
-
 var expect = require('chai').expect;
 
-var getReadableStream = require('./_utilities/getReadableStream.js');
-var getDuplexStream = require('./_utilities/getDuplexStream.js');
-var waitObj = require('../lib/waitObj.js');
+var getReadableStream = require('../_utilities/getReadableStream.js');
+var getDuplexStream = require('../_utilities/getDuplexStream.js');
+var wait = require('../../lib/v1/wait.js');
 
-describe('[waitObj]', function() {
+describe('[v1-wait]', function() {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
-  var objData = [true, 'item', 5, { obj: 'mode' }, [1, 2, 3]];
 
-  function runTest(stream, objectMode, done) {
+  function runTest(stream, done) {
 
     function onEnd(err, content) {
       expect(arguments).to.have.length(2);
 
       expect(err).to.equal(null);
 
-      if (objectMode) {
-        expect(content).to.deep.equal(objData);
-      } else {
-        expect(content).to.deep.equal(data.map(function(item) {
-          return new Buffer(item);
-        }));
-      }
+      expect(content).to.be.an.instanceof(Buffer);
+      expect(content).to.deep.equal(Buffer.concat(data.map(function(item) {
+        return new Buffer(item);
+      })));
 
       done();
     }
 
-    waitObj(stream, onEnd);
+    wait(stream, onEnd);
   }
 
   it('waits for a Readable stream', function(done) {
     var readableStream = getReadableStream(data);
 
-    runTest(readableStream, false, done);
+    runTest(readableStream, done);
   });
 
   it('waits for a Readable object stream', function(done) {
-    var readableStream = getReadableStream(objData, {
+    var readableStream = getReadableStream(data, {
       objectMode: true
     });
 
-    runTest(readableStream, true, done);
+    runTest(readableStream, done);
   });
 
   it('returns an error for a Readable stream', function(done) {
     var readableStream = getReadableStream(data.concat([12]));
 
-    waitObj(readableStream, function(err) {
+    wait(readableStream, function(err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
@@ -59,21 +53,21 @@ describe('[waitObj]', function() {
   it('waits for a Duplex stream', function(done) {
     var duplexStream = getDuplexStream(data);
 
-    runTest(duplexStream, false, done);
+    runTest(duplexStream, done);
   });
 
   it('waits for a Duplex object stream', function(done) {
-    var duplexStream = getDuplexStream(objData, {
+    var duplexStream = getDuplexStream(data, {
       objectMode: true
     });
 
-    runTest(duplexStream, true, done);
+    runTest(duplexStream, done);
   });
 
   it('returns an error for a Duplex stream', function(done) {
     var duplexStream = getDuplexStream(data.concat([12]));
 
-    waitObj(duplexStream, function(err) {
+    wait(duplexStream, function(err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');

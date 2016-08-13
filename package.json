@@ -2,10 +2,11 @@
   "name": "node-stream",
   "version": "0.0.6",
   "description": "Utilities for working with node streams.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "mocha -R spec",
-    "coverage": "istanbul cover --dir coverage node_modules/mocha/bin/_mocha",
+    "test": "gulp test",
+    "coverage": "gulp coverage",
+    "build": "gulp",
     "grandma": "grandma"
   },
   "repository": {
@@ -21,7 +22,6 @@
   "files": [
     "LICENSE",
     "README.md",
-    "index.js",
     "lib/"
   ],
   "author": "Stephen Zuniga <hello@stephenzuniga.com> (http://stephenzuniga.com/)",
@@ -36,6 +36,7 @@
     "grandma": "0.0.16",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
+    "gulp-istanbul": "^1.0.0",
     "gulp-mocha": "^3.0.1",
     "gulp-sequence": "^0.4.5",
     "istanbul": "^0.4.3",

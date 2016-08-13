@@ -1,54 +1,62 @@
-/* jshint node:true, mocha: true */
-
 var _ = require('lodash');
 var expect = require('chai').expect;
 
-var getReadableStream = require('./_utilities/getReadableStream.js');
-var getDuplexStream = require('./_utilities/getDuplexStream.js');
-var forEach = require('../lib/forEach.js');
+var getReadableStream = require('../_utilities/getReadableStream.js');
+var getDuplexStream = require('../_utilities/getDuplexStream.js');
+var forEachObj = require('../../lib/v1/forEachObj.js');
 
-describe('[forEach]', function() {
+describe('[v1-forEachObj]', function() {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
+  var objData = [true, 'item', 5, { obj: 'mode' }, [1, 2, 3]];
 
-  function runTest(stream, done) {
+  function runTest(stream, objectMode, done) {
     var idx = 0;
 
     function onData(chunk) {
 
-      expect(chunk).to.be.an.instanceof(Buffer);
-      expect(chunk).to.deep.equal(new Buffer(data[idx]));
+      if (objectMode) {
+        expect(chunk).to.deep.equal(objData[idx]);
+      } else {
+        expect(chunk).to.be.an.instanceof(Buffer);
+        expect(chunk).to.deep.equal(new Buffer(data[idx]));
+      }
 
       idx++;
     }
 
     function onEnd() {
       expect(arguments).to.have.length(0);
-      expect(idx).to.equal(data.length);
+
+      if (objectMode) {
+        expect(idx).to.equal(objData.length);
+      } else {
+        expect(idx).to.equal(data.length);
+      }
 
       done();
     }
 
-    forEach(stream, onData, onEnd);
+    forEachObj(stream, onData, onEnd);
   }
 
   it('iterates through a Readable stream', function(done) {
     var readableStream = getReadableStream(data);
 
-    runTest(readableStream, done);
+    runTest(readableStream, false, done);
   });
 
   it('iterates through a Readable object stream', function(done) {
-    var readableStream = getReadableStream(data, {
+    var readableStream = getReadableStream(objData, {
       objectMode: true
     });
 
-    runTest(readableStream, done);
+    runTest(readableStream, true, done);
   });
 
   it('returns an error for a Readable stream', function(done) {
     var readableStream = getReadableStream(data.concat([12]));
 
-    forEach(readableStream, _.noop, function(err) {
+    forEachObj(readableStream, _.noop, function(err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
@@ -59,21 +67,21 @@ describe('[forEach]', function() {
   it('iterates through a Duplex stream', function(done) {
     var duplexStream = getDuplexStream(data);
 
-    runTest(duplexStream, done);
+    runTest(duplexStream, false, done);
   });
 
   it('iterates through a Duplex object stream', function(done) {
-    var duplexStream = getDuplexStream(data, {
+    var duplexStream = getDuplexStream(objData, {
       objectMode: true
     });
 
-    runTest(duplexStream, done);
+    runTest(duplexStream, true, done);
   });
 
   it('returns an error for a Duplex stream', function(done) {
     var duplexStream = getDuplexStream(data.concat([12]));
 
-    forEach(duplexStream, _.noop, function(err) {
+    forEachObj(duplexStream, _.noop, function(err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
