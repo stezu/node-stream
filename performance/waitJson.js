@@ -1,5 +1,5 @@
 var structure = require('./_utilities/structure.js');
-var waitJson = require('../index.js').wait.json;
+var waitJson = require('../').wait.json;
 var data = [
   '[',
   '{"json":"test"}',

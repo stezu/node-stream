@@ -4,7 +4,7 @@ function getReadableStream(data) {
   var readableStream = new stream.Readable();
 
   readableStream._read = (function() {
-    var d = data.slice().concat([12]);
+    var d = data.slice();
 
     return function() {
       if (d.length > 0) {

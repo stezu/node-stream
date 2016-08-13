@@ -1,5 +1,5 @@
 var structure = require('./_utilities/structure.js');
-var firstObj = require('../index.js').first.obj;
+var firstObj = require('../').first.obj;
 var data = ['item1', 'item2', 'item3', 'item4'];
 
 module.exports = structure(data, {

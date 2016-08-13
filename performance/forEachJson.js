@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 var structure = require('./_utilities/structure.js');
-var forEachJson = require('../index.js').forEach.json;
+var forEachJson = require('../').forEach.json;
 var data = [
   '[',
   '{"json":"test"}',

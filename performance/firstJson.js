@@ -1,5 +1,5 @@
 var structure = require('./_utilities/structure.js');
-var firstJson = require('../index.js').first.json;
+var firstJson = require('../').first.json;
 var data = [
   '[',
   '{"json":"test"}',
