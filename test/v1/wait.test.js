@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 var getReadableStream = require('../_utilities/getReadableStream.js');
 var getDuplexStream = require('../_utilities/getDuplexStream.js');
-var wait = require('../../lib/v1/wait.js');
+var wait = require('../../').wait;
 
 describe('[v1-wait]', function() {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];

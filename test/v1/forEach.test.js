@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 
 var getReadableStream = require('../_utilities/getReadableStream.js');
 var getDuplexStream = require('../_utilities/getDuplexStream.js');
-var forEach = require('../../lib/v1/forEach.js');
+var forEach = require('../../').forEach;
 
 describe('[v1-forEach]', function() {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];

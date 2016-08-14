@@ -9,6 +9,9 @@
     "build": "gulp",
     "grandma": "grandma"
   },
+  "pre-commit": [
+    "build"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stezu/node-stream.git"
@@ -33,18 +36,19 @@
   "devDependencies": {
     "beeper": "^1.1.0",
     "chai": "^3.5.0",
-    "codeclimate-test-reporter": "^0.3.1",
     "grandma": "^0.4.1",
+    "codeclimate-test-reporter": "^0.3.3",
     "gulp": "^3.9.1",
-    "gulp-eslint": "^3.0.1",
+    "gulp-eslint": "^2.1.0",
     "gulp-if": "^2.0.1",
     "gulp-istanbul": "^1.0.0",
     "gulp-mocha": "^3.0.1",
     "gulp-sequence": "^0.4.5",
-    "lodash": "^4.12.0"
+    "lodash": "^4.15.0",
+    "pre-commit": "^1.1.3"
   },
   "dependencies": {
-    "split": "^1.0.0"
+    "split2": "^2.1.0"
   },
   "engines": {
     "node": ">=0.12"
