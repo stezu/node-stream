@@ -30,15 +30,14 @@ gulp.task('test', function() {
     .pipe(mocha());
 });
 
-gulp.task('pre-coverage', function() {
+gulp.task('coverage-instrument', function() {
   return gulp.src(source.lib)
     .pipe(istanbul())
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('coverage', ['pre-coverage'], function() {
+gulp.task('coverage-report', function() {
   return gulp.src(source.test)
-    .pipe(mocha())
     .pipe(istanbul.writeReports())
     .pipe(istanbul.enforceThresholds({
       thresholds: {
@@ -47,6 +46,8 @@ gulp.task('coverage', ['pre-coverage'], function() {
       }
     }));
 });
+
+gulp.task('coverage', sequence('coverage-instrument', 'test', 'coverage-report'));
 
 gulp.task('watch', ['default'], function() {
   gulp.watch(source.js, function() {
