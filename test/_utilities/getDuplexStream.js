@@ -1,9 +1,9 @@
 var stream = require('stream');
 
-function getReadableStream(data, options) {
-  var readableStream = new stream.Duplex(options);
+function getDuplexStream(data, options) {
+  var duplexStream = new stream.Duplex(options);
 
-  readableStream._read = (function() {
+  duplexStream._read = (function() {
     var d = data.slice();
 
     return function() {
@@ -15,7 +15,7 @@ function getReadableStream(data, options) {
     };
   }());
 
-  return readableStream;
+  return duplexStream;
 }
 
-module.exports = getReadableStream;
+module.exports = getDuplexStream;
