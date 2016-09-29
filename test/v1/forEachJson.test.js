@@ -5,7 +5,7 @@ var getReadableStream = require('../_utilities/getReadableStream.js');
 var getDuplexStream = require('../_utilities/getDuplexStream.js');
 var forEachJson = require('../../').forEach.json;
 
-describe('[v1-forEachJson]', function() {
+describe('[v1-forEachJson]', function () {
   var data = [
     '{"json":"test"}',
     new Buffer('{"item":"json"}'),
@@ -20,7 +20,7 @@ describe('[v1-forEachJson]', function() {
       expect(chunk).to.be.an('object');
       expect(chunk).to.deep.equal(JSON.parse(data[idx]));
 
-      idx++;
+      idx += 1;
     }
 
     function onEnd() {
@@ -33,13 +33,13 @@ describe('[v1-forEachJson]', function() {
     forEachJson(stream, onData, onEnd);
   }
 
-  it('iterates through a Readable stream', function(done) {
+  it('iterates through a Readable stream', function (done) {
     var readableStream = getReadableStream(data);
 
     runTest(readableStream, done);
   });
 
-  it('iterates through a Readable object stream', function(done) {
+  it('iterates through a Readable object stream', function (done) {
     var readableStream = getReadableStream(data, {
       objectMode: true
     });
@@ -47,10 +47,10 @@ describe('[v1-forEachJson]', function() {
     runTest(readableStream, done);
   });
 
-  it('returns an error for a Readable stream', function(done) {
+  it('returns an error for a Readable stream', function (done) {
     var readableStream = getReadableStream(data.concat([12]));
 
-    forEachJson(readableStream, _.noop, function(err) {
+    forEachJson(readableStream, _.noop, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
@@ -58,10 +58,10 @@ describe('[v1-forEachJson]', function() {
     });
   });
 
-  it('returns an error for invalid JSON on a Readable stream', function(done) {
+  it('returns an error for invalid JSON on a Readable stream', function (done) {
     var readableStream = getReadableStream(data.concat(['{"non":"json}']));
 
-    forEachJson(readableStream, _.noop, function(err) {
+    forEachJson(readableStream, _.noop, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
@@ -69,13 +69,13 @@ describe('[v1-forEachJson]', function() {
     });
   });
 
-  it('iterates through a Duplex stream', function(done) {
+  it('iterates through a Duplex stream', function (done) {
     var duplexStream = getDuplexStream(data);
 
     runTest(duplexStream, done);
   });
 
-  it('iterates through a Duplex object stream', function(done) {
+  it('iterates through a Duplex object stream', function (done) {
     var duplexStream = getDuplexStream(data, {
       objectMode: true
     });
@@ -83,10 +83,10 @@ describe('[v1-forEachJson]', function() {
     runTest(duplexStream, done);
   });
 
-  it('returns an error for a Duplex stream', function(done) {
+  it('returns an error for a Duplex stream', function (done) {
     var duplexStream = getDuplexStream(data.concat([12]));
 
-    forEachJson(duplexStream, _.noop, function(err) {
+    forEachJson(duplexStream, _.noop, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
@@ -94,10 +94,10 @@ describe('[v1-forEachJson]', function() {
     });
   });
 
-  it('returns an error for a invalid JSON on a Duplex stream', function(done) {
+  it('returns an error for a invalid JSON on a Duplex stream', function (done) {
     var duplexStream = getDuplexStream(data.concat(['{"non":"json}']));
 
-    forEachJson(duplexStream, _.noop, function(err) {
+    forEachJson(duplexStream, _.noop, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);

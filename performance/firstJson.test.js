@@ -7,7 +7,7 @@ var data = [
 ];
 
 module.exports = structure(data, {
-  test: function(done) {
+  test: function (done) {
     firstJson(this.stream, done);
   }
 });

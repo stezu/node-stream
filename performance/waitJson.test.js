@@ -9,7 +9,7 @@ var data = [
 ];
 
 module.exports = structure(data, {
-  test: function(done) {
+  test: function (done) {
     waitJson(this.stream, done);
   }
 });

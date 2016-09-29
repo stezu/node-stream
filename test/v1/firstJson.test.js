@@ -4,7 +4,7 @@ var getReadableStream = require('../_utilities/getReadableStream.js');
 var getDuplexStream = require('../_utilities/getDuplexStream.js');
 var firstJson = require('../../').first.json;
 
-describe('[v1-firstJson]', function() {
+describe('[v1-firstJson]', function () {
   var data = [
     '{"json":"test"}',
     new Buffer('{"item":"json"}'),
@@ -27,13 +27,13 @@ describe('[v1-firstJson]', function() {
     firstJson(stream, onEnd);
   }
 
-  it('waits for a Readable stream', function(done) {
+  it('waits for a Readable stream', function (done) {
     var readableStream = getReadableStream(data);
 
     runTest(readableStream, done);
   });
 
-  it('waits for a Readable object stream', function(done) {
+  it('waits for a Readable object stream', function (done) {
     var readableStream = getReadableStream(data, {
       objectMode: true
     });
@@ -41,10 +41,10 @@ describe('[v1-firstJson]', function() {
     runTest(readableStream, done);
   });
 
-  it('returns an error for a Readable stream', function(done) {
+  it('returns an error for a Readable stream', function (done) {
     var readableStream = getReadableStream([12].concat(data));
 
-    firstJson(readableStream, function(err) {
+    firstJson(readableStream, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
@@ -52,10 +52,10 @@ describe('[v1-firstJson]', function() {
     });
   });
 
-  it('returns an error for invalid JSON on a Readable stream', function(done) {
+  it('returns an error for invalid JSON on a Readable stream', function (done) {
     var readableStream = getReadableStream(['{"non":"json}'].concat(data));
 
-    firstJson(readableStream, function(err) {
+    firstJson(readableStream, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
@@ -63,13 +63,13 @@ describe('[v1-firstJson]', function() {
     });
   });
 
-  it('waits for a Duplex stream', function(done) {
+  it('waits for a Duplex stream', function (done) {
     var duplexStream = getDuplexStream(data);
 
     runTest(duplexStream, done);
   });
 
-  it('waits for a Duplex object stream', function(done) {
+  it('waits for a Duplex object stream', function (done) {
     var duplexStream = getDuplexStream(data, {
       objectMode: true
     });
@@ -77,10 +77,10 @@ describe('[v1-firstJson]', function() {
     runTest(duplexStream, done);
   });
 
-  it('returns an error for a Duplex stream', function(done) {
+  it('returns an error for a Duplex stream', function (done) {
     var duplexStream = getDuplexStream(data.concat([12]));
 
-    firstJson(duplexStream, function(err) {
+    firstJson(duplexStream, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
@@ -88,10 +88,10 @@ describe('[v1-firstJson]', function() {
     });
   });
 
-  it('returns an error for invalid JSON on a Duplex stream', function(done) {
+  it('returns an error for invalid JSON on a Duplex stream', function (done) {
     var duplexStream = getDuplexStream(['{"non":"json}'].concat(data));
 
-    firstJson(duplexStream, function(err) {
+    firstJson(duplexStream, function (err) {
       expect(arguments).to.have.length(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);

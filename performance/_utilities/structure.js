@@ -5,7 +5,7 @@ var getReadableStream = require('./getReadableStream.js');
 function structure(data, methods) {
 
   return _.merge({
-    beforeEach: function(done) {
+    beforeEach: function (done) {
       this.stream = getReadableStream(data);
       done();
     }

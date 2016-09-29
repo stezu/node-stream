@@ -13,10 +13,10 @@ var source = {
   test: ['test/**/*.test.js']
 };
 
-gulp.task('lint', function() {
+gulp.task('lint', function () {
   return gulp.src(source.js)
     .pipe(eslint())
-    .pipe(eslint.results(function(results) {
+    .pipe(eslint.results(function (results) {
       if (results.warningCount || results.errorCount) {
         beeper();
       }
@@ -25,18 +25,18 @@ gulp.task('lint', function() {
     .pipe(gulpif(gulp.seq.indexOf('watch') < 0, eslint.failAfterError()));
 });
 
-gulp.task('test', function() {
+gulp.task('test', function () {
   return gulp.src(source.test)
     .pipe(mocha());
 });
 
-gulp.task('coverage-instrument', function() {
+gulp.task('coverage-instrument', function () {
   return gulp.src(source.lib)
     .pipe(istanbul())
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('coverage-report', function() {
+gulp.task('coverage-report', function () {
   return gulp.src(source.test)
     .pipe(istanbul.writeReports())
     .pipe(istanbul.enforceThresholds({
@@ -49,8 +49,8 @@ gulp.task('coverage-report', function() {
 
 gulp.task('coverage', sequence('coverage-instrument', 'test', 'coverage-report'));
 
-gulp.task('watch', ['default'], function() {
-  gulp.watch(source.js, function() {
+gulp.task('watch', ['default'], function () {
+  gulp.watch(source.js, function () {
     sequence(['lint', 'test'])();
   });
 });

@@ -2,9 +2,9 @@ var expect = require('chai').expect;
 var _ = require('lodash');
 var index = require('../lib/index.js');
 
-describe('[index]', function() {
+describe('[index]', function () {
 
-  it('exposes the correct public api', function() {
+  it('exposes the correct public api', function () {
     expect(index).to.be.an('object')
       .and.to.have.all.keys('split', 'first', 'forEach', 'wait');
 

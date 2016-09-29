@@ -9,7 +9,7 @@ var data = [
 ];
 
 module.exports = structure(data, {
-  test: function(done) {
+  test: function (done) {
     forEachJson(this.stream, _.noop, done);
   }
 });
