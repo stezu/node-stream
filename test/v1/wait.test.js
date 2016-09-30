@@ -10,7 +10,7 @@ describe('[v1-wait]', function () {
   function runTest(stream, done) {
 
     function onEnd(err, content) {
-      expect(arguments).to.have.length(2);
+      expect(arguments).to.have.lengthOf(2);
 
       expect(err).to.equal(null);
 
@@ -43,7 +43,7 @@ describe('[v1-wait]', function () {
     var readableStream = getReadableStream(data.concat([12]));
 
     wait(readableStream, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
       done();
@@ -68,7 +68,7 @@ describe('[v1-wait]', function () {
     var duplexStream = getDuplexStream(data.concat([12]));
 
     wait(duplexStream, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
       done();

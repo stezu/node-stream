@@ -24,7 +24,7 @@ describe('[v1-forEachJson]', function () {
     }
 
     function onEnd() {
-      expect(arguments).to.have.length(0);
+      expect(arguments).to.have.lengthOf(0);
       expect(idx).to.equal(data.length);
 
       done();
@@ -51,7 +51,7 @@ describe('[v1-forEachJson]', function () {
     var readableStream = getReadableStream(data.concat([12]));
 
     forEachJson(readableStream, _.noop, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
       done();
@@ -62,7 +62,7 @@ describe('[v1-forEachJson]', function () {
     var readableStream = getReadableStream(data.concat(['{"non":"json}']));
 
     forEachJson(readableStream, _.noop, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
       done();
@@ -87,7 +87,7 @@ describe('[v1-forEachJson]', function () {
     var duplexStream = getDuplexStream(data.concat([12]));
 
     forEachJson(duplexStream, _.noop, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
       done();
@@ -98,7 +98,7 @@ describe('[v1-forEachJson]', function () {
     var duplexStream = getDuplexStream(data.concat(['{"non":"json}']));
 
     forEachJson(duplexStream, _.noop, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
       done();

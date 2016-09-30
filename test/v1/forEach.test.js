@@ -20,7 +20,7 @@ describe('[v1-forEach]', function () {
     }
 
     function onEnd() {
-      expect(arguments).to.have.length(0);
+      expect(arguments).to.have.lengthOf(0);
       expect(idx).to.equal(data.length);
 
       done();
@@ -47,7 +47,7 @@ describe('[v1-forEach]', function () {
     var readableStream = getReadableStream(data.concat([12]));
 
     forEach(readableStream, _.noop, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
       done();
@@ -72,7 +72,7 @@ describe('[v1-forEach]', function () {
     var duplexStream = getDuplexStream(data.concat([12]));
 
     forEach(duplexStream, _.noop, function (err) {
-      expect(arguments).to.have.length(1);
+      expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
       done();
