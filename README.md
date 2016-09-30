@@ -45,28 +45,28 @@ const nodeStream = require('node-stream');
 Split a stream on `matcher`. Useful for splitting files on new lines and JSON parsing each line.
 
 ```js
-nodeStream.forEach.json(
-    nodeStream.split(stream),
-    function(chunk) {
-        // chunk will be a JSON parsed object
-    },
-    function(err) {
-        // err is null or an Error object
-    }
-);
+stream
+    .pipe(nodeStream.split())
+    .pipe(nodeStream.forEach.json(
+        (chunk) => {
+            // chunk will be a JSON parsed object
+        },
+        (err) => {
+            // err is null or an Error object
+        }
+    ));
 ```
+
 <a name="first"></a>
-### first(stream, onEnd)
+### first(onEnd)
 Consume the first item in a stream and call a callback with a buffer of that item.
 
 ```js
-nodeStream.first(
-    stream,
-    function(err, data) {
+stream
+    .pipe(nodeStream.first((err, data) => {
         // err is null or an Error object
         // data is a Buffer object
-    }
-);
+    }));
 ```
 
 <a name="firstObj"></a>
@@ -74,13 +74,11 @@ nodeStream.first(
 Consume the first item in a stream and call a callback with that item.
 
 ```js
-nodeStream.first.obj(
-    stream,
-    function(err, data) {
+stream
+    .pipe(nodeStream.first.obj((err, data) => {
         // err is null or an Error object
         // data can be of any type
-    }
-);
+    }));
 ```
 
 <a name="firstJson"></a>
@@ -88,13 +86,11 @@ nodeStream.first.obj(
 Consume the first item in a stream and call a callback with a JSON parsed object. Stream will error if the consumed data is not parseable.
 
 ```js
-nodeStream.first.json(
-    stream,
-    function(err, data) {
+stream
+    .pipe(nodeStream.first.json((err, data) => {
         // err is null or an Error object
         // data is a JSON parsed object
-    }
-);
+    }));
 ```
 
 <a name="forEach"></a>
@@ -102,15 +98,15 @@ nodeStream.first.json(
 Iterate through each data tick in a stream and call a callback with that data as a Buffer.
 
 ```js
-nodeStream.forEach(
-    stream,
-    function(chunk) {
-        // chunk is a Buffer object
-    },
-    function(err) {
-        // err is null or an Error object
-    }
-);
+stream
+    .pipe(nodeStream.forEach(
+        (chunk) => {
+            // chunk is a Buffer object
+        },
+        (err) => {
+            // err is null or an Error object
+        }
+    ));
 ```
 
 <a name="forEachObj"></a>
@@ -118,15 +114,15 @@ nodeStream.forEach(
 Iterate through each data tick in a stream and call a callback with that data. Similar to `forEach`, except it does not transform the data in any way. This is best used on object streams.
 
 ```js
-nodeStream.forEach.obj(
-    stream,
-    function(chunk) {
-        // chunk can be of any type
-    },
-    function(err) {
-        // err is null or an Error object
-    }
-);
+stream
+    .pipe(nodeStream.forEach.obj(
+        (chunk) => {
+            // chunk can be of any type
+        },
+        (err) => {
+            // err is null or an Error object
+        }
+    ));
 ```
 
 <a name="forEachJson"></a>
@@ -134,15 +130,15 @@ nodeStream.forEach.obj(
 Iterate through each data tick in a stream and call a callback with that data. Similar to `forEach`, but returns a JSON parsed object on the data callback. The stream will error if any tick does not contain valid JSON.
 
 ```js
-nodeStream.forEach.json(
-    stream,
-    function(chunk) {
-        // chunk will be a JSON parsed object
-    },
-    function(err) {
-        // err is null or an Error object
-    }
-);
+stream
+    .pipe(nodeStream.forEach.json(
+        (chunk) => {
+            // chunk will be a JSON parsed object
+        },
+        (err) => {
+            // err is null or an Error object
+        }
+    ));
 ```
 
 <a name="wait"></a>
@@ -150,13 +146,11 @@ nodeStream.forEach.json(
 Consume an entire stream and call a callback with a buffer of the data.
 
 ```js
-nodeStream.wait(
-    stream,
-    function(err, data) {
+stream
+    .pipe(nodeStream.wait((err, data) => {
         // err is null or an Error object
         // data is a Buffer object
-    }
-);
+    }));
 ```
 
 <a name="waitObj"></a>
@@ -164,13 +158,11 @@ nodeStream.wait(
 Consume an entire stream and call a callback with an array of data. Each tick of the stream is an item in the array.
 
 ```js
-nodeStream.wait.obj(
-    stream,
-    function(err, data) {
+stream
+    .pipe(nodeStream.wait.obj((err, data) => {
         // err is null or an Error object
         // data is an array
-    }
-);
+    }));
 ```
 
 <a name="waitJson"></a>
@@ -178,11 +170,9 @@ nodeStream.wait.obj(
 Consume an entire stream and call a callback with a JSON parsed object. Stream will error if the consumed data is not parseable.
 
 ```js
-nodeStream.wait.json(
-    stream,
-    function(err, data) {
+stream
+    .pipe(nodeStream.wait.json((err, data) => {
         // err is null or an Error object
         // data is a JSON parsed object
-    }
-);
+    }));
 ```
