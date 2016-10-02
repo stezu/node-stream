@@ -1,8 +1,9 @@
 var expect = require('chai').expect;
 
-var getReadableStream = require('../_utilities/getReadableStream.js');
-var getDuplexStream = require('../_utilities/getDuplexStream.js');
-var firstObj = require('../../').first.obj;
+var getReadableStream = require('../../_utilities/getReadableStream.js');
+var getDuplexStream = require('../../_utilities/getDuplexStream.js');
+var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var firstObj = require('../../../').first.obj;
 
 describe('[v1-firstObj]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
@@ -27,19 +28,7 @@ describe('[v1-firstObj]', function () {
     firstObj(stream, onEnd);
   }
 
-  it('waits for a Readable stream', function (done) {
-    var readableStream = getReadableStream(data);
-
-    runTest(readableStream, false, done);
-  });
-
-  it('waits for a Readable object stream', function (done) {
-    var readableStream = getReadableStream(objData, {
-      objectMode: true
-    });
-
-    runTest(readableStream, true, done);
-  });
+  runBasicStreamTests(data, objData, runTest);
 
   it('returns an error for a Readable stream', function (done) {
     var readableStream = getReadableStream(data.concat([12]));
@@ -50,20 +39,6 @@ describe('[v1-firstObj]', function () {
       expect(err.message).to.equal('Invalid non-string/buffer chunk');
       done();
     });
-  });
-
-  it('waits for a Duplex stream', function (done) {
-    var duplexStream = getDuplexStream(data);
-
-    runTest(duplexStream, false, done);
-  });
-
-  it('waits for a Duplex object stream', function (done) {
-    var duplexStream = getDuplexStream(objData, {
-      objectMode: true
-    });
-
-    runTest(duplexStream, true, done);
   });
 
   it('returns an error for a Duplex stream', function (done) {

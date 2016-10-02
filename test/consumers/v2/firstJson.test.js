@@ -1,8 +1,9 @@
 var expect = require('chai').expect;
 
-var getReadableStream = require('../_utilities/getReadableStream.js');
-var getDuplexStream = require('../_utilities/getDuplexStream.js');
-var firstJson = require('../../').first.json;
+var getReadableStream = require('../../_utilities/getReadableStream.js');
+var getDuplexStream = require('../../_utilities/getDuplexStream.js');
+var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var firstJson = require('../../../').first.json;
 
 describe('[v2-firstJson]', function () {
   var data = [
@@ -11,7 +12,7 @@ describe('[v2-firstJson]', function () {
     '{"item1":"item2"}'
   ];
 
-  function runTest(stream, done) {
+  function runTest(stream, objectMode, done) {
     var idx = 0;
 
     function onEnd(err, content) {
@@ -36,19 +37,7 @@ describe('[v2-firstJson]', function () {
       });
   }
 
-  it('waits for a Readable stream', function (done) {
-    var readableStream = getReadableStream(data);
-
-    runTest(readableStream, done);
-  });
-
-  it('waits for a Readable object stream', function (done) {
-    var readableStream = getReadableStream(data, {
-      objectMode: true
-    });
-
-    runTest(readableStream, done);
-  });
+  runBasicStreamTests(data, data, runTest);
 
   it('returns an error for invalid JSON on a Readable stream', function (done) {
     var readableStream = getReadableStream(['{"non":"json}'].concat(data));
@@ -59,20 +48,6 @@ describe('[v2-firstJson]', function () {
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
       done();
     }).resume());
-  });
-
-  it('waits for a Duplex stream', function (done) {
-    var duplexStream = getDuplexStream(data);
-
-    runTest(duplexStream, done);
-  });
-
-  it('waits for a Duplex object stream', function (done) {
-    var duplexStream = getDuplexStream(data, {
-      objectMode: true
-    });
-
-    runTest(duplexStream, done);
   });
 
   it('returns an error for invalid JSON on a Duplex stream', function (done) {

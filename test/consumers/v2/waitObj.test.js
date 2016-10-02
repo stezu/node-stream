@@ -1,8 +1,7 @@
 var expect = require('chai').expect;
 
-var getReadableStream = require('../_utilities/getReadableStream.js');
-var getDuplexStream = require('../_utilities/getDuplexStream.js');
-var waitObj = require('../../').wait.obj;
+var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var waitObj = require('../../../').wait.obj;
 
 describe('[v2-waitObj]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
@@ -50,31 +49,5 @@ describe('[v2-waitObj]', function () {
       });
   }
 
-  it('waits for a Readable stream', function (done) {
-    var readableStream = getReadableStream(data);
-
-    runTest(readableStream, false, done);
-  });
-
-  it('waits for a Readable object stream', function (done) {
-    var readableStream = getReadableStream(objData, {
-      objectMode: true
-    });
-
-    runTest(readableStream, true, done);
-  });
-
-  it('waits for a Duplex stream', function (done) {
-    var duplexStream = getDuplexStream(data);
-
-    runTest(duplexStream, false, done);
-  });
-
-  it('waits for a Duplex object stream', function (done) {
-    var duplexStream = getDuplexStream(objData, {
-      objectMode: true
-    });
-
-    runTest(duplexStream, true, done);
-  });
+  runBasicStreamTests(data, objData, runTest);
 });

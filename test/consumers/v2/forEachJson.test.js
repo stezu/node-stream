@@ -1,9 +1,10 @@
 var _ = require('lodash');
 var expect = require('chai').expect;
 
-var getReadableStream = require('../_utilities/getReadableStream.js');
-var getDuplexStream = require('../_utilities/getDuplexStream.js');
-var forEachJson = require('../../').forEach.json;
+var getReadableStream = require('../../_utilities/getReadableStream.js');
+var getDuplexStream = require('../../_utilities/getDuplexStream.js');
+var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var forEachJson = require('../../../').forEach.json;
 
 describe('[v2-forEachJson]', function () {
   var data = [
@@ -12,7 +13,7 @@ describe('[v2-forEachJson]', function () {
     '{"item1":"item2"}'
   ];
 
-  function runTest(stream, done) {
+  function runTest(stream, objectMode, done) {
     var idx = 0;
 
     function onData(chunk) {
@@ -39,19 +40,7 @@ describe('[v2-forEachJson]', function () {
       });
   }
 
-  it('iterates through a Readable stream', function (done) {
-    var readableStream = getReadableStream(data);
-
-    runTest(readableStream, done);
-  });
-
-  it('iterates through a Readable object stream', function (done) {
-    var readableStream = getReadableStream(data, {
-      objectMode: true
-    });
-
-    runTest(readableStream, done);
-  });
+  runBasicStreamTests(data, data, runTest);
 
   it('returns an error for invalid JSON on a Readable stream', function (done) {
     var readableStream = getReadableStream(data.concat(['{"non":"json}']));
@@ -62,20 +51,6 @@ describe('[v2-forEachJson]', function () {
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
       done();
     }).resume());
-  });
-
-  it('iterates through a Duplex stream', function (done) {
-    var duplexStream = getDuplexStream(data);
-
-    runTest(duplexStream, done);
-  });
-
-  it('iterates through a Duplex object stream', function (done) {
-    var duplexStream = getDuplexStream(data, {
-      objectMode: true
-    });
-
-    runTest(duplexStream, done);
   });
 
   it('returns an error for a invalid JSON on a Duplex stream', function (done) {

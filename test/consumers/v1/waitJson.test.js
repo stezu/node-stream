@@ -1,8 +1,9 @@
 var expect = require('chai').expect;
 
-var getReadableStream = require('../_utilities/getReadableStream.js');
-var getDuplexStream = require('../_utilities/getDuplexStream.js');
-var waitJson = require('../../').wait.json;
+var getReadableStream = require('../../_utilities/getReadableStream.js');
+var getDuplexStream = require('../../_utilities/getDuplexStream.js');
+var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var waitJson = require('../../../').wait.json;
 
 describe('[v1-waitJson]', function () {
   var data = [
@@ -13,7 +14,7 @@ describe('[v1-waitJson]', function () {
     ']'
   ];
 
-  function runTest(stream, done) {
+  function runTest(stream, objectMode, done) {
 
     function onEnd(err, content) {
       expect(arguments).to.have.lengthOf(2);
@@ -31,19 +32,7 @@ describe('[v1-waitJson]', function () {
     waitJson(stream, onEnd);
   }
 
-  it('waits for a Readable stream', function (done) {
-    var readableStream = getReadableStream(data);
-
-    runTest(readableStream, done);
-  });
-
-  it('waits for a Readable object stream', function (done) {
-    var readableStream = getReadableStream(data, {
-      objectMode: true
-    });
-
-    runTest(readableStream, done);
-  });
+  runBasicStreamTests(data, data, runTest);
 
   it('returns an error for a Readable stream', function (done) {
     var readableStream = getReadableStream(data.concat([12]));
@@ -65,20 +54,6 @@ describe('[v1-waitJson]', function () {
       expect(err.message).to.match(/^Unexpected end of(?: JSON)? input$/);
       done();
     });
-  });
-
-  it('waits for a Duplex stream', function (done) {
-    var duplexStream = getDuplexStream(data);
-
-    runTest(duplexStream, done);
-  });
-
-  it('waits for a Duplex object stream', function (done) {
-    var duplexStream = getDuplexStream(data, {
-      objectMode: true
-    });
-
-    runTest(duplexStream, done);
   });
 
   it('returns an error for a Duplex stream', function (done) {
