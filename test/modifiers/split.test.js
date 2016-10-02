@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 
 var getReadableStream = require('../_utilities/getReadableStream.js');
-var getDuplexStream = require('../_utilities/getDuplexStream.js');
 var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
 var split = require('../../').split;
 
@@ -10,7 +9,6 @@ describe('[split]', function () {
   var expected = ['it', 'em1item2item3', 'i', 'tem4'];
 
   function runTest(stream, objectMode, done) {
-    var idx = 0;
     var actual = [];
 
     stream
@@ -29,7 +27,7 @@ describe('[split]', function () {
 
   it('accepts a regex matcher as the first argument', function (done) {
     var testData = ['mary had ', 'a lit', 'tle lamb who', 'se fleece was white ', 'as sn', 'ow'];
-    var expected = ['mary', 'had', 'a', 'little', 'lamb', 'whose', 'fleece', 'was', 'white', 'as', 'snow'];
+    var testExpected = ['mary', 'had', 'a', 'little', 'lamb', 'whose', 'fleece', 'was', 'white', 'as', 'snow'];
     var readableStream = getReadableStream(testData);
     var actual = [];
 
@@ -40,7 +38,7 @@ describe('[split]', function () {
       })
       .on('error', done)
       .on('end', function () {
-        expect(actual).to.deep.equal(expected);
+        expect(actual).to.deep.equal(testExpected);
 
         done();
       });
@@ -48,7 +46,7 @@ describe('[split]', function () {
 
   it('accepts a mapper as the first argument', function (done) {
     var testData = ['{"json": "parser"}\n{"parsing": "', 'json"}\n{"is', '":"fun"}\n'];
-    var expected = [{ json: 'parser' }, { parsing: 'json' }, { is: 'fun'}];
+    var testExpected = [{ json: 'parser' }, { parsing: 'json' }, { is: 'fun'}];
     var readableStream = getReadableStream(testData);
     var actual = [];
 
@@ -59,7 +57,7 @@ describe('[split]', function () {
       })
       .on('error', done)
       .on('end', function () {
-        expect(actual).to.deep.equal(expected);
+        expect(actual).to.deep.equal(testExpected);
 
         done();
       });
@@ -67,7 +65,7 @@ describe('[split]', function () {
 
   it('accepts both a string matcher and a mapper as arguments', function (done) {
     var testData = ['{"json": "parser"}banana{"parsing": "', 'json"}banana{"is', '":"fun"}'];
-    var expected = [{ json: 'parser' }, { parsing: 'json' }, { is: 'fun'}];
+    var testExpected = [{ json: 'parser' }, { parsing: 'json' }, { is: 'fun'}];
     var readableStream = getReadableStream(testData);
     var actual = [];
 
@@ -78,7 +76,7 @@ describe('[split]', function () {
       })
       .on('error', done)
       .on('end', function () {
-        expect(actual).to.deep.equal(expected);
+        expect(actual).to.deep.equal(testExpected);
 
         done();
       });
