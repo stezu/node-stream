@@ -10,6 +10,7 @@ describe('[index]', function () {
         'split',
         'pipeline',
         'through',
+        'filter',
         'map',
         'reduce',
         'first',
@@ -31,6 +32,9 @@ describe('[index]', function () {
 
     expect(index.pipeline.obj).to.be.a('function')
       .and.to.have.lengthOf(0);
+
+    expect(index.filter).to.be.a('function')
+      .and.to.have.lengthOf(1);
 
     expect(index.map).to.be.a('function')
       .and.to.have.lengthOf(1);
