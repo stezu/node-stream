@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
-var index = require('../lib/index.js');
+var index = require('../');
 
 describe('[index]', function () {
 
