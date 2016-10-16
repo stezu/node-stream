@@ -1,12 +1,12 @@
 {
   "name": "node-stream",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "Utilities for consuming, creating and manipulating node streams.",
   "main": "lib/index.js",
   "scripts": {
     "test": "gulp test",
     "coverage": "gulp coverage",
-    "build": "gulp"
+    "build": "gulp build"
   },
   "pre-commit": [
     "build"
@@ -41,6 +41,7 @@
     "beeper": "^1.1.0",
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.3.3",
+    "docdown": "^0.7.1",
     "eslint-config-stezu": "^0.1.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.1.0",
