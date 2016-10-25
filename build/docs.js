@@ -4,6 +4,13 @@ var exec = require('child_process').exec;
 var _ = require('lodash');
 var nodeStream = require('../');
 
+/**
+ * Convert an object of options into an array of command line argument strings.
+ *
+ * @private
+ * @param   {Object} options - Object to transtorm into the array of strings.
+ * @returns {Array}          - Array of command line argument strings.
+ */
 function optionsToArgs(options) {
 
   return _.map(options, function (val, key) {
@@ -11,6 +18,12 @@ function optionsToArgs(options) {
   });
 }
 
+/**
+ * Build documentation as part of a gulp task.
+ *
+ * @private
+ * @returns {Stream} - Transform stream
+ */
 function buildDocs() {
   var options = {
     destination: './docs/',
@@ -39,11 +52,11 @@ function buildDocs() {
         }
 
         if (stderr) {
-          console.error(stderr.toString());
+          process.stderr.write(stderr.toString());
         }
 
         if (stdout) {
-          console.log(stdout.toString());
+          process.stdout.write(stdout.toString());
         }
 
         return next();
