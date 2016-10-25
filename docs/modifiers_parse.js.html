@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>modifiers/map.js - Documentation</title>
+    <title>modifiers/parse.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">modifiers/map.js</h1>
+    <h1 class="page-title">modifiers/parse.js</h1>
     
 
     
@@ -38,61 +38,47 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>var through = require('through2');
+            <pre class="prettyprint source linenums"><code>var map = require('./map.js');
 
 /**
- * Creates a new stream with the results of calling the provided function on
- * every element in the stream.
- *
- * Applies the function `transform` to each item in the stream. The `transform`
- * is called with two arguments:
- * - The stream `item` and
- * - A `callback`.
- * If the `transform` passes an error to its `callback`, the stream emits an "error" event.
+ * Creates a new stream where every element in the source stream
+ * is parsed as JSON.
  *
  * @static
- * @since    1.0.0
+ * @since    1.1.0
  * @category Modifiers
  *
- * @param    {Function} transform - Function that produces a new element on the stream.
- *                                  The function is passed a `callback(err, value)` which
- *                                  must be called once it's completed.
- * @returns  {Stream}             - Transform stream.
+ * @returns  {Stream} - Transform stream.
  *
  * @example
- *
- * // replace every period with a comma to create a run-on sentence
- * fs.createReadStream('example.txt') // the text has periods. because, english.
- *   .pipe(nodeStream.map((value, next) => {
- *     const str = value.toString()
- *     next(null, str.replace('.', ','));
- *   }))
- *   // => the text has periods, because, english,
- *
  *
  * // parse a newline-separated JSON file
  * fs.createReadStream('example.log')
  *   .pipe(nodeStream.split())
- *   .pipe(nodeStream.map((value, next) => {
- *     let parsed;
+ *   .pipe(nodeStream.parse());
  *
- *     try {
- *       parsed = JSON.parse(value);
- *     } catch(e) {
- *       return next(e); // failed to parse, emit an error on the stream
- *     }
  *
- *     next(null, parsed); // emit a parsed object on the stream
- *   }));
+ * // parse a large JSON file
+ * fs.createReadStream('warandpeace.json')
+ *   .pipe(nodeStream.wait())
+ *   .pipe(nodeStream.parse());
  */
-function map(transform) {
+function parse() {
 
-  return through.obj(function (value, enc, next) {
-    transform(value, next);
+  return map(function (chunk, next) {
+    var parsed;
+
+    try {
+      parsed = JSON.parse(chunk);
+    } catch (e) {
+      return next(e);
+    }
+
+    return next(null, parsed);
   });
 }
 
-module.exports = map;
+module.exports = parse;
 </code></pre>
         </article>
     </section>

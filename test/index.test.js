@@ -13,6 +13,8 @@ describe('[index]', function () {
         'filter',
         'map',
         'reduce',
+        'parse',
+        'stringify',
         'first',
         'forEach',
         'wait'
@@ -41,6 +43,12 @@ describe('[index]', function () {
 
     expect(index.reduce).to.be.a('function')
       .and.to.have.lengthOf(2);
+
+    expect(index.parse).to.be.a('function')
+      .and.to.have.lengthOf(0);
+
+    expect(index.stringify).to.be.a('function')
+      .and.to.have.lengthOf(0);
 
     expect(index.first).to.be.a('function')
       .and.to.have.all.keys('obj', 'json');
