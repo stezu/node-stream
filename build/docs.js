@@ -1,46 +1,55 @@
 var util = require('util');
-var path = require('path');
+var exec = require('child_process').exec;
 
-var through = require('through2');
 var _ = require('lodash');
-var docdown = require('docdown');
+var nodeStream = require('../');
 
-var pkg = require('../package.json');
-var version = pkg.version;
+function optionsToArgs(options) {
 
-function getRelativePath(filePath) {
-  return (filePath.replace(process.cwd() + '/', ''));
-}
-
-function replaceFileExtension(filePath, newExtension) {
-  var parsedPath = path.parse(filePath);
-  var pathWithoutExtension = path.join(parsedPath.root, parsedPath.dir, parsedPath.name);
-
-  return (pathWithoutExtension + newExtension);
+  return _.map(options, function (val, key) {
+    return util.format('--%s %s', key, val);
+  });
 }
 
 function buildDocs() {
   var options = {
-    title: util.format('<a href="https://npmjs.com/package/node-stream">node-stream</a> <span>v%s</span>', version),
-    toc: 'categories',
-    style: 'github'
+    destination: './docs/',
+    template: './node_modules/minami'
   };
 
-  return through.obj(function (file, enc, next) {
-    var relativePath = getRelativePath(file.path);
-    var settings = _.extend({
-      path: file.path,
-      url: util.format('https://github.com/stezu/node-stream/blob/%s/%s', version, relativePath)
-    }, options);
+  return nodeStream.pipeline.obj(
+    nodeStream.reduce(function (filepaths, file, next) {
 
-    // replace file contents with markdown
-    file.contents = new Buffer(docdown(settings));
+      if (!file || !file.path) {
+        return next(new Error('received an invalid file'));
+      }
 
-    // replace file extension
-    file.path = replaceFileExtension(file.path, '.md');
+      filepaths.push(file.path);
 
-    next(null, file);
-  });
+      return next(null, filepaths);
+    }, []),
+    nodeStream.map(function (filepaths, next) {
+      var opts = optionsToArgs(options);
+      var args = [filepaths.join(' ')].concat(opts);
+
+      return exec(util.format('./node_modules/.bin/jsdoc %s', args.join(' ')), function (err, stdout, stderr) {
+
+        if (err) {
+          return next(err);
+        }
+
+        if (stderr) {
+          console.error(stderr.toString());
+        }
+
+        if (stdout) {
+          console.log(stdout.toString());
+        }
+
+        return next();
+      });
+    })
+  );
 }
 
 module.exports = buildDocs;

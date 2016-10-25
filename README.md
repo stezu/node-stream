@@ -26,3 +26,7 @@ You can then `require()` node-stream:
 ```js
 const nodeStream = require('node-stream');
 ```
+
+## Documentation
+
+Documentation can be found at [http://stezu.github.io/node-stream/](http://stezu.github.io/node-stream/).

@@ -6,11 +6,9 @@
   "scripts": {
     "test": "gulp test",
     "coverage": "gulp coverage",
+    "docs": "gulp docs",
     "build": "gulp build"
   },
-  "pre-commit": [
-    "build"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stezu/node-stream.git"
@@ -41,7 +39,6 @@
     "beeper": "^1.1.0",
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.3.3",
-    "docdown": "^0.7.1",
     "eslint-config-stezu": "^0.1.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.1.0",
@@ -49,8 +46,9 @@
     "gulp-istanbul": "^1.0.0",
     "gulp-mocha": "^3.0.1",
     "gulp-sequence": "^0.4.5",
+    "jsdoc": "^3.4.2",
     "lodash": "^4.15.0",
-    "pre-commit": "^1.1.3"
+    "minami": "^1.1.1"
   },
   "dependencies": {
     "split2": "^2.1.0",

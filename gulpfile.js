@@ -8,14 +8,9 @@ var beeper = require('beeper');
 var docs = require('./build/docs.js');
 
 var source = {
-  js: ['*.js', 'lib/**/*.js', 'performance/**/*.js', 'test/**/*.js'],
+  js: ['*.js', 'build/**/*.js', 'lib/**/*.js', 'test/**/*.js'],
   lib: ['lib/**/*.js'],
-  perf: ['performance/**/*.test.js'],
   test: ['test/**/*.test.js']
-};
-
-var dest = {
-  docs: './docs'
 };
 
 gulp.task('lint', function () {
@@ -55,14 +50,13 @@ gulp.task('coverage-report', function () {
 gulp.task('coverage', sequence('coverage-instrument', 'test', 'coverage-report'));
 
 gulp.task('docs', function () {
-  return gulp.src(source.lib, { read: false })
-    .pipe(docs())
-    .pipe(gulp.dest(dest.docs));
+  return gulp.src(source.lib.concat('README.md'), { read: false })
+    .pipe(docs());
 });
 
 gulp.task('watch', ['default'], function () {
   gulp.watch(source.js, function () {
-    sequence('lint', 'test', 'docs')();
+    sequence('lint', 'test')();
   });
 });
 
