@@ -11,7 +11,7 @@
 [5]: https://codeclimate.com/github/stezu/node-stream/badges/coverage.svg
 [6]: https://codeclimate.com/github/stezu/node-stream/coverage
 
-A small collection of stream consumers.
+A small collection of array-like methods for working with streams.
 
 ## Install
 
