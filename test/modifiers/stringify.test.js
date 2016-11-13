@@ -4,6 +4,7 @@ var getReadableStream = require('../_utilities/getReadableStream.js');
 var getDuplexStream = require('../_utilities/getDuplexStream.js');
 var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
 var stringify = require('../../').stringify;
+var parse = require('../../').parse;
 
 describe('[stringify]', function () {
   var data = ['str', true, { a: 'b' }];
@@ -73,5 +74,27 @@ describe('[stringify]', function () {
         throw new Error('end should not be called');
       })
       .resume();
+  });
+
+  it('can be parsed and strinigified multiple times without fail', function (done) {
+    var readableStream = getReadableStream(data, {
+      objectMode: true
+    });
+    var finalData = [];
+
+    readableStream
+      .pipe(stringify())
+      .pipe(parse())
+      .pipe(stringify())
+      .pipe(parse())
+      .pipe(stringify())
+      .on('data', function (chunk) {
+        finalData.push(chunk);
+      })
+      .on('end', function () {
+        expect(finalData.map(JSON.parse)).to.deep.equal(data);
+
+        done();
+      });
   });
 });
