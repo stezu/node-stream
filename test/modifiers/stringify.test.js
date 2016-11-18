@@ -88,11 +88,12 @@ describe('[stringify]', function () {
       .pipe(stringify())
       .pipe(parse())
       .pipe(stringify())
+      .pipe(parse())
       .on('data', function (chunk) {
         finalData.push(chunk);
       })
       .on('end', function () {
-        expect(finalData.map(JSON.parse)).to.deep.equal(data);
+        expect(finalData).to.deep.equal(data);
 
         done();
       });
