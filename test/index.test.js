@@ -14,6 +14,7 @@ describe('[index]', function () {
         'map',
         'reduce',
         'parse',
+        'pick',
         'stringify',
         'first',
         'forEach',
@@ -48,6 +49,9 @@ describe('[index]', function () {
       .and.to.have.lengthOf(1);
 
     expect(index.stringify).to.be.a('function')
+      .and.to.have.lengthOf(0);
+
+    expect(index.pick).to.be.a('function')
       .and.to.have.lengthOf(0);
 
     expect(index.first).to.be.a('function')

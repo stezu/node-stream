@@ -1,0 +1,111 @@
+var expect = require('chai').expect;
+
+var getReadableStream = require('../_utilities/getReadableStream.js');
+var getDuplexStream = require('../_utilities/getDuplexStream.js');
+var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
+var pick = require('../../').pick;
+
+describe('[pick]', function () {
+  var data = [{
+    name: 'bill',
+    age: '24'
+  }, {
+    name: 'pam'
+  }, {
+    age: 12
+  }];
+
+  function runTest(stream, objectMode, done) {
+    var expected = [{
+      age: '24'
+    }, {}, {
+      age: 12
+    }];
+    var actual = [];
+
+    stream
+      .pipe(pick('age'))
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('error', done)
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  }
+
+  runBasicStreamTests(null, data, runTest);
+
+  it('returns an error for a non-object on a Readable stream', function (done) {
+    var readableStream = getReadableStream(data.concat(['string']), {
+      objectMode: true
+    });
+
+    readableStream
+      .pipe(pick('age'))
+      .on('error', function (err) {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.match(/^Expected object, got string$/);
+
+        done();
+      })
+      .on('end', function () {
+        throw new Error('end should not be called');
+      })
+      .resume();
+  });
+
+  it('returns an error for a non-object on a Duplex stream', function (done) {
+    var duplexStream = getDuplexStream(data.concat([true]), {
+      objectMode: true
+    });
+
+    duplexStream
+      .pipe(pick('age'))
+      .on('error', function (err) {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.match(/^Expected object, got boolean$/);
+
+        done();
+      })
+      .on('end', function () {
+        throw new Error('end should not be called');
+      })
+      .resume();
+  });
+
+  it('works with dot notation', function (done) {
+    var readableStream = getReadableStream([{
+      a: {
+        b: ['c', 'd']
+      },
+      c: 'c'
+    }, {
+      a: {
+        b: {
+          c: ['d']
+        },
+        b1: false
+      },
+      b: true
+    }], {
+      objectMode: true
+    });
+    var expected = [{ a: { b: ['c', 'd'] } }, { a: { b: { c: ['d'] } } }];
+    var actual = [];
+
+    readableStream
+      .pipe(pick('a.b'))
+      .on('error', done)
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
+});
