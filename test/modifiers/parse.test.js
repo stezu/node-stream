@@ -60,4 +60,44 @@ describe('[parse]', function () {
       })
       .resume();
   });
+
+  it('removes unparseable json from a Readable stream when options.error = false', function (done) {
+    var readableStream = getReadableStream(data.concat(['{"non":"json}']));
+    var actual = [];
+
+    readableStream
+      .pipe(parse({
+        error: false
+      }))
+      .on('error', function () {
+        throw new Error('test should not throw any errors');
+      })
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(data.map(JSON.parse));
+        done();
+      });
+  });
+
+  it('removes unparseable json from a Duplex stream when options.error = false', function (done) {
+    var duplexStream = getDuplexStream(data.concat(['{"non":"json}']));
+    var actual = [];
+
+    duplexStream
+      .pipe(parse({
+        error: false
+      }))
+      .on('error', function () {
+        throw new Error('test should not throw any errors');
+      })
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(data.map(JSON.parse));
+        done();
+      });
+  });
 });

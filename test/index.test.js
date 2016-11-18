@@ -45,7 +45,7 @@ describe('[index]', function () {
       .and.to.have.lengthOf(2);
 
     expect(index.parse).to.be.a('function')
-      .and.to.have.lengthOf(0);
+      .and.to.have.lengthOf(1);
 
     expect(index.stringify).to.be.a('function')
       .and.to.have.lengthOf(0);
