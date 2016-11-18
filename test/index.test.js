@@ -14,8 +14,9 @@ describe('[index]', function () {
         'map',
         'reduce',
         'parse',
-        'pick',
         'stringify',
+        'pick',
+        'intersperse',
         'first',
         'forEach',
         'wait'
@@ -53,6 +54,9 @@ describe('[index]', function () {
 
     expect(index.pick).to.be.a('function')
       .and.to.have.lengthOf(0);
+
+    expect(index.intersperse).to.be.a('function')
+      .and.to.have.lengthOf(1);
 
     expect(index.first).to.be.a('function')
       .and.to.have.all.keys('obj', 'json');
