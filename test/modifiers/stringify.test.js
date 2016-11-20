@@ -28,7 +28,7 @@ describe('[stringify]', function () {
 
   runBasicStreamTests(null, data, runTest);
 
-  it('returns an error for circular references on a Readable stream', function (done) {
+  it('emits an error for circular references on a Readable stream', function (done) {
     var readableStream;
     var addlData = {};
 
@@ -52,7 +52,7 @@ describe('[stringify]', function () {
       .resume();
   });
 
-  it('returns an error for circular references on a Duplex stream', function (done) {
+  it('emits an error for circular references on a Duplex stream', function (done) {
     var duplexStream;
     var addlData = {};
 

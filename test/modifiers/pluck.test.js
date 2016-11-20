@@ -3,9 +3,9 @@ var expect = require('chai').expect;
 var getReadableStream = require('../_utilities/getReadableStream.js');
 var getDuplexStream = require('../_utilities/getDuplexStream.js');
 var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
-var pick = require('../../').pick;
+var pluck = require('../../').pluck;
 
-describe('[pick]', function () {
+describe('[pluck]', function () {
   var data = [{
     name: 'bill',
     age: '24'
@@ -16,15 +16,11 @@ describe('[pick]', function () {
   }];
 
   function runTest(stream, objectMode, done) {
-    var expected = [{
-      age: '24'
-    }, {}, {
-      age: 12
-    }];
+    var expected = ['24', 12];
     var actual = [];
 
     stream
-      .pipe(pick('age'))
+      .pipe(pluck('age'))
       .on('data', function (chunk) {
         actual.push(chunk);
       })
@@ -38,35 +34,16 @@ describe('[pick]', function () {
 
   runBasicStreamTests(null, data, runTest);
 
-  it('emits an error for a non-object on a Readable stream', function (done) {
-    var readableStream = getReadableStream(data.concat(['string']), {
+  it('emits an error if the passed in argument is not a string or number', function (done) {
+    var readableStream = getReadableStream(data, {
       objectMode: true
     });
 
     readableStream
-      .pipe(pick('age'))
+      .pipe(pluck(true))
       .on('error', function (err) {
         expect(err).to.be.an.instanceof(TypeError);
-        expect(err.message).to.match(/^Expected object, got string$/);
-
-        done();
-      })
-      .on('end', function () {
-        throw new Error('end should not be called');
-      })
-      .resume();
-  });
-
-  it('emits an error for a non-object on a Duplex stream', function (done) {
-    var duplexStream = getDuplexStream(data.concat([true]), {
-      objectMode: true
-    });
-
-    duplexStream
-      .pipe(pick('age'))
-      .on('error', function (err) {
-        expect(err).to.be.an.instanceof(TypeError);
-        expect(err.message).to.match(/^Expected object, got boolean$/);
+        expect(err.message).to.equal('Expected `property` to be a string or a number.');
 
         done();
       })
@@ -93,11 +70,11 @@ describe('[pick]', function () {
     }], {
       objectMode: true
     });
-    var expected = [{ a: { b: ['c', 'd'] } }, { a: { b: { c: ['d'] } } }];
+    var expected = [['c', 'd'], { c: ['d'] }];
     var actual = [];
 
     readableStream
-      .pipe(pick('a.b'))
+      .pipe(pluck('a.b'))
       .on('error', done)
       .on('data', function (chunk) {
         actual.push(chunk);

@@ -27,7 +27,7 @@ describe('[parse]', function () {
 
   runBasicStreamTests(data, data, runTest);
 
-  it('returns an error for invalid JSON on a Readable stream', function (done) {
+  it('emits an error for invalid JSON on a Readable stream', function (done) {
     var readableStream = getReadableStream(data.concat(['{"non":"json}']));
 
     readableStream
@@ -44,7 +44,7 @@ describe('[parse]', function () {
       .resume();
   });
 
-  it('returns an error for invalid JSON on a Duplex stream', function (done) {
+  it('emits an error for invalid JSON on a Duplex stream', function (done) {
     var duplexStream = getDuplexStream(data.concat(['{"non":"json}']));
 
     duplexStream

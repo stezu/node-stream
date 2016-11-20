@@ -19,6 +19,7 @@ describe('[index]', function () {
         'intersperse',
         'where',
         'sort',
+        'pluck',
         'first',
         'forEach',
         'wait'
@@ -64,6 +65,9 @@ describe('[index]', function () {
       .and.to.have.lengthOf(1);
 
     expect(index.sort).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.pluck).to.be.a('function')
       .and.to.have.lengthOf(1);
 
     expect(index.first).to.be.a('function')
