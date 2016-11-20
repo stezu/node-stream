@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-// var getReadableStream = require('../_utilities/getReadableStream.js');
+var getReadableStream = require('../_utilities/getReadableStream.js');
 var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
 var where = require('../../').where;
 
@@ -42,4 +42,23 @@ describe('[where]', function () {
   }
 
   runBasicStreamTests(null, data, runTest);
+
+  it('emits an error if the passed in argument is not an object', function (done) {
+    var readableStream = getReadableStream(data, {
+      objectMode: true
+    });
+
+    readableStream
+      .pipe(where('age'))
+      .on('error', function (err) {
+        expect(err).to.be.an.instanceof(TypeError);
+        expect(err.message).to.equal('Expected `query` to be an object.');
+
+        done();
+      })
+      .on('end', function () {
+        throw new Error('end should not be called');
+      })
+      .resume();
+  });
 });

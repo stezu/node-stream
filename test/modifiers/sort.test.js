@@ -47,22 +47,22 @@ describe('[sort]', function () {
       });
   });
 
-  it('ignores the passed in argument if it is not a function', function (done) {
+  it('emits an error if the passed in argument is not a function', function (done) {
     var readableStream = getReadableStream(data, {
       objectMode: true
     });
-    var expected = [10, 12, 16, 30, 5, 9];
-    var actual = [];
 
     readableStream
       .pipe(sort('banana'))
-      .on('error', done)
-      .on('data', function (chunk) {
-        actual.push(chunk);
+      .on('error', function (err) {
+        expect(err).to.be.an.instanceof(TypeError);
+        expect(err.message).to.equal('Expected `compareFunction` to be a function.');
+
+        done();
       })
       .on('end', function () {
-        expect(actual).to.deep.equal(expected);
-        done();
-      });
+        throw new Error('end should not be called');
+      })
+      .resume();
   });
 });
