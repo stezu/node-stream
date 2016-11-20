@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#intersperse">intersperse</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pick">pick</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li><li><a href="global.html#where">where</a></li></ul>
 </nav>
 
 <div id="main">
@@ -299,6 +299,172 @@ objStream
 
     return next(null, false);
   }));</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="intersperse"><span class="type-signature"></span>intersperse<span class="signature">(value)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new stream with the `value` emitted between every item in the source
+stream.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Value that should be emitted between every existing item.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.3.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_intersperse.js.html">modifiers/intersperse.js</a>, <a href="modifiers_intersperse.js.html#line22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Transform stream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Log some values to the console with new lines interspersed
+shoppingList // => ['banana', 'apple', 'orange']
+  .pipe(nodeStream.intersperse('\n'))
+  .pipe(process.stdout)
+  // => ['banana', '\n', 'apple', '\n', 'orange']</code></pre>
 
 
 
@@ -633,10 +799,10 @@ is parsed as JSON.
                 </td>
             
 
-            <td class="description last">If true, an error caught when parsing
-                                             JSON will be emitted the error on the stream.
-                                             If false, the unparseable item will be removed
-                                             from the stream without error.</td>
+            <td class="description last">If true, an error caught when parsing JSON
+                                             will be emitted on the stream. If false, the
+                                             unparseable item will be removed from the stream
+                                             without error.</td>
         </tr>
 
     
@@ -687,7 +853,7 @@ is parsed as JSON.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modifiers_parse.js.html">modifiers/parse.js</a>, <a href="modifiers_parse.js.html#line31">line 31</a>
+        <a href="modifiers_parse.js.html">modifiers/parse.js</a>, <a href="modifiers_parse.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -746,6 +912,184 @@ fs.createReadStream('example.log')
 fs.createReadStream('warandpeace.json')
   .pipe(nodeStream.wait())
   .pipe(nodeStream.parse());</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="pick"><span class="type-signature"></span>pick<span class="signature">(&hellip;properties)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new stream with the output composed of the picked properties from the source stream.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A collection of properties that will
+                                   be picked from the source object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.3.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_pick.js.html">modifiers/pick.js</a>, <a href="modifiers_pick.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Transform stream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// get some properties from each item in the stream
+// (e.g.: [{ name: 'pam', age: 24 }, { name: 'joe', age: 30 }])
+objStream
+  .pipe(nodeStream.pick('age'))
+  // => [{ age: 24 }, { age: 30 }]</code></pre>
 
 
 
@@ -876,7 +1220,7 @@ by <a href="https://github.com/substack">substack</a>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line67">line 67</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -921,6 +1265,175 @@ by <a href="https://github.com/substack">substack</a>.
 </dl>
 
     
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="pluck"><span class="type-signature"></span>pluck<span class="signature">(property)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new stream with the output composed of the plucked property
+from each item in the source stream.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>property</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A property name that will be plucked from
+                                     each item in the source stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.3.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_pluck.js.html">modifiers/pluck.js</a>, <a href="modifiers_pluck.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Transform stream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// get the value of the "age" property for every item in the stream
+objStream // => [{ name: 'pam', age: 24 }, { name: 'joe', age: 30 }])
+  .pipe(nodeStream.pluck('age'))
+  // => [24, 30]</code></pre>
 
 
 
@@ -1168,6 +1681,176 @@ objStream
 
     
 
+    <h4 class="name" id="sort"><span class="type-signature"></span>sort<span class="signature">(compareFunction)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new stream where all elements of the source stream have been
+sorted by the Array.sort method. Each value will be emitted individually.
+
+*Note:* This method will buffer all contents of the source stream before
+sending it. You should not use this method if your source stream is large
+as it could consume large amounts of memory.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>compareFunction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function that will be passed directly
+                                       to Array.sort for item comparison.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.3.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_sort.js.html">modifiers/sort.js</a>, <a href="modifiers_sort.js.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Transform stream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// sort a stream of numbers
+objStream // => [10, 3, 9, 2, 4, 1]
+  .pipe(nodeStream.sort())
+  // => [1, 2, 3, 4, 9, 10]</code></pre>
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="split"><span class="type-signature"></span>split<span class="signature">(matcher<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
 
     
@@ -1290,7 +1973,7 @@ wrapper of <a href="https://www.npmjs.com/package/split2">split2</a> by
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line50">line 50</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -1647,7 +2330,7 @@ objStream
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line88">line 88</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line98">line 98</a>
     </li></ul></dd>
     
 
@@ -1696,6 +2379,173 @@ objStream
 
 
         
+            
+
+    
+
+    <h4 class="name" id="where"><span class="type-signature"></span>where<span class="signature">(query)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    A convenient form of filter which performs a deep comparison between a given `query`
+and items in the source stream. Items that match the `query` are forwarded to the output
+stream.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>query</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object of properties to compare against all items in
+                           the source stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.3.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_where.js.html">modifiers/where.js</a>, <a href="modifiers_where.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Transform stream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Get all users from a given zip code
+users // => [{ name: 'Bill', zip: 90210 }, { name: 'Tracy', zip: 33193 }, { name: 'Paul', zip: 90210 }]
+  .pipe(nodeStream.where({ zip: 90210 }))
+  // => [{ name: 'Bill', zip: 90210 }, { name: 'Paul', zip: 90210 }]</code></pre>
+
+
+
+        
     
 
     
@@ -1713,7 +2563,7 @@ objStream
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Thu Nov 17 2016 21:36:10 GMT-0500 (EST) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sat Nov 19 2016 21:35:50 GMT-0500 (EST) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>modifiers/parse.js - Documentation</title>
+    <title>modifiers/where.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">modifiers/parse.js</h1>
+    <h1 class="page-title">modifiers/where.js</h1>
     
 
     
@@ -40,60 +40,42 @@
         <article>
             <pre class="prettyprint source linenums"><code>var _ = require('lodash');
 
-var map = require('./map.js');
+var filter = require('./filter.js');
 
 /**
- * Creates a new stream where every element in the source stream
- * is parsed as JSON.
+ * A convenient form of filter which performs a deep comparison between a given `query`
+ * and items in the source stream. Items that match the `query` are forwarded to the output
+ * stream.
  *
  * @static
- * @since    1.1.0
+ * @since    1.3.0
  * @category Modifiers
  *
- * @param    {Object}  [options]              - Options to use when parsing items in the stream.
- * @param    {Boolean} [options.error = true] - If true, an error caught when parsing JSON
- *                                              will be emitted on the stream. If false, the
- *                                              unparseable item will be removed from the stream
- *                                              without error.
- * @returns  {Stream}                         - Transform stream.
+ * @param    {Object} query - An object of properties to compare against all items in
+ *                            the source stream.
+ * @returns  {Stream}       - Transform stream.
  *
  * @example
  *
- * // parse a newline-separated JSON file
- * fs.createReadStream('example.log')
- *   .pipe(nodeStream.split())
- *   .pipe(nodeStream.parse());
- *
- *
- * // parse a large JSON file
- * fs.createReadStream('warandpeace.json')
- *   .pipe(nodeStream.wait())
- *   .pipe(nodeStream.parse());
+ * // Get all users from a given zip code
+ * users // => [{ name: 'Bill', zip: 90210 }, { name: 'Tracy', zip: 33193 }, { name: 'Paul', zip: 90210 }]
+ *   .pipe(nodeStream.where({ zip: 90210 }))
+ *   // => [{ name: 'Bill', zip: 90210 }, { name: 'Paul', zip: 90210 }]
  */
-function parse(options) {
-  var settings = _.extend({
-    error: true
-  }, options);
+function where(query) {
+  var matcher = _.matches(query);
 
-  return map(function (chunk, next) {
-    var parsed;
+  return filter(function (value, next) {
 
-    try {
-      parsed = JSON.parse(chunk);
-    } catch (e) {
-
-      if (settings.error === true) {
-        return next(e);
-      }
-
-      return next();
+    if (!_.isPlainObject(query)) {
+      return next(new TypeError('Expected `query` to be an object.'));
     }
 
-    return next(null, parsed);
+    return next(null, matcher(value));
   });
 }
 
-module.exports = parse;
+module.exports = where;
 </code></pre>
         </article>
     </section>

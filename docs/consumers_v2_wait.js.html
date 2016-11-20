@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#intersperse">intersperse</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pick">pick</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li><li><a href="global.html#where">where</a></li></ul>
 </nav>
 
 <div id="main">
@@ -41,6 +41,32 @@
             <pre class="prettyprint source linenums"><code>var through = require('through2');
 var pipeline = require('stream-combiner2');
 
+var parse = require('../../modifiers/parse.js');
+
+/**
+ * Create a through stream that simply calls a callback with the contents.
+ * Make sure to also pass the data along so the stream continues.
+ *
+ * @private
+ * @static
+ * @since    1.3.0
+ * @category Utilities
+ *
+ * @param    {Function}  onData - Callback with an error or parsed JSON.
+ * @returns  {Stream}           - Transform Stream
+ */
+function throughWithCallback(onData) {
+
+  return through.obj(function (chunk, enc, next) {
+
+    if (onData) {
+      onData(null, chunk);
+    }
+
+    next(null, chunk);
+  });
+}
+
 /**
  * Creates a new stream with a single value that's an array of every item
  * in the stream.
@@ -51,7 +77,11 @@ var pipeline = require('stream-combiner2');
  * @since    1.0.0
  * @category Consumers
  *
- * @returns  {Stream} - Transform stream.
+ * @param    {Function} callback - A function to be called with the contents
+ *                                 of the stream. This is a convenience to
+ *                                 avoid listening to the data/end events of
+ *                                 the stream.
+ * @returns  {Stream}            - Transform stream.
  *
  * @example
  *
@@ -60,19 +90,23 @@ var pipeline = require('stream-combiner2');
  *   .pipe(nodeStream.wait.obj());
  *   // => [{ 'name': 'paul' }, { 'name': 'lisa' }, { 'name': 'mary' }]
  */
-function waitObj() {
+function waitObj(callback) {
   var data = [];
 
-  return through.obj(
-    function transform(chunk, enc, next) {
-      data.push(chunk);
-      next();
-    },
-    function Flush(next) {
-      this.push(data);
+  return pipeline.obj(
+    through.obj(
+      function transform(chunk, enc, next) {
+        data.push(chunk);
 
-      next();
-    }
+        next();
+      },
+      function Flush(next) {
+        this.push(data);
+
+        next();
+      }
+    ),
+    throughWithCallback(callback)
   );
 }
 
@@ -85,24 +119,29 @@ function waitObj() {
  * @since    1.0.0
  * @category Consumers
  *
- * @returns  {Stream} - Transform stream.
+ * @param    {Function} callback - A function to be called with the contents
+ *                                 of the stream. This is a convenience to
+ *                                 avoid listening to the data/end events of
+ *                                 the stream.
+ * @returns  {Stream}            - Transform stream.
  *
  * @example
  *
- * // get the contents of a file
+ * // get the entire contents of a file
  * fs.createReadStream('example.txt')
  *   .pipe(nodeStream.wait());
  *   // => Buffer
  */
-function wait() {
+function wait(callback) {
 
   return pipeline.obj(
     waitObj(),
     through.obj(function (chunk, enc, next) {
       next(null, Buffer.concat(chunk.map(function (item) {
-        return new Buffer(item);
+        return new Buffer(item, enc);
       })));
-    })
+    }),
+    throughWithCallback(callback)
   );
 }
 
@@ -116,30 +155,25 @@ function wait() {
  * @since    1.0.0
  * @category Consumers
  *
- * @returns  {Stream} - Transform stream.
+ * @param    {Function} callback - A function to be called with the contents
+ *                                 of the stream. This is a convenience to
+ *                                 avoid listening to the data/end events of
+ *                                 the stream.
+ * @returns  {Stream}            - Transform stream.
  *
  * @example
  *
  * // parse the JSON contents of a file
- * fs.createReadStream('example.txt')
+ * fs.createReadStream('example.json')
  *   .pipe(nodeStream.wait.json());
  *   // => { 'nanananananananananana': 'batman' }
  */
-function waitJson() {
+function waitJson(callback) {
 
   return pipeline.obj(
     wait(),
-    through.obj(function (chunk, enc, next) {
-      var parsed;
-
-      try {
-        parsed = JSON.parse(chunk);
-      } catch (e) {
-        return next(e);
-      }
-
-      return next(null, parsed);
-    })
+    parse(),
+    throughWithCallback(callback)
   );
 }
 
@@ -159,7 +193,7 @@ module.exports = wait;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Thu Nov 17 2016 21:36:09 GMT-0500 (EST) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sat Nov 19 2016 21:35:50 GMT-0500 (EST) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

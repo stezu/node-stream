@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>modifiers/parse.js - Documentation</title>
+    <title>modifiers/sort.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">modifiers/parse.js</h1>
+    <h1 class="page-title">modifiers/sort.js</h1>
     
 
     
@@ -39,61 +39,80 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>var _ = require('lodash');
+var through = require('through2');
+var pipeline = require('stream-combiner2');
 
+var wait = require('../consumers/v2/wait.js');
 var map = require('./map.js');
 
 /**
- * Creates a new stream where every element in the source stream
- * is parsed as JSON.
+ * Creates a new stream where all elements of the source stream have been
+ * sorted by the Array.sort method. Each value will be emitted individually.
+ *
+ * *Note:* This method will buffer all contents of the source stream before
+ * sending it. You should not use this method if your source stream is large
+ * as it could consume large amounts of memory.
  *
  * @static
- * @since    1.1.0
+ * @since    1.3.0
  * @category Modifiers
  *
- * @param    {Object}  [options]              - Options to use when parsing items in the stream.
- * @param    {Boolean} [options.error = true] - If true, an error caught when parsing JSON
- *                                              will be emitted on the stream. If false, the
- *                                              unparseable item will be removed from the stream
- *                                              without error.
- * @returns  {Stream}                         - Transform stream.
+ * @param    {Function} compareFunction - A function that will be passed directly
+ *                                        to Array.sort for item comparison.
+ * @returns  {Stream}                   - Transform stream.
  *
  * @example
  *
- * // parse a newline-separated JSON file
- * fs.createReadStream('example.log')
- *   .pipe(nodeStream.split())
- *   .pipe(nodeStream.parse());
- *
- *
- * // parse a large JSON file
- * fs.createReadStream('warandpeace.json')
- *   .pipe(nodeStream.wait())
- *   .pipe(nodeStream.parse());
+ * // sort a stream of numbers
+ * objStream // => [10, 3, 9, 2, 4, 1]
+ *   .pipe(nodeStream.sort())
+ *   // => [1, 2, 3, 4, 9, 10]
  */
-function parse(options) {
-  var settings = _.extend({
-    error: true
-  }, options);
+function sort(compareFunction) {
 
-  return map(function (chunk, next) {
-    var parsed;
+  return pipeline.obj(
 
-    try {
-      parsed = JSON.parse(chunk);
-    } catch (e) {
+    // collect all items into an array
+    wait.obj(),
 
-      if (settings.error === true) {
-        return next(e);
+    // sort the array
+    map(function (chunk, next) {
+
+      // compareFunction can be null, undefined or a Function
+      if (!_.isNil(compareFunction) &amp;&amp; !_.isFunction(compareFunction)) {
+        return next(new TypeError('Expected `compareFunction` to be a function.'));
       }
 
-      return next();
-    }
+      return next(null, chunk.sort(compareFunction));
+    }),
 
-    return next(null, parsed);
-  });
+    // expand the array so all input items are re-emitted
+    through.obj(function Transform(chunk, enc, next) {
+      var self = this;
+      var len = chunk.length;
+
+      // recursively add array items to the stream asynchronously
+      (function emitNextItem(i) {
+
+        setImmediate(function () {
+          self.push(chunk[i]);
+
+          // keep pushing items to the stream if more items are available
+          if (i &lt; len - 1) {
+            emitNextItem(i + 1);
+
+            return;
+          }
+
+          // the array has been depleted
+          next();
+        });
+      }(0));
+    })
+  );
 }
 
-module.exports = parse;
+module.exports = sort;
 </code></pre>
         </article>
     </section>

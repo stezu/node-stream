@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#intersperse">intersperse</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pick">pick</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li><li><a href="global.html#where">where</a></li></ul>
 </nav>
 
 <div id="main">
@@ -90,7 +90,7 @@ contents of the stream.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="consumers_v2_wait.js.html">consumers/v2/wait.js</a>, <a href="consumers_v2_wait.js.html#line39">line 39</a>
+        <a href="consumers_v2_wait.js.html">consumers/v2/wait.js</a>, <a href="consumers_v2_wait.js.html#line73">line 73</a>
     </li></ul></dd>
     
 
@@ -105,7 +105,7 @@ contents of the stream.</div>
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>// get the contents of a file
+    <pre class="prettyprint"><code>// get the entire contents of a file
 fs.createReadStream('example.txt')
   .pipe(nodeStream.wait());
   // => Buffer</code></pre>
@@ -134,7 +134,7 @@ fs.createReadStream('example.txt')
 
     
 
-    <h4 class="name" id=".json"><span class="type-signature">(static) </span>json<span class="signature">()</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+    <h4 class="name" id=".json"><span class="type-signature">(static) </span>json<span class="signature">(callback)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
 
     
 
@@ -151,6 +151,58 @@ by JSON parsing the contents of the entire stream.
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to be called with the contents
+                                of the stream. This is a convenience to
+                                avoid listening to the data/end events of
+                                the stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -189,7 +241,7 @@ by JSON parsing the contents of the entire stream.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="consumers_v2_wait.js.html">consumers/v2/wait.js</a>, <a href="consumers_v2_wait.js.html#line69">line 69</a>
+        <a href="consumers_v2_wait.js.html">consumers/v2/wait.js</a>, <a href="consumers_v2_wait.js.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -239,7 +291,7 @@ by JSON parsing the contents of the entire stream.
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>// parse the JSON contents of a file
-fs.createReadStream('example.txt')
+fs.createReadStream('example.json')
   .pipe(nodeStream.wait.json());
   // => { 'nanananananananananana': 'batman' }</code></pre>
 
@@ -250,7 +302,7 @@ fs.createReadStream('example.txt')
 
     
 
-    <h4 class="name" id=".obj"><span class="type-signature">(static) </span>obj<span class="signature">()</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+    <h4 class="name" id=".obj"><span class="type-signature">(static) </span>obj<span class="signature">(callback)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
 
     
 
@@ -267,6 +319,58 @@ in the stream.
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to be called with the contents
+                                of the stream. This is a convenience to
+                                avoid listening to the data/end events of
+                                the stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -305,7 +409,7 @@ in the stream.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="consumers_v2_wait.js.html">consumers/v2/wait.js</a>, <a href="consumers_v2_wait.js.html#line4">line 4</a>
+        <a href="consumers_v2_wait.js.html">consumers/v2/wait.js</a>, <a href="consumers_v2_wait.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -379,7 +483,7 @@ objStream
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Thu Nov 17 2016 21:36:10 GMT-0500 (EST) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sat Nov 19 2016 21:35:50 GMT-0500 (EST) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
