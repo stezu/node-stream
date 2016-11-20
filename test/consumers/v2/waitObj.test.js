@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 
+var getReadableStream = require('../../_utilities/getReadableStream.js');
 var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
 var waitObj = require('../../../').wait.obj;
 
@@ -33,4 +34,44 @@ describe('[v2-waitObj]', function () {
   }
 
   runBasicStreamTests(data, objData, runTest);
+
+  it('optionally provides data to a callback', function (done) {
+    var stream = getReadableStream(objData, {
+      objectMode: true
+    });
+    var actual = {
+      callback: [],
+      event: []
+    };
+    var doneCount = 0;
+
+    function onDone() {
+      doneCount += 1;
+
+      if (doneCount >= 2) {
+        expect(actual.callback).to.have.lengthOf(1);
+        expect(actual.event).to.have.lengthOf(1);
+
+        // If they're both the same we have succeeded
+        expect(actual.callback).to.deep.equal(actual.event);
+
+        expect(actual.callback[0]).to.deep.equal(objData);
+
+        done();
+      }
+    }
+
+    stream
+      .pipe(waitObj(function (err, chunk) {
+        expect(err).to.equal(null);
+        actual.callback.push(chunk);
+
+        onDone();
+      }))
+      .on('data', function (chunk) {
+        actual.event.push(chunk);
+      })
+      .on('error', done)
+      .on('end', onDone);
+  });
 });
