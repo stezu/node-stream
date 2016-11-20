@@ -20,6 +20,10 @@ describe('[index]', function () {
         'where',
         'sort',
         'pluck',
+        'find',
+        'findWhere',
+        'drop',
+        'take',
         'first',
         'forEach',
         'wait'
@@ -68,6 +72,18 @@ describe('[index]', function () {
       .and.to.have.lengthOf(1);
 
     expect(index.pluck).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.find).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.findWhere).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.drop).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.take).to.be.a('function')
       .and.to.have.lengthOf(1);
 
     expect(index.first).to.be.a('function')
