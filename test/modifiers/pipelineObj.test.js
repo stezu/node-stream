@@ -64,14 +64,14 @@ describe('[pipelineObj]', function () {
       });
   });
 
-  it('handles errors emitted on a sub-stream', function () {
+  it('handles errors emitted on the first stream', function (done) {
     var readableStream = getReadableStream([1, 2, 3, 4, 5], {
       objectMode: true
     });
     var returnedError = new Error('error handling test');
     var streams = getTransformStreams();
 
-    streams[3] = through(function (chunk, enc, next) {
+    streams[0] = through.obj(function (chunk, enc, next) {
       next(returnedError);
     });
 
@@ -79,6 +79,56 @@ describe('[pipelineObj]', function () {
       .pipe(pipelineObj.apply(null, streams))
       .on('error', function (err) {
         expect(err).to.equal(returnedError);
+
+        done();
+      })
+      .on('end', function () {
+        throw new Error('end should not have been called');
+      })
+      .resume();
+  });
+
+  it('handles errors emitted on the last stream', function (done) {
+    var readableStream = getReadableStream([1, 2, 3, 4, 5], {
+      objectMode: true
+    });
+    var returnedError = new Error('error handling test');
+    var streams = getTransformStreams();
+
+    streams[streams.length - 1] = through.obj(function (chunk, enc, next) {
+      next(returnedError);
+    });
+
+    readableStream
+      .pipe(pipelineObj.apply(null, streams))
+      .on('error', function (err) {
+        expect(err).to.equal(returnedError);
+
+        done();
+      })
+      .on('end', function () {
+        throw new Error('end should not have been called');
+      })
+      .resume();
+  });
+
+  it('handles errors emitted on the middle stream', function (done) {
+    var readableStream = getReadableStream([1, 2, 3, 4, 5], {
+      objectMode: true
+    });
+    var returnedError = new Error('error handling test');
+    var streams = getTransformStreams();
+
+    streams[1] = through.obj(function (chunk, enc, next) {
+      next(returnedError);
+    });
+
+    readableStream
+      .pipe(pipelineObj.apply(null, streams))
+      .on('error', function (err) {
+        expect(err).to.equal(returnedError);
+
+        done();
       })
       .on('end', function () {
         throw new Error('end should not have been called');
