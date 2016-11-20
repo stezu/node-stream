@@ -17,6 +17,7 @@ describe('[index]', function () {
         'stringify',
         'pick',
         'intersperse',
+        'where',
         'first',
         'forEach',
         'wait'
@@ -56,6 +57,9 @@ describe('[index]', function () {
       .and.to.have.lengthOf(0);
 
     expect(index.intersperse).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.where).to.be.a('function')
       .and.to.have.lengthOf(1);
 
     expect(index.first).to.be.a('function')
