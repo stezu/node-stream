@@ -108,4 +108,45 @@ describe('[pick]', function () {
         done();
       });
   });
+
+  it('can pick multiple properties at a time', function (done) {
+    var readableStream = getReadableStream([{
+      name: 'Pam',
+      age: 24,
+      location: 'Florida'
+    }, {
+      name: 'Bill',
+      age: 26,
+      location: 'Alabama'
+    }, {
+      name: 'Jessica',
+      age: 32,
+      location: 'California'
+    }], {
+      objectMode: true
+    });
+    var expected = [{
+      name: 'Pam',
+      age: 24
+    }, {
+      name: 'Bill',
+      age: 26
+    }, {
+      name: 'Jessica',
+      age: 32
+    }];
+    var actual = [];
+
+    readableStream
+      .pipe(pick('name', 'age'))
+      .on('error', done)
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
 });

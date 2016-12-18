@@ -8,10 +8,10 @@ var filter = require('../../').filter;
 describe('[filter]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', '', 'item4'];
   var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
-  var expected = ['item1', 'item2', 'item3', 'item4'];
-  var objExpected = [true, [1, 2, 3], 'string', '11', 95.23, { obj: true }, _.noop];
 
   function runTest(stream, objectMode, done) {
+    var expected = ['item1', 'item2', 'item3', 'item4'];
+    var objExpected = [true, [1, 2, 3], 'string', '11', 95.23, { obj: true }, _.noop];
     var actual = [];
 
     stream
@@ -100,6 +100,54 @@ describe('[filter]', function () {
       .on('error', done)
       .on('end', function () {
         expect(actual).to.deep.equal([2, 4, 6, 8]);
+
+        done();
+      });
+  });
+
+  it('works with a sync condition', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = ['mary', 'had', 'little', 'lamb'];
+    var actual = [];
+
+    readableStream
+      .pipe(filter(function (chunk) {
+        return chunk.length > 2;
+      }))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        expect(chunk).to.be.an.instanceof(Buffer);
+
+        actual.push(chunk.toString());
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
+
+  it('works with a sync condition on an object stream', function (done) {
+    var readableStream = getReadableStream([true, {}, [], 4, 'stringything'], {
+      objectMode: true
+    });
+    var expected = [{}, []];
+    var actual = [];
+
+    readableStream
+      .pipe(filter(function (chunk) {
+        return typeof chunk === 'object';
+      }))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
 
         done();
       });

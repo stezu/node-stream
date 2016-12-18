@@ -8,10 +8,10 @@ var find = require('../../').find;
 describe('[find]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', '', 'item4'];
   var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
-  var expected = ['item1'];
-  var objExpected = [true];
 
   function runTest(stream, objectMode, done) {
+    var expected = ['item1'];
+    var objExpected = [true];
     var actual = [];
 
     stream
@@ -58,6 +58,7 @@ describe('[find]', function () {
 
   it('uses truthiness to determine if the item should stay or go', function (done) {
     var testData = [1, 2, 3, 4, 5, 6, 7, 8];
+    var expected = [2];
     var actual = [];
     var readableStream = getReadableStream(testData, {
       objectMode: true
@@ -74,7 +75,55 @@ describe('[find]', function () {
       })
       .on('error', done)
       .on('end', function () {
-        expect(actual).to.deep.equal([2]);
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
+
+  it('works with a sync condition', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = ['little'];
+    var actual = [];
+
+    readableStream
+      .pipe(find(function (chunk) {
+        return chunk.length > 4;
+      }))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        expect(chunk).to.be.an.instanceof(Buffer);
+
+        actual.push(chunk.toString());
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
+
+  it('works with a sync condition on an object stream', function (done) {
+    var readableStream = getReadableStream([true, {}, [], 4, 'stringything'], {
+      objectMode: true
+    });
+    var expected = [{}];
+    var actual = [];
+
+    readableStream
+      .pipe(find(function (chunk) {
+        return typeof chunk === 'object';
+      }))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
 
         done();
       });
