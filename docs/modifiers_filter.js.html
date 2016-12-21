@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#intersperse">intersperse</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pick">pick</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li><li><a href="global.html#where">where</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#drop">drop</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findWhere">findWhere</a></li><li><a href="global.html#intersperse">intersperse</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pick">pick</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#take">take</a></li><li><a href="global.html#through">through</a></li><li><a href="global.html#where">where</a></li></ul>
 </nav>
 
 <div id="main">
@@ -40,56 +40,76 @@
         <article>
             <pre class="prettyprint source linenums"><code>var through = require('through2');
 
+var makeAsync = require('../_utils/makeAsync.js');
+
 /**
  * Creates a new stream with all elements that pass the test implemented by the
- * provided function.
- *
- * Applies the function `condition` to each item in the stream. The `condition`
- * is called with two arguments:
- * - The stream `item` and
- * - A `callback`.
- * If the `condition` passes an error to its `callback`, the stream emits an "error" event.
+ * provided function. Similar to Array.filter... but on a stream.
  *
  * @static
  * @since    1.0.0
  * @category Modifiers
  *
- * @param    {Function} condition - Function that filters elements on the stream. The
- *                                  function is passed a `callback(err, keep)` which
- *                                  must be called once it's completed.
- * @returns  {Stream}             - Transform stream.
+ * @param    {Function} condition - Function that filters elements on the stream.
+ *                                  Takes one argument, the value of the item at
+ *                                  this position in the stream.
+ * @returns  {Stream}             - A transform stream with the filtered values.
  *
  * @example
  *
- * // remove random chunks of data because data loss is fun
- * fs.createReadStream('example.txt')
- *   .pipe(nodeStream.filter((value, next) => {
- *     const rnd = Math.random() > 0.6;
- *     next(null, rnd);
- *   }))
- *   // => please don't ever do this
+ * // If you wanted to create a new stream whose values all passed a certain criteria,
+ * // you could do something like the following. Assuming "test-scores.txt" is a file
+ * // containing the following data:
+ * // Sally...90
+ * // Tommy...94
+ * // Jimmy...12
+ * // Sarah...82
+ * // Jonny...64
  *
+ * // We can write a function that returns the students who are failing:
+ * fs.createReadStream('test-scores.txt')
+ *   .pipe(nodeStream.split()) // split on new lines
+ *   .pipe(nodeStream.filter(value => {
+ *     const [student, testScore] = value.toString().split('...');
  *
- * // return a filtered object stream
- * objStream
- *   .pipe(nodeStream.filter((value, next) => {
- *
- *     if (value.author === 'stezu') {
- *       return next(null, true);
- *     }
- *
- *     if (typeof value.author === 'undefined') {
- *       return next(new Error('unknown data')); // emit an error on the stream
- *     }
- *
- *     return next(null, false);
+ *     return Number(testScore) &lt; 70;
  *   }));
+ *
+ * // The resulting stream would have the following data:
+ * // Jimmy...12
+ * // Jonny...64
+ *
+ *
+ * // It is also possible to filter a stream asynchronously for more complex actions.
+ * // Note: The signature of the function that you pass as the callback is important. It
+ * // MUST have *two* parameters.
+ *
+ * // Assuming "filenames.txt" is a newline-separated list of file names, you could
+ * // create a new stream with only valid names by doing something like the following:
+ * fs.createReadStream('filenames.txt')
+ *   .pipe(nodeStream.split()) // split on new lines
+ *   .pipe(nodeStream.filter((value, next) => {
+ *     fs.stat(value, (err, stats) => {
+ *
+ *       // Error the stream since this file is not valid
+ *       if (err) {
+ *         return next(err);
+ *       }
+ *
+ *       next(null, stats.isFile());
+ *     });
+ *   }));
+ *
+ * // The resulting stream will contain the filenames that passed the test. Note: If `next`
+ * // is called with an error as the first argument, the stream will error. This is typical
+ * // behavior for node callbacks.
  */
 function filter(condition) {
+  var cb = makeAsync(condition, 2);
 
   return through.obj(function (chunk, enc, next) {
 
-    condition(chunk, function (err, keep) {
+    cb(chunk, function (err, keep) {
 
       if (err) {
         return next(err);
@@ -117,7 +137,7 @@ module.exports = filter;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Nov 20 2016 13:31:48 GMT-0500 (EST) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Dec 21 2016 18:55:52 GMT-0500 (EST) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

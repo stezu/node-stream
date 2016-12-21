@@ -8,10 +8,10 @@ var reduce = require('../../').reduce;
 describe('[reduce]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
   var objData = [true, false, [1, 2, 3], 'string', '11', 95.23, { obj: true }, _.noop];
-  var expected = ['4'];
-  var objExpected = [8];
 
   function runTest(stream, objectMode, done) {
+    var expected = ['4'];
+    var objExpected = [8];
     var actual = [];
 
     stream
@@ -57,5 +57,118 @@ describe('[reduce]', function () {
         throw new Error('end should not be called');
       })
       .resume();
+  });
+
+  it('works with a sync reducer', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = 'maryhadalittlelamb';
+    var actual = '';
+
+    readableStream
+      .pipe(reduce(function (memo, chunk) {
+        return memo + chunk;
+      }, ''))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        expect(chunk).to.be.a('string');
+
+        actual += chunk;
+      })
+      .on('end', function () {
+        expect(actual).to.equal(expected);
+
+        done();
+      });
+  });
+
+  it('works with a sync reducer on an object stream', function (done) {
+    var readableStream = getReadableStream([1, 5, 11, 4, 12], {
+      objectMode: true
+    });
+    var expected = 33;
+    var actual = 0;
+
+    readableStream
+      .pipe(reduce(function (memo, chunk) {
+        return memo + chunk;
+      }, 0))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        expect(chunk).to.be.a('number');
+
+        actual += chunk;
+      })
+      .on('end', function () {
+        expect(actual).to.equal(expected);
+
+        done();
+      });
+  });
+
+  it('works as a sync reducer when the function has 0 arguments', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = 1;
+    var actual = null;
+
+    readableStream
+      .pipe(reduce(function () {
+        return 1;
+      }, 0))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+
+        if (actual === expected) {
+          throw new Error('data should only be called once');
+        }
+
+        expect(chunk).to.be.a('number');
+
+        actual = chunk;
+      })
+      .on('end', function () {
+        expect(actual).to.equal(expected);
+
+        done();
+      });
+  });
+
+  it('works as an async reducer when the function has more than the expected arguments', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = 'maryhadalittlelamb';
+    var actual = '';
+
+    readableStream
+      .pipe(reduce(function (memo, chunk, next, apple) {
+
+        if (typeof apple !== 'undefined') {
+          throw new Error('this test was expecting only three valid arguments');
+        }
+
+        next(null, memo + chunk);
+      }, ''))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+
+        if (actual === expected) {
+          throw new Error('data should only be called once');
+        }
+
+        expect(chunk).to.be.a('string');
+
+        actual = chunk;
+      })
+      .on('end', function () {
+        expect(actual).to.equal(expected);
+
+        done();
+      });
   });
 });

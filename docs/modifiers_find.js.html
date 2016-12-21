@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>modifiers/map.js - Documentation</title>
+    <title>modifiers/find.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">modifiers/map.js</h1>
+    <h1 class="page-title">modifiers/find.js</h1>
     
 
     
@@ -38,59 +38,81 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>var through = require('through2');
-
-var makeAsync = require('../_utils/makeAsync.js');
+            <pre class="prettyprint source linenums"><code>var pipeline = require('./pipeline.js');
+var filter = require('./filter.js');
+var take = require('./take.js');
 
 /**
- * Creates a new stream with the results of calling the provided function on
- * every item in the stream. Similar to Array.map... but on a stream.
+ * Creates a new Stream with the first element from the source stream
+ * where `condition` is true. A convenient form of `filter`.
  *
  * @static
- * @since    1.0.0
+ * @since    1.4.0
  * @category Modifiers
  *
- * @param    {Function} transform - Function that returns a new element on the
- *                                  stream. Takes one argument, the value of the
- *                                  item at this position in the stream.
- * @returns  {Stream}             - A transform stream with the modified values.
+ * @param    {Function} condition - Function that filters elements on the stream.
+ *                                  Takes one argument, the value of the item at
+ *                                  this position in the stream.
+ * @returns  {Stream}             - A transform stream with the first value that
+ *                                  passed the test.
  *
  * @example
  *
- * // For a simple find/replace, you could do something like the following. Assuming
- * // "example.txt" is a file with the text "the text has periods. because, english.",
- * // you could replace each period with a comma like so:
- * fs.createReadStream('example.txt')
- *   .pipe(nodeStream.map(value => value.toString().replace('.', ',')));
+ * // If you wanted to create a new stream with the first value that passed a certain
+ * // criteria, you could do something like the following. Assuming "test-scores.txt"
+ * // is a file containing the following data:
+ * // Sally...90
+ * // Tommy...94
+ * // Jimmy...12
+ * // Sarah...82
+ * // Jonny...64
  *
- * // The resulting stream will have the value "the text has periods, because, english,".
+ * // We can write a function that returns the first failing student:
+ * fs.createReadStream('test-scores.txt')
+ *   .pipe(nodeStream.split()) // split on new lines
+ *   .pipe(nodeStream.find(value => {
+ *     const [student, testScore] = value.toString().split('...');
+ *
+ *     return Number(testScore) &lt; 70;
+ *   }));
+ *
+ * // The resulting stream would have the following data:
+ * // Jimmy...12
  *
  *
- * // It is also possible to transform a stream asynchronously for more complex actions.
+ * // It is also possible to filter a stream asynchronously for more complex actions.
  * // Note: The signature of the function that you pass as the callback is important. It
  * // MUST have *two* parameters.
  *
  * // Assuming "filenames.txt" is a newline-separated list of file names, you could
- * // create a new stream with their contents by doing something like the following:
+ * // create a new stream with the first valid filename by doing something like the following:
  * fs.createReadStream('filenames.txt')
  *   .pipe(nodeStream.split()) // split on new lines
- *   .pipe(nodeStream.map((value, next) => {
- *     fs.readFile(value, next);
+ *   .pipe(nodeStream.find((value, next) => {
+ *     fs.stat(value, (err, stats) => {
+ *
+ *       // Error the stream since this file is not valid
+ *       if (err) {
+ *         return next(err);
+ *       }
+ *
+ *       next(null, stats.isFile());
+ *     });
  *   }));
  *
- * // The resulting stream will contain the text of each file. Note: If `next` is called
- * // with an error as the first argument, the stream will error. This is typical behavior
- * // for node callbacks.
+ * // The resulting stream will contain the first filename that passed the test. Note: If `next`
+ * // is called with an error as the first argument, the stream will error. This is typical
+ * // behavior for node callbacks.
  */
-function map(transform) {
-  var cb = makeAsync(transform, 2);
+function find(condition) {
 
-  return through.obj(function (value, enc, next) {
-    cb(value, next);
-  });
+  return pipeline.obj(
+    filter(condition),
+    take(1)
+  );
 }
 
-module.exports = map;
+module.exports = find;
 </code></pre>
         </article>
     </section>
