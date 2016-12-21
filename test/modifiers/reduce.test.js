@@ -108,4 +108,33 @@ describe('[reduce]', function () {
         done();
       });
   });
+
+  it('works as a sync reducer when the function has 0 arguments', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = 1;
+    var actual = null;
+
+    readableStream
+      .pipe(reduce(function () {
+        return 1;
+      }, 0))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+
+        if (actual === expected) {
+          throw new Error('data should only be called once');
+        }
+
+        expect(chunk).to.be.a('number');
+
+        actual = chunk;
+      })
+      .on('end', function () {
+        expect(actual).to.equal(expected);
+
+        done();
+      });
+  });
 });

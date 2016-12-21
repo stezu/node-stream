@@ -152,4 +152,31 @@ describe('[filter]', function () {
         done();
       });
   });
+
+  it('works as a sync condition when the function has 0 arguments', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = ['a', 'little', 'lamb'];
+    var actual = [];
+    var i = 0;
+
+    readableStream
+      .pipe(filter(function () {
+        i += 1;
+
+        return i > 2;
+      }))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        expect(chunk).to.be.an.instanceof(Buffer);
+
+        actual.push(chunk.toString());
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
 });

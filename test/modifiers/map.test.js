@@ -140,4 +140,28 @@ describe('[map]', function () {
         done();
       });
   });
+
+  it('works as a sync transformer when the function has 0 arguments', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = ['a', 'a', 'a', 'a', 'a'];
+    var actual = [];
+
+    readableStream
+      .pipe(map(function () {
+        return 'a';
+      }))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        expect(chunk).to.be.a('string');
+
+        actual.push(chunk);
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
 });
