@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#filter">filter</a></li><li><a href="global.html#intersperse">intersperse</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pick">pick</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#through">through</a></li><li><a href="global.html#where">where</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wait.html">wait</a><ul class='methods'><li data-type='method'><a href="wait.html#.json">json</a></li><li data-type='method'><a href="wait.html#.obj">obj</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#drop">drop</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findWhere">findWhere</a></li><li><a href="global.html#intersperse">intersperse</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#parse">parse</a></li><li><a href="global.html#pick">pick</a></li><li><a href="global.html#pipeline">pipeline</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#split">split</a></li><li><a href="global.html#stringify">stringify</a></li><li><a href="global.html#take">take</a></li><li><a href="global.html#through">through</a></li><li><a href="global.html#where">where</a></li></ul>
 </nav>
 
 <div id="main">
@@ -115,6 +115,171 @@
 
     
 
+    <h4 class="name" id="drop"><span class="type-signature"></span>drop<span class="signature">(n)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new Stream without the first `n` values from the source stream.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>n</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Number of items to drop from the source stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.4.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_drop.js.html">modifiers/drop.js</a>, <a href="modifiers_drop.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Transform stream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// drop the first 3 items from a stream
+inStream // => ['b', 'a', 'n', 'a', 'n', 'a']
+  .pipe(nodeStream.drop(3))
+  .pipe(process.stdout)
+  // => ['a', 'n', 'a']</code></pre>
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="filter"><span class="type-signature"></span>filter<span class="signature">(condition)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
 
     
@@ -123,13 +288,7 @@
 
 <div class="description">
     Creates a new stream with all elements that pass the test implemented by the
-provided function.
-
-Applies the function `condition` to each item in the stream. The `condition`
-is called with two arguments:
-- The stream `item` and
-- A `callback`.
-If the `condition` passes an error to its `callback`, the stream emits an "error" event.
+provided function. Similar to Array.filter... but on a stream.
 </div>
 
 
@@ -181,9 +340,9 @@ If the `condition` passes an error to its `callback`, the stream emits an "error
 
             
 
-            <td class="description last">Function that filters elements on the stream. The
-                                 function is passed a `callback(err, keep)` which
-                                 must be called once it's completed.</td>
+            <td class="description last">Function that filters elements on the stream.
+                                 Takes one argument, the value of the item at
+                                 this position in the stream.</td>
         </tr>
 
     
@@ -227,7 +386,427 @@ If the `condition` passes an error to its `callback`, the stream emits an "error
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modifiers_filter.js.html">modifiers/filter.js</a>, <a href="modifiers_filter.js.html#line48">line 48</a>
+        <a href="modifiers_filter.js.html">modifiers/filter.js</a>, <a href="modifiers_filter.js.html#line67">line 67</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - A transform stream with the filtered values.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// If you wanted to create a new stream whose values all passed a certain criteria,
+// you could do something like the following. Assuming "test-scores.txt" is a file
+// containing the following data:
+// Sally...90
+// Tommy...94
+// Jimmy...12
+// Sarah...82
+// Jonny...64
+
+// We can write a function that returns the students who are failing:
+fs.createReadStream('test-scores.txt')
+  .pipe(nodeStream.split()) // split on new lines
+  .pipe(nodeStream.filter(value => {
+    const [student, testScore] = value.toString().split('...');
+
+    return Number(testScore) &lt; 70;
+  }));
+
+// The resulting stream would have the following data:
+// Jimmy...12
+// Jonny...64
+
+
+// It is also possible to filter a stream asynchronously for more complex actions.
+// Note: The signature of the function that you pass as the callback is important. It
+// MUST have *two* parameters.
+
+// Assuming "filenames.txt" is a newline-separated list of file names, you could
+// create a new stream with only valid names by doing something like the following:
+fs.createReadStream('filenames.txt')
+  .pipe(nodeStream.split()) // split on new lines
+  .pipe(nodeStream.filter((value, next) => {
+    fs.stat(value, (err, stats) => {
+
+      // Error the stream since this file is not valid
+      if (err) {
+        return next(err);
+      }
+
+      next(null, stats.isFile());
+    });
+  }));
+
+// The resulting stream will contain the filenames that passed the test. Note: If `next`
+// is called with an error as the first argument, the stream will error. This is typical
+// behavior for node callbacks.</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="find"><span class="type-signature"></span>find<span class="signature">(condition)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new Stream with the first element from the source stream
+where `condition` is true. A convenient form of `filter`.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>condition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function that filters elements on the stream.
+                                 Takes one argument, the value of the item at
+                                 this position in the stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.4.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_find.js.html">modifiers/find.js</a>, <a href="modifiers_find.js.html#line67">line 67</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - A transform stream with the first value that
+                                 passed the test.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// If you wanted to create a new stream with the first value that passed a certain
+// criteria, you could do something like the following. Assuming "test-scores.txt"
+// is a file containing the following data:
+// Sally...90
+// Tommy...94
+// Jimmy...12
+// Sarah...82
+// Jonny...64
+
+// We can write a function that returns the first failing student:
+fs.createReadStream('test-scores.txt')
+  .pipe(nodeStream.split()) // split on new lines
+  .pipe(nodeStream.find(value => {
+    const [student, testScore] = value.toString().split('...');
+
+    return Number(testScore) &lt; 70;
+  }));
+
+// The resulting stream would have the following data:
+// Jimmy...12
+
+
+// It is also possible to filter a stream asynchronously for more complex actions.
+// Note: The signature of the function that you pass as the callback is important. It
+// MUST have *two* parameters.
+
+// Assuming "filenames.txt" is a newline-separated list of file names, you could
+// create a new stream with the first valid filename by doing something like the following:
+fs.createReadStream('filenames.txt')
+  .pipe(nodeStream.split()) // split on new lines
+  .pipe(nodeStream.find((value, next) => {
+    fs.stat(value, (err, stats) => {
+
+      // Error the stream since this file is not valid
+      if (err) {
+        return next(err);
+      }
+
+      next(null, stats.isFile());
+    });
+  }));
+
+// The resulting stream will contain the first filename that passed the test. Note: If `next`
+// is called with an error as the first argument, the stream will error. This is typical
+// behavior for node callbacks.</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="findWhere"><span class="type-signature"></span>findWhere<span class="signature">(query)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new Stream with the first element from the source stream
+that matches the `query`. A convenient form of `where`. It performs
+a deep comparison between a given `query` and items in the source
+stream. Items that match the `query` are forwarded to the output
+stream.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>query</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object of properties to compare against all items in
+                           the source stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.4.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_findWhere.js.html">modifiers/findWhere.js</a>, <a href="modifiers_findWhere.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -276,29 +855,10 @@ If the `condition` passes an error to its `callback`, the stream emits an "error
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>// remove random chunks of data because data loss is fun
-fs.createReadStream('example.txt')
-  .pipe(nodeStream.filter((value, next) => {
-    const rnd = Math.random() > 0.6;
-    next(null, rnd);
-  }))
-  // => please don't ever do this
-
-
-// return a filtered object stream
-objStream
-  .pipe(nodeStream.filter((value, next) => {
-
-    if (value.author === 'stezu') {
-      return next(null, true);
-    }
-
-    if (typeof value.author === 'undefined') {
-      return next(new Error('unknown data')); // emit an error on the stream
-    }
-
-    return next(null, false);
-  }));</code></pre>
+    <pre class="prettyprint"><code>// find the first element that matches the condition
+objStream // => [{ name: 'Bob', age: 30 }, { name: 'Lisa', age: 30 }]
+  .pipe(nodeStream.findWhere({ age: 30 })
+  // => [{ name: 'Bob', age: 30 }]</code></pre>
 
 
 
@@ -481,13 +1041,7 @@ shoppingList // => ['banana', 'apple', 'orange']
 
 <div class="description">
     Creates a new stream with the results of calling the provided function on
-every element in the stream.
-
-Applies the function `transform` to each item in the stream. The `transform`
-is called with two arguments:
-- The stream `item` and
-- A `callback`.
-If the `transform` passes an error to its `callback`, the stream emits an "error" event.
+every item in the stream. Similar to Array.map... but on a stream.
 </div>
 
 
@@ -539,9 +1093,9 @@ If the `transform` passes an error to its `callback`, the stream emits an "error
 
             
 
-            <td class="description last">Function that produces a new element on the stream.
-                                 The function is passed a `callback(err, value)` which
-                                 must be called once it's completed.</td>
+            <td class="description last">Function that returns a new element on the
+                                 stream. Takes one argument, the value of the
+                                 item at this position in the stream.</td>
         </tr>
 
     
@@ -585,7 +1139,7 @@ If the `transform` passes an error to its `callback`, the stream emits an "error
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modifiers_map.js.html">modifiers/map.js</a>, <a href="modifiers_map.js.html#line48">line 48</a>
+        <a href="modifiers_map.js.html">modifiers/map.js</a>, <a href="modifiers_map.js.html#line45">line 45</a>
     </li></ul></dd>
     
 
@@ -612,7 +1166,7 @@ If the `transform` passes an error to its `callback`, the stream emits an "error
 
         
 <div class="param-desc">
-    - Transform stream.
+    - A transform stream with the modified values.
 </div>
 
 
@@ -634,29 +1188,30 @@ If the `transform` passes an error to its `callback`, the stream emits an "error
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>// replace every period with a comma to create a run-on sentence
-fs.createReadStream('example.txt') // the text has periods. because, english.
+    <pre class="prettyprint"><code>// For a simple find/replace, you could do something like the following. Assuming
+// "example.txt" is a file with the text "the text has periods. because, english.",
+// you could replace each period with a comma like so:
+fs.createReadStream('example.txt')
+  .pipe(nodeStream.map(value => value.toString().replace('.', ',')));
+
+// The resulting stream will have the value "the text has periods, because, english,".
+
+
+// It is also possible to transform a stream asynchronously for more complex actions.
+// Note: The signature of the function that you pass as the callback is important. It
+// MUST have *two* parameters.
+
+// Assuming "filenames.txt" is a newline-separated list of file names, you could
+// create a new stream with their contents by doing something like the following:
+fs.createReadStream('filenames.txt')
+  .pipe(nodeStream.split()) // split on new lines
   .pipe(nodeStream.map((value, next) => {
-    const str = value.toString()
-    next(null, str.replace('.', ','));
-  }))
-  // => the text has periods, because, english,
+    fs.readFile(value, next);
+  }));
 
-
-// parse a newline-separated JSON file
-fs.createReadStream('example.log')
-  .pipe(nodeStream.split())
-  .pipe(nodeStream.map((value, next) => {
-    let parsed;
-
-    try {
-      parsed = JSON.parse(value);
-    } catch(e) {
-      return next(e); // failed to parse, emit an error on the stream
-    }
-
-    next(null, parsed); // emit a parsed object on the stream
-  }));</code></pre>
+// The resulting stream will contain the text of each file. Note: If `next` is called
+// with an error as the first argument, the stream will error. This is typical behavior
+// for node callbacks.</code></pre>
 
 
 
@@ -1468,16 +2023,8 @@ objStream // => [{ name: 'pam', age: 24 }, { name: 'joe', age: 30 }])
 
 
 <div class="description">
-    Creates a new stream with a single value that's produced by calling a reducer
-with each element of the original array.
-
-Applies the function `reducer` to each item in the stream. The `reducer`
-is called with three arguments:
-- The value previously returned in the last invocation of the callback, or
-  initialValue, if supplied.
-- The stream `item` and
-- A `callback`.
-If the `reducer` passes an error to its `callback`, the stream emits an "error" event.
+    Creates a new stream with a single item that's produced by calling a reducer with
+each item of the original stream. Similar to Array.reduce... but on a stream.
 </div>
 
 
@@ -1539,9 +2086,10 @@ If the `reducer` passes an error to its `callback`, the stream emits an "error" 
 
             
 
-            <td class="description last">Function that reduces elements on the stream.
-                                      The function is passed a `callback(err, result)`
-                                      which must be called once it's completed.</td>
+            <td class="description last">Function that reduces items in the stream. Takes
+                                      two arguments: the current value of the reduction,
+                                      and the value of the item at this position in the
+                                      stream.</td>
         </tr>
 
     
@@ -1619,7 +2167,7 @@ If the `reducer` passes an error to its `callback`, the stream emits an "error" 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modifiers_reduce.js.html">modifiers/reduce.js</a>, <a href="modifiers_reduce.js.html#line53">line 53</a>
+        <a href="modifiers_reduce.js.html">modifiers/reduce.js</a>, <a href="modifiers_reduce.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -1646,7 +2194,7 @@ If the `reducer` passes an error to its `callback`, the stream emits an "error" 
 
         
 <div class="param-desc">
-    - Transform stream.
+    - A transform stream that results from the reduction.
 </div>
 
 
@@ -1668,30 +2216,49 @@ If the `reducer` passes an error to its `callback`, the stream emits an "error" 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>// determine the content length of the given stream
+    <pre class="prettyprint"><code>// If you wanted to determine the content-length of a stream, you could do something like
+// the following. Assuming "example.txt" is a large file, you could determine it's length
+// by doing the following:
 fs.createReadStream('example.txt')
-  .pipe(nodeStream.reduce((size, value, next) => {
-    next(null, size + value.length);
-  }, 0))
+  .pipe(nodeStream.reduce((length, value) => length + value.length), 0);
+
+// The resulting stream will have an integer value representing the length of "example.txt".
 
 
-// find the most popular authors in an object stream
-objStream
-  .pipe(nodeStream.reduce((authors, value, next) => {
+// It is also possible to reduce a stream asynchronously for more complex actions.
+// Note: The signature of the function that you pass as the callback is important. It
+// MUST have *three* parameters.
 
-    if (typeof value.author === 'undefined') {
-      return next(new Error('unknown data')); // emit an error on the stream
-    }
+// Assuming "twitterers.txt" is a newline-separated list of your favorite tweeters, you
+// could identify which is the most recently active by using the Twitter API:
+fs.createReadStream('twitterers.txt')
+  .pipe(nodeStream.split()) // split on new lines
+  .pipe(nodeStream.reduce((memo, user, next) => {
+    twit.get('search/tweets', { q: `from:${user}`, count: 1 }, (err, data) => {
 
-    if (!authors[value.author]) {
-      authors[value.author] = 0;
-    }
+      // Error the stream since this request failed
+      if (err) {
+        return next(err);
+      }
 
-    authors[value.author] += 1;
+      // This is the first iteration of the reduction, so we automatically save the tweet
+      if (!memo) {
+        return next(null, data);
+      }
 
-    return next(null, authors);
-  }, {}));
-  // => { 'paul': 4, 'lisa': 12, 'mary': 1 }</code></pre>
+      // This tweet is the most recent so far, save it for later
+      if (new Date(data.statuses.created_at) > new Date(memo.statuses.created_at)) {
+        return next(null, data);
+      }
+
+      // The tweet we have saved is still the most recent
+      next(null, memo);
+    });
+  }));
+
+// The resulting stream will contain the most recent tweet of the users in the list.
+// Note: If `next` is called with an error as the first argument, the stream will error.
+// This is typical behavior for node callbacks.</code></pre>
 
 
 
@@ -1992,7 +2559,7 @@ wrapper of <a href="https://www.npmjs.com/package/split2">split2</a> by
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line61">line 61</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line69">line 69</a>
     </li></ul></dd>
     
 
@@ -2154,6 +2721,171 @@ is converted to a string by using `JSON.stringify`.
 objStream
   .pipe(nodeStream.stringify())
   .pipe(process.stdout);</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="take"><span class="type-signature"></span>take<span class="signature">(n)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new Stream with the first `n` values from the source stream.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>n</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Number of items to take from the source stream.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.4.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modifiers_take.js.html">modifiers/take.js</a>, <a href="modifiers_take.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Transform stream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Stream</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// take the first 3 items from a stream
+inStream // => ['b', 'a', 'n', 'a', 'n', 'a']
+  .pipe(nodeStream.take(3))
+  .pipe(process.stdout)
+  // => ['b', 'a', 'n']</code></pre>
 
 
 
@@ -2349,7 +3081,7 @@ objStream
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line82">line 82</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -2582,7 +3314,7 @@ users // => [{ name: 'Bill', zip: 90210 }, { name: 'Tracy', zip: 33193 }, { name
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Nov 20 2016 13:31:48 GMT-0500 (EST) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Dec 21 2016 18:55:52 GMT-0500 (EST) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
