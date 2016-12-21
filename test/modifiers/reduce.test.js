@@ -137,4 +137,38 @@ describe('[reduce]', function () {
         done();
       });
   });
+
+  it('works as an async reducer when the function has more than the expected arguments', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = 'maryhadalittlelamb';
+    var actual = '';
+
+    readableStream
+      .pipe(reduce(function (memo, chunk, next, apple) {
+
+        if (typeof apple !== 'undefined') {
+          throw new Error('this test was expecting only three valid arguments');
+        }
+
+        next(null, memo + chunk);
+      }, ''))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+
+        if (actual === expected) {
+          throw new Error('data should only be called once');
+        }
+
+        expect(chunk).to.be.a('string');
+
+        actual = chunk;
+      })
+      .on('end', function () {
+        expect(actual).to.equal(expected);
+
+        done();
+      });
+  });
 });

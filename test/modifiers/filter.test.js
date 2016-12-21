@@ -179,4 +179,36 @@ describe('[filter]', function () {
         done();
       });
   });
+
+  it('works as an async condition when the function has more than the expected arguments', function (done) {
+    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    var expected = ['a', 'little', 'lamb'];
+    var actual = [];
+    var i = 0;
+
+    readableStream
+      .pipe(filter(function (chunk, next, banana, apple) {
+
+        if (typeof banana !== 'undefined' && typeof apple !== 'undefined') {
+          throw new Error('this test was expecting only two valid arguments');
+        }
+
+        i += 1;
+
+        return next(null, i > 2);
+      }))
+      .on('error', function () {
+        throw new Error('error should not be called');
+      })
+      .on('data', function (chunk) {
+        expect(chunk).to.be.an.instanceof(Buffer);
+
+        actual.push(chunk.toString());
+      })
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
 });
