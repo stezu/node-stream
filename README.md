@@ -11,11 +11,24 @@
 [5]: https://codeclimate.com/github/stezu/node-stream/badges/coverage.svg
 [6]: https://codeclimate.com/github/stezu/node-stream/coverage
 
-A small collection of array-like methods for working with streams.
+A collection of array-like methods for working with streams.
+
+```js
+const nodeStream = require('node-stream');
+
+// Get the 5 most recent posts by stezu
+db.createReadStream()
+    .pipe(nodeStream.where({ type: 'post', author: 'stezu' }))
+    .pipe(nodeStream.sort((a, b) => a.id > b.id))
+    .pipe(nodeStream.take(5))
+    .pipe(nodeStream.stringify())
+    .pipe(nodeStream.intersperse('\n'))
+    .pipe(process.stdout);
+```
 
 ## Install
 
-The source is available for download from [GitHub](https://github.com/stezu/node-stream). You can also install using npm:
+You can install using npm:
 
 ```bash
 npm install --save node-stream
