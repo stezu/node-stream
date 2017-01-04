@@ -24,6 +24,7 @@ describe('[index]', function () {
         'findWhere',
         'drop',
         'take',
+        'throttle',
         'first',
         'forEach',
         'wait'
@@ -84,6 +85,9 @@ describe('[index]', function () {
       .and.to.have.lengthOf(1);
 
     expect(index.take).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.throttle).to.be.a('function')
       .and.to.have.lengthOf(1);
 
     expect(index.first).to.be.a('function')
