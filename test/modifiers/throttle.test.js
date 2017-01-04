@@ -87,4 +87,7 @@ describe.only('[throttle]', function () {
       input.end();
     }, 4);
   });
+
+  it('successfully ends if there is no data written');
+
 });
