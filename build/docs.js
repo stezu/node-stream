@@ -1,4 +1,5 @@
 var util = require('util');
+var path = require('path');
 var exec = require('child_process').exec;
 
 var _ = require('lodash');
@@ -45,7 +46,9 @@ function buildDocs() {
       var opts = optionsToArgs(options);
       var args = [filepaths.join(' ')].concat(opts);
 
-      return exec(util.format('./node_modules/.bin/jsdoc %s', args.join(' ')), function (err, stdout, stderr) {
+      var bin = path.resolve('.', 'node_modules/.bin/jsdoc');
+
+      return exec(util.format('"%s" %s', bin, args.join(' ')), function (err, stdout, stderr) {
 
         if (err) {
           return next(err);
