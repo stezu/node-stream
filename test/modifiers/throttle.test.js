@@ -18,8 +18,8 @@ describe('[throttle]', function () {
   function runTest(stream, objectMode, done) {
     var expected = [[buff('item1')], [buff('item2'), buff('item3'), buff('item4')]];
     var objExpected = [
-      [objData.slice(0, 1)],
-      [objData.slice(1)]
+      objData.slice(0, 1),
+      objData.slice(1)
     ];
     var actual = [];
 
@@ -32,7 +32,7 @@ describe('[throttle]', function () {
       .on('end', function () {
 
         if (objectMode) {
-//          expect(actual).to.deep.equal(objExpected);
+          expect(actual).to.deep.equal(objExpected);
         } else {
           expect(actual).to.deep.equal(expected);
         }
