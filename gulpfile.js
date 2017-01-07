@@ -54,7 +54,7 @@ gulp.task('docs', function () {
     .pipe(docs());
 });
 
-gulp.task('watch', ['default'], function () {
+gulp.task('watch', ['build'], function () {
   gulp.watch(source.js, function () {
     sequence('lint', 'test')();
   });
