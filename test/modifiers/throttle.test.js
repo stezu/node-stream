@@ -12,7 +12,7 @@ function buff(str) {
 }
 
 describe.only('[throttle]', function () {
-  var data = ['item1', new Buffer('item2'), 'item3', '', 'item4'];
+  var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
   var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
 
   function basicTests(batchOptions, expected, objExpected) {
@@ -163,9 +163,45 @@ describe.only('[throttle]', function () {
   });
 
   describe('when neither "time" nor "count" are defined in options', function () {
-    it('writes chunks immediately when read');
+    var expected = data.map(function (val) {
+      return [buff(val)];
+    });
+    var objExpected = objData.map(function (val) {
+      return [val];
+    });
 
-    it('successfully ends if there is no data written');
+    basicTests(null, expected, objExpected);
+
+    it('writes chunks immediately when read', function (done) {
+      var DATA = _.times(5);
+      var input = through.obj();
+      var idx = 0;
+      var chunksRead = false;
+
+      function write() {
+        input.push(DATA[idx]);
+        idx += 1;
+      }
+
+      input
+        .pipe(throttle())
+        .on('data', function (chunk) {
+          chunksRead = true;
+          expect(chunk).to.be.an('array');
+          expect(chunk).to.deep.equal([DATA[idx]]);
+        })
+        .on('error', done)
+        .on('end', function () {
+          expect(chunksRead).to.equal(true);
+          done();
+        });
+
+      while (idx < DATA.length) {
+        write();
+      }
+
+      input.end();
+    });
   });
 
 });
