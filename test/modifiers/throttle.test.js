@@ -12,27 +12,20 @@ function buff(str) {
 }
 
 describe.only('[throttle]', function () {
+  var data = ['item1', new Buffer('item2'), 'item3', '', 'item4'];
+  var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
 
-  describe('when "time" is defined in options', function () {
-    var data = ['item1', new Buffer('item2'), 'item3', '', 'item4'];
-    var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
-
-    function runTest(stream, objectMode, done) {
-      var expected = [[buff('item1')], [buff('item2'), buff('item3'), buff('item4')]];
-      var objExpected = [
-        objData.slice(0, 1),
-        objData.slice(1)
-      ];
+  function basicTests(batchOptions, expected, objExpected) {
+    runBasicStreamTests(data, objData, function (stream, objectMode, done) {
       var actual = [];
 
       stream
-        .pipe(throttle({ time: 5 }))
+        .pipe(throttle(batchOptions))
         .on('data', function (chunk) {
           actual.push(chunk);
         })
         .on('error', done)
         .on('end', function () {
-
           if (objectMode) {
             expect(actual).to.deep.equal(objExpected);
           } else {
@@ -41,9 +34,17 @@ describe.only('[throttle]', function () {
 
           done();
         });
-    }
+    });
+  }
 
-    runBasicStreamTests(data, objData, runTest);
+  describe('when "time" is defined in options', function () {
+    var expected = [[buff('item1')], [buff('item2'), buff('item3'), buff('item4')]];
+    var objExpected = [
+      objData.slice(0, 1),
+      objData.slice(1)
+    ];
+
+    basicTests({ time: 5 }, expected, objExpected);
 
     it('writes all chunks as an array', function (done) {
       var input = getReadableStream([1], {
@@ -91,10 +92,19 @@ describe.only('[throttle]', function () {
     });
 
     it('successfully ends if there is no data written');
-
   });
 
   describe('when "count" is defined in options', function () {
+    var expected = [[buff('item1'), buff('item2')], [buff('item3'), buff('item4')]];
+    var tempObjData = [].concat(objData);
+    var objExpected = [];
+
+    while (tempObjData.length) {
+      objExpected.push(tempObjData.splice(0, 2));
+    }
+
+    basicTests({ count: 2 }, expected, objExpected);
+
     it('writes all chunks as an array');
 
     it('emits chunks of the defined size');
