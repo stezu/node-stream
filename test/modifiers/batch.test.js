@@ -5,7 +5,7 @@ var through = require('through2');
 var getReadableStream = require('../_utilities/getReadableStream.js');
 var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
 
-var throttle = require('../../').throttle;
+var batch = require('../../').batch;
 
 function buff(str) {
   return new Buffer(str);
@@ -20,7 +20,7 @@ describe('[throttle]', function () {
       var actual = [];
 
       stream
-        .pipe(throttle(batchOptions))
+        .pipe(batch(batchOptions))
         .on('data', function (chunk) {
           actual.push(chunk);
         })
@@ -44,7 +44,7 @@ describe('[throttle]', function () {
       var chunksRead = false;
 
       input
-        .pipe(throttle(batchOptions))
+        .pipe(batch(batchOptions))
         .on('data', function (chunk) {
           chunksRead = true;
           expect(chunk).to.be.an('array');
@@ -64,7 +64,7 @@ describe('[throttle]', function () {
       var chunksRead = false;
 
       input
-        .pipe(throttle(batchOptions))
+        .pipe(batch(batchOptions))
         .on('data', function (chunk) {
           chunksRead = true;
           expect(chunk).to.be.an('array');
@@ -92,7 +92,7 @@ describe('[throttle]', function () {
       var input = through.obj();
 
       input
-        .pipe(throttle({ time: 1 }))
+        .pipe(batch({ time: 1 }))
         .on('data', function (chunk) {
           actual.push(chunk);
         })
@@ -141,7 +141,7 @@ describe('[throttle]', function () {
       var chunks = 0;
 
       input
-        .pipe(throttle({ count: COUNT }))
+        .pipe(batch({ count: COUNT }))
         .on('data', function (chunk) {
           chunks += 1;
           expect(chunk).to.be.an('array').and.to.have.lengthOf(COUNT);
@@ -173,7 +173,7 @@ describe('[throttle]', function () {
       var CHUNKS = 10;
 
       input
-        .pipe(throttle({
+        .pipe(batch({
           count: 1,
           time: 5000
         }))
@@ -196,7 +196,7 @@ describe('[throttle]', function () {
       var reads = 0;
 
       input
-        .pipe(throttle({
+        .pipe(batch({
           count: 100,
           time: 1
         }))
@@ -223,7 +223,7 @@ describe('[throttle]', function () {
       var chunksRead = false;
 
       input
-        .pipe(throttle({
+        .pipe(batch({
           count: 2,
           time: 1
         }))
@@ -261,7 +261,7 @@ describe('[throttle]', function () {
       }
 
       input
-        .pipe(throttle())
+        .pipe(batch())
         .on('data', function (chunk) {
           chunksRead = true;
           expect(chunk).to.be.an('array');
