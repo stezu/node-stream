@@ -110,4 +110,10 @@ describe.only('[throttle]', function () {
     it('successfully ends if there is no data written');
   });
 
+  describe('when neither "time" nor "count" are defined in options', function () {
+    it('writes chunks immediately when read');
+
+    it('successfully ends if there is no data written');
+  });
+
 });
