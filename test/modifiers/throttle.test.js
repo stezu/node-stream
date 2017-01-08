@@ -155,11 +155,88 @@ describe.only('[throttle]', function () {
   });
 
   describe('when both "time" and "count" are defined in options', function () {
-    it('writes chunks if count is met first before the defined time');
+    function asyncWrite(stream, dataArr) {
+      if (dataArr.length) {
+        setTimeout(function () {
+          stream.push(dataArr[0]);
 
-    it('writes chunks if time is met first before the defined count');
+          asyncWrite(stream, dataArr.slice(1));
+        }, 1);
+      } else {
+        stream.end();
+      }
+    }
 
-    it('successfully ends if there is no data written');
+    it('writes chunks if count is met first before the defined time', function (done) {
+      var input = through.obj();
+      var chunks = 0;
+      var CHUNKS = 10;
+
+      input
+        .pipe(throttle({
+          count: 1,
+          time: 5000
+        }))
+        .on('data', function (chunk) {
+          chunks += 1;
+          expect(chunk).to.be.an('array').and.to.have.lengthOf(1);
+        })
+        .on('error', done)
+        .on('end', function () {
+          expect(chunks).to.equal(CHUNKS);
+          done();
+        });
+
+      asyncWrite(input, _.times(CHUNKS));
+    });
+
+    it('writes chunks if time is met first before the defined count', function (done) {
+      var input = through.obj();
+      var CHUNKS = 10;
+      var reads = 0;
+
+      input
+        .pipe(throttle({
+          count: 100,
+          time: 1
+        }))
+        .on('data', function (chunk) {
+          reads += 1;
+          expect(chunk).to.be.an('array').and.to.have.length.above(0);
+        })
+        .on('error', done)
+        .on('end', function () {
+          // for good measure, leave some wiggle room as to
+          // how many writes we expect, because timers
+          expect(reads).to.be.above(CHUNKS / 2);
+          done();
+        });
+
+      asyncWrite(input, _.times(10));
+    });
+
+    it('successfully ends if there is no data written', function (done) {
+      var input = getReadableStream([], {
+        objectMode: true
+      });
+
+      var chunksRead = false;
+
+      input
+        .pipe(throttle({
+          count: 2,
+          time: 1
+        }))
+        .on('data', function (chunk) {
+          chunksRead = true;
+          expect(chunk).to.be.an('array');
+        })
+        .on('error', done)
+        .on('end', function () {
+          expect(chunksRead).to.equal(false);
+          done();
+        });
+    });
   });
 
   describe('when neither "time" nor "count" are defined in options', function () {
