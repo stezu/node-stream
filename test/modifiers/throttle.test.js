@@ -131,23 +131,24 @@ describe.only('[throttle]', function () {
     basicTests({ count: 2 }, expected, objExpected);
 
     it('emits chunks of the defined size', function (done) {
-      var SIZE = 3;
+      var COUNT = 3;
+      var CHUNKS = 5;
 
-      var input = getReadableStream(_.times(5 * SIZE), {
+      var input = getReadableStream(_.times(CHUNKS * COUNT), {
         objectMode: true
       });
 
-      var chunksRead = false;
+      var chunks = 0;
 
       input
-        .pipe(throttle({ count: SIZE }))
+        .pipe(throttle({ count: COUNT }))
         .on('data', function (chunk) {
-          chunksRead = true;
-          expect(chunk).to.be.an('array').and.to.have.lengthOf(SIZE);
+          chunks += 1;
+          expect(chunk).to.be.an('array').and.to.have.lengthOf(COUNT);
         })
         .on('error', done)
         .on('end', function () {
-          expect(chunksRead).to.equal(true);
+          expect(chunks).to.equal(CHUNKS);
           done();
         });
     });
