@@ -11,7 +11,7 @@ function buff(str) {
   return new Buffer(str);
 }
 
-describe.only('[throttle]', function () {
+describe('[throttle]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
   var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
 
