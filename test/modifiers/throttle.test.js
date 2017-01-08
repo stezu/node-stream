@@ -35,6 +35,47 @@ describe.only('[throttle]', function () {
           done();
         });
     });
+
+    it('writes all chunks as an array', function (done) {
+      var input = getReadableStream([1, 2, 3], {
+        objectMode: true
+      });
+
+      var chunksRead = false;
+
+      input
+        .pipe(throttle(batchOptions))
+        .on('data', function (chunk) {
+          chunksRead = true;
+          expect(chunk).to.be.an('array');
+        })
+        .on('error', done)
+        .on('end', function () {
+          expect(chunksRead).to.equal(true);
+          done();
+        });
+    });
+
+    it('successfully ends if there is no data written', function (done) {
+      var input = getReadableStream([], {
+        objectMode: true
+      });
+
+      var chunksRead = false;
+
+      input
+        .pipe(throttle(batchOptions))
+        .on('data', function (chunk) {
+          chunksRead = true;
+          expect(chunk).to.be.an('array');
+        })
+        .on('error', done)
+        .on('end', function () {
+          expect(chunksRead).to.equal(false);
+          done();
+        });
+    });
+
   }
 
   describe('when "time" is defined in options', function () {
@@ -45,20 +86,6 @@ describe.only('[throttle]', function () {
     ];
 
     basicTests({ time: 5 }, expected, objExpected);
-
-    it('writes all chunks as an array', function (done) {
-      var input = getReadableStream([1], {
-        objectMode: true
-      });
-
-      input
-        .pipe(throttle({ time: 1 }))
-        .on('data', function (chunk) {
-          expect(chunk).to.be.an('array');
-        })
-        .on('error', done)
-        .on('end', done);
-    });
 
     it('combines data written during an interval into one write', function (done) {
       var actual = [];
@@ -90,8 +117,6 @@ describe.only('[throttle]', function () {
         input.end();
       }, 4);
     });
-
-    it('successfully ends if there is no data written');
   });
 
   describe('when "count" is defined in options', function () {
@@ -105,11 +130,27 @@ describe.only('[throttle]', function () {
 
     basicTests({ count: 2 }, expected, objExpected);
 
-    it('writes all chunks as an array');
+    it('emits chunks of the defined size', function (done) {
+      var SIZE = 3;
 
-    it('emits chunks of the defined size');
+      var input = getReadableStream(_.times(5 * SIZE), {
+        objectMode: true
+      });
 
-    it('successfully ends if there is no data written');
+      var chunksRead = false;
+
+      input
+        .pipe(throttle({ count: SIZE }))
+        .on('data', function (chunk) {
+          chunksRead = true;
+          expect(chunk).to.be.an('array').and.to.have.lengthOf(SIZE);
+        })
+        .on('error', done)
+        .on('end', function () {
+          expect(chunksRead).to.equal(true);
+          done();
+        });
+    });
   });
 
   describe('when both "time" and "count" are defined in options', function () {
