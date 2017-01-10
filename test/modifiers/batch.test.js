@@ -92,7 +92,7 @@ describe('[throttle]', function () {
       var input = through.obj();
 
       input
-        .pipe(batch({ time: 1 }))
+        .pipe(batch({ time: 5 }))
         .on('data', function (chunk) {
           actual.push(chunk);
         })
@@ -115,7 +115,7 @@ describe('[throttle]', function () {
         input.write(5);
 
         input.end();
-      }, 4);
+      }, 6);
     });
   });
 
