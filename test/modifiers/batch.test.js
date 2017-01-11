@@ -281,4 +281,32 @@ describe('[batch]', function () {
     });
   });
 
+  function runSimpleTest(opts, done) {
+    var input = getReadableStream([1], {
+      objectMode: true
+    });
+
+    var expected = [[1]];
+    var actual = [];
+
+    input
+      .pipe(batch(opts))
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('error', done)
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+        done();
+      });
+  }
+
+  ['string', null, [1, 2, 3], 42].forEach(function (val) {
+    describe('when invalid value ' + JSON.stringify(val) + ' is used as options', function () {
+      it('works with the default options', function (done) {
+        runSimpleTest(val, done);
+      });
+    });
+  });
+
 });
