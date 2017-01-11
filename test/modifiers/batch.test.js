@@ -152,6 +152,28 @@ describe('[batch]', function () {
           done();
         });
     });
+
+    it('emits any remaining elements when the stream ends', function (done) {
+      var testData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      var expectedData = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12]];
+
+      var input = getReadableStream(testData, {
+        objectMode: true
+      });
+
+      var actual = [];
+
+      input
+        .pipe(batch({ count: 5 }))
+        .on('data', function (chunk) {
+          actual.push(chunk);
+        })
+        .on('error', done)
+        .on('end', function () {
+          expect(actual).to.deep.equal(expectedData);
+          done();
+        });
+    });
   });
 
   describe('when both "time" and "count" are defined in options', function () {
