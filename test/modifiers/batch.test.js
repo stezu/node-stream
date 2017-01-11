@@ -261,54 +261,12 @@ describe('[batch]', function () {
     });
   });
 
-  describe('when neither "time" nor "count" are defined in options', function () {
-    var expected = data.map(function (val) {
-      return [buff(val)];
-    });
-    var objExpected = objData.map(function (val) {
-      return [val];
-    });
-
-    basicTests(null, expected, objExpected);
-
-    it('writes chunks immediately when read', function (done) {
-      var DATA = _.times(5);
-      var input = through.obj();
-      var idx = 0;
-      var chunksRead = false;
-
-      function write() {
-        input.push(DATA[idx]);
-        idx += 1;
-      }
-
-      input
-        .pipe(batch())
-        .on('data', function (chunk) {
-          chunksRead = true;
-          expect(chunk).to.be.an('array');
-          expect(chunk).to.deep.equal([DATA[idx]]);
-        })
-        .on('error', done)
-        .on('end', function () {
-          expect(chunksRead).to.equal(true);
-          done();
-        });
-
-      while (idx < DATA.length) {
-        write();
-      }
-
-      input.end();
-    });
-  });
-
   function runSimpleTest(opts, done) {
-    var input = getReadableStream([1], {
+    var input = getReadableStream([1, 2, 3], {
       objectMode: true
     });
 
-    var expected = [[1]];
+    var expected = [[1], [2], [3]];
     var actual = [];
 
     input
@@ -322,6 +280,21 @@ describe('[batch]', function () {
         done();
       });
   }
+
+  describe('when neither "time" nor "count" are defined in options', function () {
+    var expected = data.map(function (val) {
+      return [buff(val)];
+    });
+    var objExpected = objData.map(function (val) {
+      return [val];
+    });
+
+    basicTests({}, expected, objExpected);
+
+    it('writes chunks immediately when read', function (done) {
+      runSimpleTest({}, done);
+    });
+  });
 
   ['string', null, [1, 2, 3], 42].forEach(function (val) {
     describe('when invalid value ' + JSON.stringify(val) + ' is used as options', function () {
