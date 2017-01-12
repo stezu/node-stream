@@ -1,4 +1,5 @@
 var expect = require('chai').expect;
+var sinon = require('sinon');
 var _ = require('lodash');
 var through = require('through2');
 
@@ -88,6 +89,7 @@ describe('[batch]', function () {
     basicTests({ time: 5 }, expected, objExpected);
 
     it('combines data written during an interval into one write', function (done) {
+      var clock = sinon.useFakeTimers(Date.now());
       var actual = [];
       var input = through.obj();
 
@@ -105,17 +107,19 @@ describe('[batch]', function () {
 
       input.write(1);
 
-      setTimeout(function () {
-        input.write(2);
-        input.write(3);
-      }, 1);
+      clock.tick(1);
 
-      setTimeout(function () {
-        input.write(4);
-        input.write(5);
+      input.write(2);
+      input.write(3);
 
-        input.end();
-      }, 6);
+      clock.tick(6);
+
+      input.write(4);
+      input.write(5);
+
+      input.end();
+
+      clock.restore();
     });
   });
 
