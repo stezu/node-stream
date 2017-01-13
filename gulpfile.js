@@ -54,12 +54,14 @@ gulp.task('docs', function () {
     .pipe(docs());
 });
 
-gulp.task('watch', ['build'], function () {
-  gulp.watch(source.js, function () {
-    sequence('lint', 'test')();
-  });
+gulp.task('watch:run', function (done) {
+  sequence('lint', 'test')(done);
 });
 
-gulp.task('build', sequence('lint', 'test'));
+gulp.task('watch', ['watch:run'], function () {
+  gulp.watch(source.js, ['watch:run']);
+});
+
+gulp.task('build', sequence('lint', 'coverage'));
 
 gulp.task('default', sequence('lint', 'test', 'docs'));
