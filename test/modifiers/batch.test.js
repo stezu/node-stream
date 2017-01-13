@@ -182,15 +182,17 @@ describe('[batch]', function () {
 
   describe('when both "time" and "count" are defined in options', function () {
     function asyncWrite(stream, dataArr) {
-      if (dataArr.length) {
-        setTimeout(function () {
-          stream.push(dataArr[0]);
+      var clock = sinon.useFakeTimers(Date.now());
 
-          asyncWrite(stream, dataArr.slice(1));
-        }, 1);
-      } else {
-        stream.end();
-      }
+      dataArr.forEach(function (val) {
+        stream.push(val);
+
+        clock.tick(1);
+      });
+
+      clock.restore();
+
+      stream.end();
     }
 
     it('writes chunks if count is met first before the defined time', function (done) {
@@ -219,12 +221,14 @@ describe('[batch]', function () {
     it('writes chunks if time is met first before the defined count', function (done) {
       var input = through.obj();
       var CHUNKS = 10;
+      // 10 / 2 + 1, since the first write is synchronous
+      var EXPECTED = 6;
       var reads = 0;
 
       input
         .pipe(batch({
           count: 100,
-          time: 1
+          time: 2
         }))
         .on('data', function (chunk) {
           reads += 1;
@@ -232,13 +236,11 @@ describe('[batch]', function () {
         })
         .on('error', done)
         .on('end', function () {
-          // for good measure, leave some wiggle room as to
-          // how many writes we expect, because timers
-          expect(reads).to.be.above(CHUNKS / 2);
+          expect(reads).to.equal(EXPECTED);
           done();
         });
 
-      asyncWrite(input, _.times(10));
+      asyncWrite(input, _.times(CHUNKS));
     });
 
     it('successfully ends if there is no data written', function (done) {
