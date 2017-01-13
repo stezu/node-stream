@@ -1,8 +1,7 @@
 var expect = require('chai').expect;
-var sinon = require('sinon');
 var _ = require('lodash');
-var through = require('through2');
 
+var asyncStream = require('../_utilities/getFakeAsyncStream.js');
 var getReadableStream = require('../_utilities/getReadableStream.js');
 var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
 
@@ -89,37 +88,32 @@ describe('[batch]', function () {
     basicTests({ time: 5 }, expected, objExpected);
 
     it('combines data written during an interval into one write', function (done) {
-      var clock = sinon.useFakeTimers(Date.now());
       var actual = [];
-      var input = through.obj();
+      var input = asyncStream.readable(_.times(20), { objectMode: true });
 
       input
-        .pipe(batch({ time: 5 }))
+        .pipe(batch({ time: 4 }))
         .on('data', function (chunk) {
           actual.push(chunk);
         })
         .on('error', done)
         .on('end', function () {
-          expect(actual).to.deep.equal([[1], [2, 3], [4, 5]]);
+          expect(actual).to.deep.equal([
+            // since this is leading mode, the first write
+            // is synchronous
+            [0],
+            // due to sinon timers, this actually ends up covering
+            // the same time period as the first read, so it will
+            // be one less item than expected
+            [1, 2, 3],
+            [4, 5, 6, 7],
+            [8, 9, 10, 11],
+            [12, 13, 14, 15],
+            [16, 17, 18, 19]
+          ]);
 
           done();
         });
-
-      input.write(1);
-
-      clock.tick(1);
-
-      input.write(2);
-      input.write(3);
-
-      clock.tick(6);
-
-      input.write(4);
-      input.write(5);
-
-      input.end();
-
-      clock.restore();
     });
   });
 
@@ -181,22 +175,8 @@ describe('[batch]', function () {
   });
 
   describe('when both "time" and "count" are defined in options', function () {
-    function asyncWrite(stream, dataArr) {
-      var clock = sinon.useFakeTimers(Date.now());
-
-      dataArr.forEach(function (val) {
-        stream.push(val);
-
-        clock.tick(1);
-      });
-
-      clock.restore();
-
-      stream.end();
-    }
-
     it('writes chunks if count is met first before the defined time', function (done) {
-      var input = through.obj();
+      var input = asyncStream.readable(_.times(10), { objectMode: true });
       var chunks = 0;
       var CHUNKS = 10;
 
@@ -214,16 +194,14 @@ describe('[batch]', function () {
           expect(chunks).to.equal(CHUNKS);
           done();
         });
-
-      asyncWrite(input, _.times(CHUNKS));
     });
 
     it('writes chunks if time is met first before the defined count', function (done) {
-      var input = through.obj();
       var CHUNKS = 10;
       // 10 / 2 + 1, since the first write is synchronous
       var EXPECTED = 6;
       var reads = 0;
+      var input = asyncStream.readable(_.times(CHUNKS), { objectMode: true });
 
       input
         .pipe(batch({
@@ -239,8 +217,6 @@ describe('[batch]', function () {
           expect(reads).to.equal(EXPECTED);
           done();
         });
-
-      asyncWrite(input, _.times(CHUNKS));
     });
 
     it('successfully ends if there is no data written', function (done) {
