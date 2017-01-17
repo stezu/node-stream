@@ -1,4 +1,5 @@
 var expect = require('chai').expect;
+var _ = require('lodash');
 
 var getReadableStream = require('../../_utilities/getReadableStream.js');
 var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
@@ -73,5 +74,20 @@ describe('[v2-waitObj]', function () {
       })
       .on('error', done)
       .on('end', onDone);
+  });
+
+  it('reads the entire stream when given a callback', function (done) {
+    var testData = _.times(100);
+    var stream = getReadableStream(testData, {
+      objectMode: true
+    });
+
+    stream
+      .pipe(waitObj(function (err, chunk) {
+        expect(err).to.equal(null);
+        expect(chunk).to.deep.equal(testData);
+
+        done();
+      }));
   });
 });

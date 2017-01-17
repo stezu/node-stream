@@ -1,4 +1,5 @@
 var expect = require('chai').expect;
+var _ = require('lodash');
 
 var getReadableStream = require('../../_utilities/getReadableStream.js');
 var getDuplexStream = require('../../_utilities/getDuplexStream.js');
@@ -14,6 +15,31 @@ describe('[v2-waitJson]', function () {
     ']'
   ];
 
+  function getRandomObject() {
+    var obj = {};
+    var i = 0;
+
+    for (i = 0; i < _.random(1, 3); i++) {
+      obj['item_' + i] = _.uniqueId();
+    }
+
+    return obj;
+  }
+
+  function getTestData(numberOfItems) {
+    var items = _.times(numberOfItems, getRandomObject).map(JSON.stringify);
+
+    return ['[', items.shift()]
+      .concat(items.map(function (str) {
+        return ',' + str;
+      }))
+      .concat([']']);
+  }
+
+  function expectJSON(arr) {
+    return JSON.parse(Buffer.concat(arr.map(Buffer)));
+  }
+
   function runTest(stream, objectMode, done) {
     var actual = [];
 
@@ -26,9 +52,7 @@ describe('[v2-waitJson]', function () {
       .on('end', function () {
         expect(actual).to.have.lengthOf(1);
 
-        expect(actual[0]).to.deep.equal(JSON.parse(Buffer.concat(data.map(function (item) {
-          return new Buffer(item);
-        }))));
+        expect(actual[0]).to.deep.equal(expectJSON(data));
 
         done();
       });
@@ -71,7 +95,8 @@ describe('[v2-waitJson]', function () {
   });
 
   it('optionally provides data to a callback', function (done) {
-    var stream = getReadableStream(data);
+    var testData = getTestData(15);
+    var stream = getReadableStream(testData);
     var actual = {
       callback: [],
       event: []
@@ -88,9 +113,7 @@ describe('[v2-waitJson]', function () {
         // If they're both the same we have succeeded
         expect(actual.callback).to.deep.equal(actual.event);
 
-        expect(actual.callback[0]).to.deep.equal(JSON.parse(Buffer.concat(data.map(function (item) {
-          return new Buffer(item);
-        }))));
+        expect(actual.callback[0]).to.deep.equal(expectJSON(testData));
 
         done();
       }
@@ -108,5 +131,20 @@ describe('[v2-waitJson]', function () {
       })
       .on('error', done)
       .on('end', onDone);
+  });
+
+  it('reads the entire stream when given a callback', function (done) {
+    var testData = getTestData(100);
+    var stream = getReadableStream(testData, {
+      objectMode: true
+    });
+
+    stream
+      .pipe(waitJson(function (err, chunk) {
+        expect(err).to.equal(null);
+        expect(chunk).to.deep.equal(JSON.parse(testData.join('')));
+
+        done();
+      }));
   });
 });
