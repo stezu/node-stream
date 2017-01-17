@@ -79,17 +79,14 @@ describe('[batch]', function () {
   }
 
   describe('when "time" is defined in options', function () {
-    var expected = [[buff('item1')], [buff('item2'), buff('item3'), buff('item4')]];
-    var objExpected = [
-      objData.slice(0, 1),
-      objData.slice(1)
-    ];
+    var expected = [[buff('item1'), buff('item2'), buff('item3'), buff('item4')]];
+    var objExpected = [objData];
 
     basicTests({ time: 5 }, expected, objExpected);
 
     it('combines data written during an interval into one write', function (done) {
       var actual = [];
-      var input = asyncStream.readable(_.times(20), { objectMode: true });
+      var input = asyncStream.readable(_.times(22), { objectMode: true });
 
       input
         .pipe(batch({ time: 4 }))
@@ -99,17 +96,12 @@ describe('[batch]', function () {
         .on('error', done)
         .on('end', function () {
           expect(actual).to.deep.equal([
-            // since this is leading mode, the first write
-            // is synchronous
-            [0],
-            // due to sinon timers, this actually ends up covering
-            // the same time period as the first read, so it will
-            // be one less item than expected
-            [1, 2, 3],
+            [0, 1, 2, 3],
             [4, 5, 6, 7],
             [8, 9, 10, 11],
             [12, 13, 14, 15],
-            [16, 17, 18, 19]
+            [16, 17, 18, 19],
+            [20, 21]
           ]);
 
           done();
@@ -198,8 +190,7 @@ describe('[batch]', function () {
 
     it('writes chunks if time is met first before the defined count', function (done) {
       var CHUNKS = 10;
-      // 10 / 2 + 1, since the first write is synchronous
-      var EXPECTED = 6;
+      var EXPECTED = 5;
       var reads = 0;
       var input = asyncStream.readable(_.times(CHUNKS), { objectMode: true });
 
