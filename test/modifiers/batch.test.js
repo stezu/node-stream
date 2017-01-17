@@ -11,6 +11,11 @@ function buff(str) {
   return new Buffer(str);
 }
 
+function undef() {
+  // I seriously have to implement a function to get the value undefined
+  return;
+}
+
 describe('[batch]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
   var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
@@ -269,12 +274,81 @@ describe('[batch]', function () {
     });
   });
 
-  ['string', null, [1, 2, 3], 42].forEach(function (val) {
-    describe('when invalid value ' + JSON.stringify(val) + ' is used as options', function () {
-      it('works with the default options', function (done) {
-        runSimpleTest(val, done);
+  describe('emits an error when', function () {
+    function invalidOptions(options, constructor, errMessage) {
+      return function (done) {
+        var input = getReadableStream([1], {
+          objectMode: true
+        });
+
+        input
+          .pipe(batch(options))
+          .on('data', _.noop)
+          .on('error', function (err) {
+            expect(err).to.be.instanceOf(constructor);
+            expect(err.message).to.equal(errMessage);
+
+            done();
+          })
+          .on('end', function () {
+            done(new Error('done was not supposed to be called'));
+          });
+      };
+    }
+
+    function stringify(val) {
+      return JSON.stringify(val) || typeof val;
+    }
+
+    ['string', [1, 2, 3], 42, _.noop].forEach(function (val) {
+      it('options is the invalid value: ' + stringify(val), function (done) {
+        invalidOptions(val, TypeError, 'Expected `options` to be an object or not defined.')(done);
       });
     });
+
+    ['string', [1, 2, 3], {}, _.noop, -1].forEach(function (val) {
+      it('options.time is the invalid value: ' + stringify(val), invalidOptions(
+        { time: val },
+        TypeError,
+        'Expected `options.time` to be an integer that is 0 or greater.'
+      ));
+    });
+
+    ['string', [1, 2, 3], {}, _.noop, 0, -1].forEach(function (val) {
+      it('options.count is the invalid value: ' + stringify(val), invalidOptions(
+        { count: val },
+        TypeError,
+        'Expected `options.count` to be an integer greater than 0.'
+      ));
+    });
+  });
+
+  describe('does not emit an error when', function () {
+    function validOptionsTest(options) {
+      return function (done) {
+        var input = getReadableStream([1], {
+          objectMode: true
+        });
+
+        input
+          .pipe(batch(options))
+          .on('data', _.noop)
+          .on('error', done)
+          .on('end', function () {
+            done();
+          });
+      };
+    }
+
+    it('options are not provided', validOptionsTest());
+
+    it('options is null', validOptionsTest(null));
+
+    it('options is an empty object', validOptionsTest({}));
+
+    it('options.time is set to undefined', validOptionsTest({ time: undef() }));
+
+    it('options.count is set to undefined', validOptionsTest({ count: undef() }));
   });
 
 });
