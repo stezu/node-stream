@@ -11,11 +11,6 @@ function buff(str) {
   return new Buffer(str);
 }
 
-function undef() {
-  // I seriously have to implement a function to get the value undefined
-  return;
-}
-
 describe('[batch]', function () {
   var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
   var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
@@ -324,6 +319,8 @@ describe('[batch]', function () {
   });
 
   describe('does not emit an error when', function () {
+    var undef;
+
     function validOptionsTest(options) {
       return function (done) {
         var input = getReadableStream([1], {
@@ -346,9 +343,8 @@ describe('[batch]', function () {
 
     it('options is an empty object', validOptionsTest({}));
 
-    it('options.time is set to undefined', validOptionsTest({ time: undef() }));
+    it('options.time is set to undefined', validOptionsTest({ time: undef }));
 
-    it('options.count is set to undefined', validOptionsTest({ count: undef() }));
+    it('options.count is set to undefined', validOptionsTest({ count: undef }));
   });
-
 });
