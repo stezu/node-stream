@@ -25,6 +25,7 @@ describe('[index]', function () {
         'drop',
         'take',
         'batch',
+        'flatten',
         'first',
         'forEach',
         'wait'
@@ -89,6 +90,9 @@ describe('[index]', function () {
 
     expect(index.batch).to.be.a('function')
       .and.to.have.lengthOf(1);
+
+    expect(index.flatten).to.be.a('function')
+      .and.to.have.lengthOf(0);
 
     expect(index.first).to.be.a('function')
       .and.to.have.all.keys('obj', 'json');
