@@ -38,4 +38,12 @@ describe('[flatten]', function () {
   }
 
   runBasicStreamTests(data, objData, runTest);
+
+  it('emits all items in read arrays as individual items');
+
+  it('passes through non-array items');
+
+  it('can handle large arrays');
+
+  it('reverses a batch stream');
 });
