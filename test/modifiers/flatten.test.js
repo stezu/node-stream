@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var _ = require('lodash');
 
 var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
-var asyncStream = require('../_utilities/getFakeAsyncStream.js');
+var getReadableStream = require('../_utilities/getReadableStream.js');
 
 var flatten = require('../../').flatten;
 var batch = require('../../').batch;
@@ -49,7 +49,7 @@ describe('[flatten]', function () {
     var inputCount = 0;
     var actual = [];
 
-    var input = asyncStream.readable([_.times(count)], {
+    var input = getReadableStream([_.times(count)], {
       objectMode: true
     });
 
@@ -78,7 +78,7 @@ describe('[flatten]', function () {
     var inputCount = 0;
     var actual = [];
 
-    var input = asyncStream.readable(_.times(count), {
+    var input = getReadableStream(_.times(count), {
       objectMode: true
     });
 
@@ -111,7 +111,7 @@ describe('[flatten]', function () {
       return memo.concat(val);
     }, []);
 
-    var input = asyncStream.readable(data, {
+    var input = getReadableStream(data, {
       objectMode: true
     });
 
@@ -130,5 +130,26 @@ describe('[flatten]', function () {
       });
   });
 
-  it('reverses a batch stream');
+  it('reverses a batch stream', function (done) {
+    var data = _.times(300);
+
+    var input = getReadableStream(data, {
+      objectMode: true
+    });
+
+    var actual = [];
+
+    input
+      .pipe(batch({ count: 23 }))
+      .pipe(flatten())
+      .on('data', function (chunk) {
+        actual.push(chunk);
+      })
+      .on('error', done)
+      .on('end', function () {
+        expect(actual).to.deep.equal(data);
+
+        done();
+      });
+  });
 });
