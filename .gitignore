@@ -8,3 +8,6 @@ coverage
 
 # Dependencies
 node_modules
+
+# Build Artifacts
+docs
