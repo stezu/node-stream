@@ -62,6 +62,6 @@ gulp.task('watch', ['watch:run'], function () {
   gulp.watch(source.js, ['watch:run']);
 });
 
-gulp.task('build', sequence('lint', 'coverage'));
+gulp.task('build', sequence('lint', 'coverage', 'docs'));
 
 gulp.task('default', sequence('lint', 'test', 'docs'));
