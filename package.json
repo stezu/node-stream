@@ -1,6 +1,6 @@
 {
   "name": "node-stream",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Utilities for consuming, creating and manipulating node streams.",
   "main": "lib/index.js",
   "scripts": {
