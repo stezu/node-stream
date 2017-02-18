@@ -39,7 +39,7 @@
     "beeper": "^1.1.0",
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.3.3",
-    "eslint-config-stezu": "^0.1.1",
+    "eslint-config-stezu": "^1.0.2",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.1.0",
     "gulp-if": "^2.0.1",
