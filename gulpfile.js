@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
-var eslint = require('gulp-eslint');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var sequence = require('gulp-sequence');
@@ -15,11 +14,16 @@ var source = {
 
 gulp.task('lint', function () {
   var majorVersion = process.version.slice(1).split('.')[0];
+  var eslint;
 
   if (majorVersion < 4) {
     // eslint-disable-next-line no-console
     return console.log('ESLint cannot run on Node', process.version);
   }
+
+  // require eslint once we've determined we can
+  // eslint-disable-next-line global-require
+  eslint = require('gulp-eslint');
 
   return gulp.src(source.js)
     .pipe(eslint())
