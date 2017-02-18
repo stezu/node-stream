@@ -169,7 +169,6 @@ describe('[map]', function () {
     var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
     var expected = ['mary ', 'had ', 'a ', 'little ', 'lamb '];
     var actual = [];
-    var i = 0;
 
     readableStream
       .pipe(map(function (chunk, next, banana, apple) {
@@ -177,8 +176,6 @@ describe('[map]', function () {
         if (typeof banana !== 'undefined' && typeof apple !== 'undefined') {
           throw new Error('this test was expecting only two valid arguments');
         }
-
-        i += 1;
 
         return next(null, chunk + ' ');
       }))

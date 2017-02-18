@@ -14,6 +14,13 @@ var source = {
 };
 
 gulp.task('lint', function () {
+  var majorVersion = process.version.slice(1).split('.')[0];
+
+  if (majorVersion < 4) {
+    // eslint-disable-next-line no-console
+    return console.log('ESLint cannot run on Node', process.version);
+  }
+
   return gulp.src(source.js)
     .pipe(eslint())
     .pipe(eslint.results(function (results) {
