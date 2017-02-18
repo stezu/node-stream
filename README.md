@@ -1,15 +1,15 @@
 # Node-Stream
 
-[![Build Status][1]][2] [![Code Climate][3]][4] [![Test Coverage][5]][6]
+[![Build Status][1]][2] [![bitHound Score][3]][4] [![Test Coverage][5]][6]
 
 [1]: https://travis-ci.org/stezu/node-stream.svg?branch=master
 [2]: https://travis-ci.org/stezu/node-stream
 
-[3]: https://codeclimate.com/github/stezu/node-stream/badges/gpa.svg
-[4]: https://codeclimate.com/github/stezu/node-stream
+[3]: https://www.bithound.io/github/stezu/node-stream/badges/score.svg
+[4]: https://www.bithound.io/github/stezu/node-stream
 
-[5]: https://codeclimate.com/github/stezu/node-stream/badges/coverage.svg
-[6]: https://codeclimate.com/github/stezu/node-stream/coverage
+[5]: https://coveralls.io/repos/github/stezu/node-stream/badge.svg?branch=master
+[6]: https://coveralls.io/github/stezu/node-stream?branch=master
 
 A collection of array-like methods for working with streams.
 
