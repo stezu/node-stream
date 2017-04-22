@@ -4,7 +4,8 @@ node_js:
   - "6"
   - "5"
   - "4"
-  - "0"
+  - "0.12"
+  - "0.10"
 addons:
   code_climate:
     repo_token: 79816a32349b15a909e262a88676bf1d51021ad6848b96706411bb2b829dd5b6
