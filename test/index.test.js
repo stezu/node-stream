@@ -7,6 +7,7 @@ describe('[index]', function () {
   it('exposes the correct public api', function () {
     expect(index).to.be.an('object')
       .and.to.have.all.keys([
+        'fromArray',
         'split',
         'pipeline',
         'through',
@@ -30,6 +31,9 @@ describe('[index]', function () {
         'forEach',
         'wait'
       ]);
+
+    expect(index.fromArray).to.be.a('function')
+      .and.to.have.lengthOf(1);
 
     expect(index.split).to.be.a('function')
       .and.to.have.lengthOf(3);
