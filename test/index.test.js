@@ -8,6 +8,7 @@ describe('[index]', function () {
     expect(index).to.be.an('object')
       .and.to.have.all.keys([
         'fromArray',
+        'fromPromise',
         'split',
         'pipeline',
         'through',
@@ -33,6 +34,9 @@ describe('[index]', function () {
       ]);
 
     expect(index.fromArray).to.be.a('function')
+      .and.to.have.lengthOf(1);
+
+    expect(index.fromPromise).to.be.a('function')
       .and.to.have.lengthOf(1);
 
     expect(index.split).to.be.a('function')
