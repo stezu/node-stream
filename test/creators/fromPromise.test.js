@@ -12,32 +12,23 @@ function stringify(val) {
 describe('[fromPromise]', function () {
 
   function invalidSource(source, constructor, message) {
-
-    return function (done) {
-
-      fromPromise(source)
-        .on('data', _.noop)
-        .on('error', function (err) {
-          expect(err).to.be.instanceOf(constructor);
-          expect(err.message).to.equal(message);
-
-          done();
-        })
-        .on('end', function () {
-          done(new Error('done was not supposed to be called'));
-        });
-    };
+    expect(function () {
+      fromPromise(source);
+    }).to.throw(constructor, message);
   }
 
-  describe('emits an error when', function () {
+  describe('throws an error when', function () {
     var nonPromises = ['string', false, true, null, 42, {}, _.noop, { then: 12 }];
 
     nonPromises.forEach(function (source) {
 
-      it('source is the invalid value: ' + stringify(source), function (done) {
-        invalidSource(source, TypeError, 'Expected `source` to be a promise.')(done);
+      it('source is the invalid value: ' + stringify(source), function () {
+        invalidSource(source, TypeError, 'Expected `source` to be a promise.');
       });
     });
+  });
+
+  describe('emits an error when', function () {
 
     it('the promise rejects synchronously', function (done) {
       var err = new Error('this promise rejected');
