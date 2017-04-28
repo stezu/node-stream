@@ -1,42 +1,41 @@
-/* global Promise */
-
 var expect = require('chai').expect;
 var _ = require('lodash');
 
-var fromPromise = require('../../').fromPromise;
+var fromCallback = require('../../').fromCallback;
 
 function stringify(val) {
   return JSON.stringify(val) || typeof val;
 }
 
-describe('[fromPromise]', function () {
+describe('[fromCallback]', function () {
 
   function invalidSource(source, constructor, message) {
     expect(function () {
-      fromPromise(source);
+      fromCallback(source);
     }).to.throw(constructor, message);
   }
 
   describe('throws an error when', function () {
-    var nonPromises = ['string', false, true, null, 42, {}, _.noop, { then: 12 }, ['apple']];
+    var nonFunctions = ['string', false, true, null, 42, {}, ['apple']];
 
-    nonPromises.forEach(function (source) {
+    nonFunctions.forEach(function (source) {
 
       it('source is the invalid value: ' + stringify(source), function () {
-        invalidSource(source, TypeError, 'Expected `source` to be a promise.');
+        invalidSource(source, TypeError, 'Expected `source` to be a function.');
       });
     });
   });
 
   describe('emits an error when', function () {
 
-    it('the promise rejects synchronously', function (done) {
-      var err = new Error('this promise rejected');
-      var source = new Promise(function (resolve, reject) {
-        reject(err);
-      });
+    it('the callback errors synchronously', function (done) {
+      var err = new Error('this method errored');
 
-      fromPromise(source)
+      function source(callback) {
+        callback(err);
+      }
+
+      fromCallback(source)
         .on('data', _.noop)
         .on('error', function (emittedError) {
           expect(emittedError).to.equal(err);
@@ -47,15 +46,16 @@ describe('[fromPromise]', function () {
         });
     });
 
-    it('the promise rejects asynchronously', function (done) {
-      var err = new Error('this promise rejected');
-      var source = new Promise(function (resolve, reject) {
+    it('the callback errors asynchronously', function (done) {
+      var err = new Error('this method errored');
+
+      function source(callback) {
         setTimeout(function () {
-          reject(err);
+          callback(err);
         }, 5);
-      });
+      }
 
-      fromPromise(source)
+      fromCallback(source)
         .on('data', _.noop)
         .on('error', function (emittedError) {
           expect(emittedError).to.equal(err);
@@ -67,14 +67,15 @@ describe('[fromPromise]', function () {
     });
   });
 
-  it('creates a stream correctly when a promise is resolved synchronously', function (done) {
+  it('creates a stream correctly when a callback succeeds synchronously', function (done) {
     var data = [-10, 42, false, {}, undefined, _.noop, true, 'banana']; // eslint-disable-line no-undefined
-    var source = new Promise(function (resolve) {
-      resolve(data);
-    });
     var dest = [];
 
-    fromPromise(source)
+    function source(callback) {
+      callback.apply(null, [null].concat(data));
+    }
+
+    fromCallback(source)
       .on('data', function (chunk) {
         dest.push(chunk);
       })
@@ -85,17 +86,17 @@ describe('[fromPromise]', function () {
       });
   });
 
-  it('creates a stream correctly when a promise is resolved asynchronously', function (done) {
+  it('creates a stream correctly when a callback succeeds asynchronously', function (done) {
     var data = [-10, 42, false, {}, undefined, _.noop, true, 'banana']; // eslint-disable-line no-undefined
-    var source = new Promise(function (resolve) {
+    var dest = [];
 
+    function source(callback) {
       setTimeout(function () {
-        resolve(data);
+        callback.apply(null, [null].concat(data));
       }, 5);
-    });
-    var dest = [];
+    }
 
-    fromPromise(source)
+    fromCallback(source)
       .on('data', function (chunk) {
         dest.push(chunk);
       })
@@ -106,14 +107,15 @@ describe('[fromPromise]', function () {
       });
   });
 
-  it('does not end the stream if a null exists in the promise arguments', function (done) {
+  it('does not end the stream if a null exists in the callback arguments', function (done) {
     var data = [1, 2, 3, null, 4, 5, 6];
-    var source = new Promise(function (resolve) {
-      resolve(data);
-    });
     var dest = [];
 
-    fromPromise(source)
+    function source(callback) {
+      callback.apply(null, [null].concat(data));
+    }
+
+    fromCallback(source)
       .on('data', function (chunk) {
         dest.push(chunk);
       })
@@ -123,4 +125,6 @@ describe('[fromPromise]', function () {
         done();
       });
   });
+
+  it('maintains the context of the source function if it is bound');
 });
