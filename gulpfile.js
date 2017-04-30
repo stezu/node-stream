@@ -3,13 +3,16 @@ var gulpif = require('gulp-if');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var sequence = require('gulp-sequence');
+var documentation = require('gulp-documentation');
 var beeper = require('beeper');
-var docs = require('./build/docs.js');
 
 var source = {
-  js: ['*.js', 'build/**/*.js', 'lib/**/*.js', 'test/**/*.js'],
+  js: ['*.js', 'lib/**/*.js', 'test/**/*.js'],
   lib: ['lib/**/*.js'],
   test: ['test/**/*.test.js']
+};
+var dest = {
+  docs: './docs'
 };
 
 gulp.task('lint', function () {
@@ -61,8 +64,12 @@ gulp.task('coverage-report', function () {
 gulp.task('coverage', sequence('coverage-instrument', 'test', 'coverage-report'));
 
 gulp.task('docs', function () {
-  return gulp.src(source.lib.concat('README.md'), { read: false })
-    .pipe(docs());
+  return gulp.src(source.lib, { read: false })
+    .pipe(documentation('html', {
+      sortOrder: 'alpha',
+      github: true
+    }))
+    .pipe(gulp.dest(dest.docs));
 });
 
 gulp.task('watch:run', function (done) {
