@@ -68,7 +68,7 @@ gulp.task('docs', function () {
 
   if (majorVersion < 4) {
     // eslint-disable-next-line no-console
-    return console.log('ESLint cannot run on Node', process.version);
+    return console.log('Documentationjs cannot run on Node', process.version);
   }
 
   // require documentation once we've determined we can
