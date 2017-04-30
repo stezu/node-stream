@@ -4,6 +4,7 @@ var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var sequence = require('gulp-sequence');
 var beeper = require('beeper');
+var packageJson = require('./package.json');
 
 var majorVersion = process.version.slice(1).split('.')[0];
 
@@ -79,6 +80,9 @@ gulp.task('docs', function () {
     .pipe(documentation('html', {
       sortOrder: 'alpha',
       github: true
+    }, {
+      name: packageJson.name,
+      version: packageJson.version
     }))
     .pipe(gulp.dest(dest.docs));
 });
