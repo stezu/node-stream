@@ -4,16 +4,20 @@ var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var sequence = require('gulp-sequence');
 var beeper = require('beeper');
-var docs = require('./build/docs.js');
+var packageJson = require('./package.json');
+
+var majorVersion = process.version.slice(1).split('.')[0];
 
 var source = {
-  js: ['*.js', 'build/**/*.js', 'lib/**/*.js', 'test/**/*.js'],
+  js: ['*.js', 'lib/**/*.js', 'test/**/*.js'],
   lib: ['lib/**/*.js'],
   test: ['test/**/*.test.js']
 };
+var dest = {
+  docs: './docs'
+};
 
 gulp.task('lint', function () {
-  var majorVersion = process.version.slice(1).split('.')[0];
   var eslint;
 
   if (majorVersion < 4) {
@@ -61,8 +65,26 @@ gulp.task('coverage-report', function () {
 gulp.task('coverage', sequence('coverage-instrument', 'test', 'coverage-report'));
 
 gulp.task('docs', function () {
-  return gulp.src(source.lib.concat('README.md'), { read: false })
-    .pipe(docs());
+  var documentation;
+
+  if (majorVersion < 4) {
+    // eslint-disable-next-line no-console
+    return console.log('Documentationjs cannot run on Node', process.version);
+  }
+
+  // require documentation once we've determined we can
+  // eslint-disable-next-line global-require
+  documentation = require('gulp-documentation');
+
+  return gulp.src(source.lib, { read: false })
+    .pipe(documentation('html', {
+      sortOrder: 'alpha',
+      github: true
+    }, {
+      name: packageJson.name,
+      version: packageJson.version
+    }))
+    .pipe(gulp.dest(dest.docs));
 });
 
 gulp.task('watch:run', function (done) {
