@@ -11,7 +11,9 @@
 [5]: https://coveralls.io/repos/github/stezu/node-stream/badge.svg?branch=master
 [6]: https://coveralls.io/github/stezu/node-stream?branch=master
 
-A collection of array-like methods for working with streams.
+A [Stream](https://nodejs.org/api/stream.html) is a core interface in Node which is generally misunderstood. Since Node doesn't provide a simple API for them, they are very often misused. This library aims to resolve those problems by exposing a collection of array-like methods for working with Node Streams.
+
+Every function in Node-Stream returns an instance of a *Streams3* Stream which means you'll be using the latest implementation of Streams. This library works with the latest Streams as well as Node 0.12 Streams.
 
 ```js
 const nodeStream = require('node-stream');
