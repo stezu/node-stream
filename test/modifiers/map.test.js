@@ -61,7 +61,7 @@ describe('[map]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not be called');
+        done(new Error('end should not be called'));
       })
       .resume();
   });
@@ -101,7 +101,7 @@ describe('[map]', function () {
         return chunk + ' ';
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.a('string');
@@ -127,7 +127,7 @@ describe('[map]', function () {
         return typeof chunk;
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.a('string');
@@ -151,7 +151,7 @@ describe('[map]', function () {
         return 'a';
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.a('string');
@@ -174,13 +174,13 @@ describe('[map]', function () {
       .pipe(map(function (chunk, next, banana, apple) {
 
         if (typeof banana !== 'undefined' && typeof apple !== 'undefined') {
-          throw new Error('this test was expecting only two valid arguments');
+          done(new Error('this test was expecting only two valid arguments'));
         }
 
         return next(null, chunk + ' ');
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.a('string');

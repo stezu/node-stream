@@ -59,7 +59,7 @@ describe('[pipeline]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not have been called');
+        done(new Error('end should not have been called'));
       })
       .resume();
   });
@@ -81,7 +81,7 @@ describe('[pipeline]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not have been called');
+        done(new Error('end should not have been called'));
       })
       .resume();
   });
@@ -103,7 +103,7 @@ describe('[pipeline]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not have been called');
+        done(new Error('end should not have been called'));
       })
       .resume();
   });

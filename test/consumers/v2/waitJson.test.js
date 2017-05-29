@@ -72,7 +72,7 @@ describe('[v2-waitJson]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not be called');
+        done(new Error('end should not be called'));
       })
       .resume();
   });
@@ -89,7 +89,7 @@ describe('[v2-waitJson]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not be called');
+        done(new Error('end should not be called'));
       })
       .resume();
   });

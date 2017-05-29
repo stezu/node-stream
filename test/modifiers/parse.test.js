@@ -39,7 +39,7 @@ describe('[parse]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not be called');
+        done(new Error('end should not be called'));
       })
       .resume();
   });
@@ -56,7 +56,7 @@ describe('[parse]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not be called');
+        done(new Error('end should not be called'));
       })
       .resume();
   });
@@ -70,7 +70,7 @@ describe('[parse]', function () {
         error: false
       }))
       .on('error', function () {
-        throw new Error('test should not throw any errors');
+        done(new Error('test should not throw any errors'));
       })
       .on('data', function (chunk) {
         actual.push(chunk);
@@ -90,7 +90,7 @@ describe('[parse]', function () {
         error: false
       }))
       .on('error', function () {
-        throw new Error('test should not throw any errors');
+        done(new Error('test should not throw any errors'));
       })
       .on('data', function (chunk) {
         actual.push(chunk);

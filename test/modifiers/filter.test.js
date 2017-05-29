@@ -51,7 +51,7 @@ describe('[filter]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not be called');
+        done(new Error('end should not be called'));
       })
       .resume();
   });
@@ -115,7 +115,7 @@ describe('[filter]', function () {
         return chunk.length > 2;
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.an.instanceof(Buffer);
@@ -141,7 +141,7 @@ describe('[filter]', function () {
         return typeof chunk === 'object';
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         actual.push(chunk);
@@ -166,7 +166,7 @@ describe('[filter]', function () {
         return i > 2;
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.an.instanceof(Buffer);
@@ -190,7 +190,7 @@ describe('[filter]', function () {
       .pipe(filter(function (chunk, next, banana, apple) {
 
         if (typeof banana !== 'undefined' && typeof apple !== 'undefined') {
-          throw new Error('this test was expecting only two valid arguments');
+          done(new Error('this test was expecting only two valid arguments'));
         }
 
         i += 1;
@@ -198,7 +198,7 @@ describe('[filter]', function () {
         return next(null, i > 2);
       }))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.an.instanceof(Buffer);

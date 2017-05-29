@@ -54,7 +54,7 @@ describe('[reduce]', function () {
         done();
       })
       .on('end', function () {
-        throw new Error('end should not be called');
+        done(new Error('end should not be called'));
       })
       .resume();
   });
@@ -69,7 +69,7 @@ describe('[reduce]', function () {
         return memo + chunk;
       }, ''))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.a('string');
@@ -95,7 +95,7 @@ describe('[reduce]', function () {
         return memo + chunk;
       }, 0))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
         expect(chunk).to.be.a('number');
@@ -119,12 +119,12 @@ describe('[reduce]', function () {
         return 1;
       }, 0))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
 
         if (actual === expected) {
-          throw new Error('data should only be called once');
+          done(new Error('data should only be called once'));
         }
 
         expect(chunk).to.be.a('number');
@@ -147,18 +147,18 @@ describe('[reduce]', function () {
       .pipe(reduce(function (memo, chunk, next, apple) {
 
         if (typeof apple !== 'undefined') {
-          throw new Error('this test was expecting only three valid arguments');
+          done(new Error('this test was expecting only three valid arguments'));
         }
 
         next(null, memo + chunk);
       }, ''))
       .on('error', function () {
-        throw new Error('error should not be called');
+        done(new Error('error should not be called'));
       })
       .on('data', function (chunk) {
 
         if (actual === expected) {
-          throw new Error('data should only be called once');
+          done(new Error('data should only be called once'));
         }
 
         expect(chunk).to.be.a('string');
