@@ -10,7 +10,7 @@ describe('[pipeline]', function () {
     var streams = [];
 
     function appendValue(val) {
-      return through.obj(function (chunk, enc, next) {
+      return through(function (chunk, enc, next) {
         next(null, chunk + val);
       });
     }
