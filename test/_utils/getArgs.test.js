@@ -1,5 +1,4 @@
 var expect = require('chai').expect;
-var _ = require('lodash');
 
 var getArgs = require('../../lib/_utils/getArgs.js');
 
