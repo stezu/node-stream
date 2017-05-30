@@ -108,9 +108,43 @@ describe('[pipeline]', function () {
       .resume();
   });
 
-  it('returns a passthrough stream when given 0 input streams');
+  it('returns a passthrough stream when given 0 input streams', function (done) {
+    var readableStream = getReadableStream(['1', '2', '3', '4', '5']);
+    var expected = ['1', '2', '3', '4', '5'];
+    var actual = [];
+    var testStream = pipeline();
 
-  it('returns the given stream when given 1 input stream');
+    readableStream
+      .pipe(testStream)
+      .on('data', function (chunk) {
+        actual.push(chunk.toString());
+      })
+      .on('error', done)
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
+
+  it('returns the given stream when given 1 input stream', function (done) {
+    var readableStream = getReadableStream(['1', '2', '3', '4', '5']);
+    var expected = ['1', '2', '3', '4', '5'];
+    var actual = [];
+    var outputStream = pipeline(readableStream);
+
+    // The output stream should have the same contents
+    outputStream
+      .on('data', function (chunk) {
+        actual.push(chunk.toString());
+      })
+      .on('error', done)
+      .on('end', function () {
+        expect(actual).to.deep.equal(expected);
+
+        done();
+      });
+  });
 
   describe('when the duplex stream is destroyed', function () {
 
