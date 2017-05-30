@@ -152,7 +152,7 @@ describe('[pipeline]', function () {
       });
   });
 
-  describe.only('when the duplex stream is destroyed', function () {
+  describe('when the duplex stream is destroyed', function () {
     var inputStreams, outputStream;
 
     before(function (done) {
@@ -195,14 +195,58 @@ describe('[pipeline]', function () {
       expect(inputStreams.through).to.have.property('destroyed').and.to.equal(true);
       expect(inputStreams.readableStream).to.have.property('destroyed').and.to.equal(true);
     });
+
+    it('the duplex stream is destroyed', function () {
+      expect(outputStream).to.have.property('destroyed').and.to.equal(true);
+    });
   });
 
   describe('when a child stream is destroyed', function () {
+    var inputStreams, outputStream;
 
-    it('other child file descriptors are closed');
+    before(function (done) {
+      mockFs({
+        'read-file.txt': 'this is a test file. it has some content in it.'
+      });
 
-    it('other child requests are aborted');
+      inputStreams = {
+        'fsRead': fs.createReadStream('read-file.txt'),
+        'fsWrite': fs.createWriteStream('write-file.txt'),
+        'request': getMockRequest(),
+        'through': through(),
+        'readableStream': getReadableStream(['this stream', 'has', 'content in', 'it'])
+      };
+      outputStream = pipeline(_.values(inputStreams));
 
-    it('other child streams are destroyed');
+      setImmediate(function () {
+        inputStreams.through.destroy();
+        done();
+      });
+    });
+
+    after(function () {
+      _.values(inputStreams).forEach(endStream);
+      inputStreams = null;
+      outputStream = null;
+      mockFs.restore();
+    });
+
+    it('other child file descriptors are closed', function () {
+      expect(inputStreams.fsRead).to.have.property('closed').and.to.equal(true);
+      expect(inputStreams.fsWrite).to.have.property('closed').and.to.equal(true);
+    });
+
+    it('other child requests are aborted', function () {
+      expect(inputStreams.request).to.have.property('aborted').and.to.be.a('number');
+    });
+
+    it('other child streams are destroyed', function () {
+      expect(inputStreams.through).to.have.property('destroyed').and.to.equal(true);
+      expect(inputStreams.readableStream).to.have.property('destroyed').and.to.equal(true);
+    });
+
+    it('the duplex stream is destroyed', function () {
+      expect(outputStream).to.have.property('destroyed').and.to.equal(true);
+    });
   });
 });
