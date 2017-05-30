@@ -135,4 +135,26 @@ describe('[pipelineObj]', function () {
       })
       .resume();
   });
+
+  it('returns a passthrough stream when given 0 input streams');
+
+  it('returns the given stream when given 1 input stream');
+
+  describe('when the duplex stream is destroyed', function () {
+
+    it('child file descriptors are closed');
+
+    it('child requests are aborted');
+
+    it('child streams are destroyed');
+  });
+
+  describe('when a child stream is destroyed', function () {
+
+    it('other child file descriptors are closed');
+
+    it('other child requests are aborted');
+
+    it('other child streams are destroyed');
+  });
 });
