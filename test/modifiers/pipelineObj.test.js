@@ -5,9 +5,9 @@ var _ = require('lodash');
 var through = require('through2');
 var expect = require('chai').expect;
 
-var getReadableStream = require('../_utilities/getReadableStream.js');
-var getMockRequest = require('../_utilities/getMockRequest.js');
-var endStream = require('../_utilities/endStream.js');
+var getReadableStream = require('../_testHelpers/getReadableStream.js');
+var getMockRequest = require('../_testHelpers/getMockRequest.js');
+var endStream = require('../_testHelpers/endStream.js');
 var pipelineObj = require('../../').pipeline.obj;
 
 describe('[pipelineObj]', function () {

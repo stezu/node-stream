@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 
-var getReadableStream = require('../../_utilities/getReadableStream.js');
-var getDuplexStream = require('../../_utilities/getDuplexStream.js');
-var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var getReadableStream = require('../../_testHelpers/getReadableStream.js');
+var getDuplexStream = require('../../_testHelpers/getDuplexStream.js');
+var runBasicStreamTests = require('../../_testHelpers/runBasicStreamTests.js');
 var first = require('../../../').first;
 
 describe('[v1-first]', function () {

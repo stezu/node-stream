@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 
-var getReadableStream = require('../../_utilities/getReadableStream.js');
-var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var getReadableStream = require('../../_testHelpers/getReadableStream.js');
+var runBasicStreamTests = require('../../_testHelpers/runBasicStreamTests.js');
 var waitObj = require('../../../').wait.obj;
 
 describe('[v2-waitObj]', function () {
