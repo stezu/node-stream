@@ -1,7 +1,13 @@
+var fs = require('fs');
+
+var mockFs = require('mock-fs');
+var _ = require('lodash');
 var through = require('through2');
 var expect = require('chai').expect;
 
 var getReadableStream = require('../_utilities/getReadableStream.js');
+var getMockRequest = require('../_utilities/getMockRequest.js');
+var endStream = require('../_utilities/endStream.js');
 var pipeline = require('../../').pipeline;
 
 describe('[pipeline]', function () {
@@ -146,13 +152,49 @@ describe('[pipeline]', function () {
       });
   });
 
-  describe('when the duplex stream is destroyed', function () {
+  describe.only('when the duplex stream is destroyed', function () {
+    var inputStreams, outputStream;
 
-    it('child file descriptors are closed');
+    before(function (done) {
+      mockFs({
+        'read-file.txt': 'this is a test file. it has some content in it.'
+      });
 
-    it('child requests are aborted');
+      inputStreams = {
+        'fsRead': fs.createReadStream('read-file.txt'),
+        'fsWrite': fs.createWriteStream('write-file.txt'),
+        'request': getMockRequest(),
+        'through': through(),
+        'readableStream': getReadableStream(['this stream', 'has', 'content in', 'it'])
+      };
+      outputStream = pipeline(_.values(inputStreams));
 
-    it('child streams are destroyed');
+      setImmediate(function () {
+        outputStream.destroy();
+        done();
+      });
+    });
+
+    after(function () {
+      _.values(inputStreams).forEach(endStream);
+      inputStreams = null;
+      outputStream = null;
+      mockFs.restore();
+    });
+
+    it('child file descriptors are closed', function () {
+      expect(inputStreams.fsRead).to.have.property('closed').and.to.equal(true);
+      expect(inputStreams.fsWrite).to.have.property('closed').and.to.equal(true);
+    });
+
+    it('child requests are aborted', function () {
+      expect(inputStreams.request).to.have.property('aborted').and.to.be.a('number');
+    });
+
+    it('child streams are destroyed', function () {
+      expect(inputStreams.through).to.have.property('destroyed').and.to.equal(true);
+      expect(inputStreams.readableStream).to.have.property('destroyed').and.to.equal(true);
+    });
   });
 
   describe('when a child stream is destroyed', function () {
