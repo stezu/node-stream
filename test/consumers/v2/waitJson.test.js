@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 
-var getReadableStream = require('../../_utilities/getReadableStream.js');
-var getDuplexStream = require('../../_utilities/getDuplexStream.js');
-var runBasicStreamTests = require('../../_utilities/runBasicStreamTests.js');
+var getReadableStream = require('../../_testHelpers/getReadableStream.js');
+var getDuplexStream = require('../../_testHelpers/getDuplexStream.js');
+var runBasicStreamTests = require('../../_testHelpers/runBasicStreamTests.js');
 var waitJson = require('../../../').wait.json;
 
 describe('[v2-waitJson]', function () {

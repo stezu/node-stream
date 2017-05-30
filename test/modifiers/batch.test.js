@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 
-var asyncStream = require('../_utilities/getFakeAsyncStream.js');
-var getReadableStream = require('../_utilities/getReadableStream.js');
-var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
+var asyncStream = require('../_testHelpers/getFakeAsyncStream.js');
+var getReadableStream = require('../_testHelpers/getReadableStream.js');
+var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
 
 var batch = require('../../').batch;
 

@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-var runBasicStreamTests = require('../_utilities/runBasicStreamTests.js');
+var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
 var intersperse = require('../../').intersperse;
 
 describe('[intersperse]', function () {

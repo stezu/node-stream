@@ -1,7 +1,7 @@
 var through = require('through2');
 var expect = require('chai').expect;
 
-var getReadableStream = require('../_utilities/getReadableStream.js');
+var getReadableStream = require('../_testHelpers/getReadableStream.js');
 var pipeline = require('../../').pipeline;
 
 describe('[pipeline]', function () {
