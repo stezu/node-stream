@@ -1,0 +1,2913 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>node-stream 1.7.0 | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation'>
+  <div class='max-width-4 mx-auto'>
+    <div class='clearfix md-mxn2'>
+      <div class='fixed xs-hide fix-3 overflow-auto max-height-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>node-stream</h3>
+          <div class='mb1'><code>1.7.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#batch'
+                  class="">
+                  batch
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#drop'
+                  class="">
+                  drop
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#filter'
+                  class="">
+                  filter
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#find'
+                  class="">
+                  find
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#findwhere'
+                  class="">
+                  findWhere
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#flatten'
+                  class="">
+                  flatten
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#fromarray'
+                  class="">
+                  fromArray
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#fromcallback'
+                  class="">
+                  fromCallback
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#frompromise'
+                  class="">
+                  fromPromise
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#split'
+                  class="">
+                  split
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#through'
+                  class="">
+                  through
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#throughobj'
+                  class="">
+                  through.obj
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#intersperse'
+                  class="">
+                  intersperse
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#map'
+                  class="">
+                  map
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#parse'
+                  class="">
+                  parse
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#pick'
+                  class="">
+                  pick
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#pipeline'
+                  class="">
+                  pipeline
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#pipelineobj'
+                  class="">
+                  pipeline.obj
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#pluck'
+                  class="">
+                  pluck
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#reduce'
+                  class="">
+                  reduce
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#sort'
+                  class="">
+                  sort
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#stringify'
+                  class="">
+                  stringify
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#take'
+                  class="">
+                  take
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#wait'
+                  class="">
+                  wait
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#waitjson'
+                  class="">
+                  wait.json
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#waitobj'
+                  class="">
+                  wait.obj
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#where'
+                  class="">
+                  where
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div class='fix-margin-3'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='batch'>
+      batch
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/batch.js#L110-L230'>
+      <span>lib/modifiers/batch.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns a new stream that batches writes based on a specific interval, count of items, or both.
+All items read on the stream and will be re-emitted as part of an array of one or more items
+based on the criteria defined in the options.</p>
+
+
+  <div class='pre p1 fill-light mt0'>batch(options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.5.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
+	    Define how items will be batched and written to the
+the stream. Note that when both 
+<code>time</code>
+ and 
+<code>count</code>
+ are
+defined, items will be written to the stream whenever
+either one of the conditions is met.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>options.time</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+                  
+                    (default <code>0</code>)
+                  </td>
+                  <td class='break-word'><span>The interval, in milliseconds, to limit writes to.
+During that time, all items read on the stream will
+be collected and written as an array at the set
+interval.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>options.count</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+                  
+                    (default <code>1</code>)
+                  </td>
+                  <td class='break-word'><span>The number of items to buffer before writing all
+of them in an array.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> input = nodeStream.through.obj();
+
+input.pipe(nodeStream.batch({ <span class="hljs-attr">time</span>: <span class="hljs-number">100</span> }));
+
+input.write(<span class="hljs-number">1</span>);
+
+setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  input.write(<span class="hljs-number">2</span>);
+  input.write(<span class="hljs-number">3</span>);
+}, <span class="hljs-number">100</span>);
+
+setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  input.write(<span class="hljs-number">4</span>);
+  input.write(<span class="hljs-number">5</span>);
+}, <span class="hljs-number">200</span>);
+
+<span class="hljs-comment">// =&gt; [[1], [2, 3], [4, 5]]</span></pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> input = nodeStream.through.obj();
+
+input.pipe(nodeStream.batch({ <span class="hljs-attr">count</span>: <span class="hljs-number">2</span> }));
+
+input.write(<span class="hljs-number">1</span>);
+input.write(<span class="hljs-number">2</span>);
+input.write(<span class="hljs-number">3</span>);
+input.write(<span class="hljs-number">4</span>);
+input.write(<span class="hljs-number">5</span>);
+
+<span class="hljs-comment">// =&gt; [[1, 2], [3, 4], [5]]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='drop'>
+      drop
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/drop.js#L23-L41'>
+      <span>lib/modifiers/drop.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new Stream without the first <code>n</code> values from the source stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>drop(n: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.4.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>n</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)</code>
+	    Number of items to drop from the source stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// drop the first 3 items from a stream</span>
+inStream <span class="hljs-comment">// =&gt; ['b', 'a', 'n', 'a', 'n', 'a']</span>
+  .pipe(nodeStream.drop(<span class="hljs-number">3</span>))
+  .pipe(process.stdout)
+  <span class="hljs-comment">// =&gt; ['a', 'n', 'a']</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='filter'>
+      filter
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/filter.js#L68-L86'>
+      <span>lib/modifiers/filter.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with all elements that pass the test implemented by the
+provided function. Similar to Array.filter... but on a stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>filter(condition: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>condition</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    Function that filters elements on the stream.
+Takes one argument, the value of the item at
+this position in the stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        A transform stream with the filtered values.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// If you wanted to create a new stream whose values all passed a certain criteria,</span>
+<span class="hljs-comment">// you could do something like the following. Assuming "test-scores.txt" is a file</span>
+<span class="hljs-comment">// containing the following data:</span>
+<span class="hljs-comment">// Sally...90</span>
+<span class="hljs-comment">// Tommy...94</span>
+<span class="hljs-comment">// Jimmy...12</span>
+<span class="hljs-comment">// Sarah...82</span>
+<span class="hljs-comment">// Jonny...64</span>
+
+<span class="hljs-comment">// We can write a function that returns the students who are failing:</span>
+fs.createReadStream(<span class="hljs-string">'test-scores.txt'</span>)
+  .pipe(nodeStream.split()) <span class="hljs-comment">// split on new lines</span>
+  .pipe(nodeStream.filter(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> [student, testScore] = value.toString().split(<span class="hljs-string">'...'</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Number</span>(testScore) &lt; <span class="hljs-number">70</span>;
+  }));
+
+<span class="hljs-comment">// The resulting stream would have the following data:</span>
+<span class="hljs-comment">// Jimmy...12</span>
+<span class="hljs-comment">// Jonny...64</span></pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// It is also possible to filter a stream asynchronously for more complex actions.</span>
+<span class="hljs-comment">// Note: The signature of the function that you pass as the callback is important. It</span>
+<span class="hljs-comment">// MUST have *two* parameters.</span>
+
+<span class="hljs-comment">// Assuming "filenames.txt" is a newline-separated list of file names, you could</span>
+<span class="hljs-comment">// create a new stream with only valid names by doing something like the following:</span>
+fs.createReadStream(<span class="hljs-string">'filenames.txt'</span>)
+  .pipe(nodeStream.split()) <span class="hljs-comment">// split on new lines</span>
+  .pipe(nodeStream.filter(<span class="hljs-function">(<span class="hljs-params">value, next</span>) =&gt;</span> {
+    fs.stat(value, (err, stats) =&gt; {
+
+      <span class="hljs-comment">// Error the stream since this file is not valid</span>
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> next(err);
+      }
+
+      next(<span class="hljs-literal">null</span>, stats.isFile());
+    });
+  }));
+
+<span class="hljs-comment">// The resulting stream will contain the filenames that passed the test. Note: If `next`</span>
+<span class="hljs-comment">// is called with an error as the first argument, the stream will error. This is typical</span>
+<span class="hljs-comment">// behavior for node callbacks.</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='find'>
+      find
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/find.js#L68-L74'>
+      <span>lib/modifiers/find.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new Stream with the first element from the source stream
+where <code>condition</code> is true. A convenient form of <code>filter</code>.</p>
+
+
+  <div class='pre p1 fill-light mt0'>find(condition: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.4.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>condition</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    Function that filters elements on the stream.
+Takes one argument, the value of the item at
+this position in the stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        A transform stream with the first value that
+passed the test.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// If you wanted to create a new stream with the first value that passed a certain</span>
+<span class="hljs-comment">// criteria, you could do something like the following. Assuming "test-scores.txt"</span>
+<span class="hljs-comment">// is a file containing the following data:</span>
+<span class="hljs-comment">// Sally...90</span>
+<span class="hljs-comment">// Tommy...94</span>
+<span class="hljs-comment">// Jimmy...12</span>
+<span class="hljs-comment">// Sarah...82</span>
+<span class="hljs-comment">// Jonny...64</span>
+
+<span class="hljs-comment">// We can write a function that returns the first failing student:</span>
+fs.createReadStream(<span class="hljs-string">'test-scores.txt'</span>)
+  .pipe(nodeStream.split()) <span class="hljs-comment">// split on new lines</span>
+  .pipe(nodeStream.find(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> [student, testScore] = value.toString().split(<span class="hljs-string">'...'</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Number</span>(testScore) &lt; <span class="hljs-number">70</span>;
+  }));
+
+<span class="hljs-comment">// The resulting stream would have the following data:</span>
+<span class="hljs-comment">// Jimmy...12</span></pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// It is also possible to filter a stream asynchronously for more complex actions.</span>
+<span class="hljs-comment">// Note: The signature of the function that you pass as the callback is important. It</span>
+<span class="hljs-comment">// MUST have *two* parameters.</span>
+
+<span class="hljs-comment">// Assuming "filenames.txt" is a newline-separated list of file names, you could</span>
+<span class="hljs-comment">// create a new stream with the first valid filename by doing something like the following:</span>
+fs.createReadStream(<span class="hljs-string">'filenames.txt'</span>)
+  .pipe(nodeStream.split()) <span class="hljs-comment">// split on new lines</span>
+  .pipe(nodeStream.find(<span class="hljs-function">(<span class="hljs-params">value, next</span>) =&gt;</span> {
+    fs.stat(value, (err, stats) =&gt; {
+
+      <span class="hljs-comment">// Error the stream since this file is not valid</span>
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> next(err);
+      }
+
+      next(<span class="hljs-literal">null</span>, stats.isFile());
+    });
+  }));
+
+<span class="hljs-comment">// The resulting stream will contain the first filename that passed the test. Note: If `next`</span>
+<span class="hljs-comment">// is called with an error as the first argument, the stream will error. This is typical</span>
+<span class="hljs-comment">// behavior for node callbacks.</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='findwhere'>
+      findWhere
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/findWhere.js#L27-L33'>
+      <span>lib/modifiers/findWhere.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new Stream with the first element from the source stream
+that matches the <code>query</code>. A convenient form of <code>where</code>. It performs
+a deep comparison between a given <code>query</code> and items in the source
+stream. Items that match the <code>query</code> are forwarded to the output
+stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>findWhere(query: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.4.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>query</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    An object of properties to compare against all items in
+the source stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// find the first element that matches the condition</span>
+objStream <span class="hljs-comment">// =&gt; [{ name: 'Bob', age: 30 }, { name: 'Lisa', age: 30 }]</span>
+  .pipe(nodeStream.findWhere({ <span class="hljs-attr">age</span>: <span class="hljs-number">30</span> })
+  <span class="hljs-comment">// =&gt; [{ name: 'Bob', age: 30 }]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='flatten'>
+      flatten
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/flatten.js#L47-L61'>
+      <span>lib/modifiers/flatten.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns a new stream that flattens all arrays passing through by one level. All non-array
+items will be passed through as-is.</p>
+
+
+  <div class='pre p1 fill-light mt0'>flatten(): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.5.0</div>
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> input = nodeStream.through.obj();
+
+input.pipe(nodeStream.flatten());
+
+input.write([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
+input.write([<span class="hljs-number">4</span>, <span class="hljs-number">5</span>]);
+input.write(<span class="hljs-number">6</span>);
+
+<span class="hljs-comment">// =&gt; [1, 2, 3, 4, 5, 6]</span></pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> input = nodeStream.through.obj();
+
+input
+  <span class="hljs-comment">// batch items that are read</span>
+  .pipe(nodeStream.batch({ <span class="hljs-attr">count</span>: <span class="hljs-number">2</span> }))
+  <span class="hljs-comment">// perform a transform action on the batches</span>
+  .pipe(transformBatch())
+  <span class="hljs-comment">// flatten the batches back</span>
+  .pipe(nodeStream.flatten());
+
+input.write(<span class="hljs-number">1</span>);
+input.write(<span class="hljs-number">2</span>);
+input.write(<span class="hljs-number">3</span>);
+input.write(<span class="hljs-number">4</span>);
+input.write(<span class="hljs-number">5</span>);
+
+<span class="hljs-comment">// =&gt; [1, 2, 3, 4, 5]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='fromarray'>
+      fromArray
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/creators/fromArray.js#L25-L46'>
+      <span>lib/creators/fromArray.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new readable stream from an array. This is primarily useful for
+piping into additional node-stream methods like map, reduce and filter.</p>
+
+
+  <div class='pre p1 fill-light mt0'>fromArray(source: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_readable">Stream.Readable</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.6.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>source</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>)</code>
+	    An array which will be converted to a stream. If an item
+in the array is 
+<code>null</code>
+ the stream will end early. Every
+other data type is allowed and valid.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_readable">Stream.Readable</a></code>:
+        Readable stream.
+
+      
+    
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Throws</div>
+    <ul>
+      
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError">TypeError</a>: If 
+<code>source</code>
+ is not an array.
+</li>
+      
+    </ul>
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// Create a stream from an array which is then piped to another node-stream method</span>
+nodeStream.fromArray([<span class="hljs-string">'file1.txt'</span>, <span class="hljs-string">'file2.txt'</span>, <span class="hljs-string">'file3.txt'</span>])
+  .pipe(nodeStream.map(fs.readFile));
+  <span class="hljs-comment">// =&gt; ['contents of file1.txt', 'contents of file2.txt', 'contents of file3.txt']</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='fromcallback'>
+      fromCallback
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/creators/fromCallback.js#L28-L67'>
+      <span>lib/creators/fromCallback.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new readable stream from a function which accepts a node-style callback.
+This is primarily useful for piping into additional node-stream methods like map,
+reduce and filter.</p>
+
+
+  <div class='pre p1 fill-light mt0'>fromCallback(source: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_readable">Stream.Readable</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.6.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>source</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    A function to call which accepts a node-style
+callback as the last argument. When that callback
+is called, this stream will emit all arguments
+as a single array.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_readable">Stream.Readable</a></code>:
+        Readable stream.
+
+      
+    
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Throws</div>
+    <ul>
+      
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError">TypeError</a>: If 
+<code>source</code>
+ is not a function.
+</li>
+      
+    </ul>
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// Create a stream from a function callback which is then piped to another node-stream method</span>
+nodeStream.fromCallback(fs.readdir.bind(<span class="hljs-keyword">this</span>, path.resolve(<span class="hljs-string">'.'</span>)))
+  .pipe(nodeStream.map(fs.readFile));
+  <span class="hljs-comment">// =&gt; ['contents of file1.txt', 'contents of file2.js', 'contents of file3.pdf']</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='frompromise'>
+      fromPromise
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/creators/fromPromise.js#L25-L66'>
+      <span>lib/creators/fromPromise.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new readable stream from a promise. This is primarily useful for
+piping into additional node-stream methods like map, reduce and filter.</p>
+
+
+  <div class='pre p1 fill-light mt0'>fromPromise(source: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_readable">Stream.Readable</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.6.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>source</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>)</code>
+	    A promise which will be converted to a stream. If the promise
+resolves, each argument becomes a discrete item in the stream.
+If the promise rejects, the stream will emit an "error" event.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_readable">Stream.Readable</a></code>:
+        Readable stream.
+
+      
+    
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Throws</div>
+    <ul>
+      
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError">TypeError</a>: If 
+<code>source</code>
+ is not a promise.
+</li>
+      
+    </ul>
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// Create a stream from a promise</span>
+nodeStream.fromPromise(globby(<span class="hljs-string">'*.js'</span>))
+  .pipe(nodeStream.map(fs.readFile));
+  <span class="hljs-comment">// =&gt; ['contents of file1.js', 'contents of file2.js', 'contents of file3.js']</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='split'>
+      split
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/index.js#L83-L83'>
+      <span>lib/index.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns a stream that has been split on new lines (by default). This is a
+wrapper of <a href="https://www.npmjs.com/package/split2">split2</a> by
+<a href="https://github.com/mcollina">mcollina</a>.</p>
+
+
+  <div class='pre p1 fill-light mt0'>split(matcher: (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp">RegExp</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)?): <a href="https://nodejs.org/api/stream.html">Stream</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>matcher</span> <code class='quiet'>((<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp">RegExp</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)?)</code>
+	    A regular expression or string to split
+the stream by. The characters that match
+this regular expression are removed.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html">Stream</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='through'>
+      through
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/index.js#L124-L124'>
+      <span>lib/index.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns a transform stream with a simple API. This is a wrapper of
+<a href="https://www.npmjs.com/package/through2">through2</a> by
+<a href="https://github.com/rvagg">rvagg</a>.</p>
+
+
+  <div class='pre p1 fill-light mt0'>through(options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?, transform: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?, flush: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?): <a href="https://nodejs.org/api/stream.html">Stream</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
+	    Optional and passed directly to 
+<code>stream.Transform</code>
+.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?)</code>
+	    A function that takes a stream chunk, encoding and callback
+to transform the data in a stream. Additional items can
+be appended to the stream by calling 
+<code>this.push(chunk)</code>
+.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>flush</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?)</code>
+	    A function called at the end of the stream that can be
+used to finish up any processing. Additional items can be
+appended to the stream by calling 
+<code>this.push(chunk)</code>
+.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html">Stream</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='throughobj'>
+      through.obj
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/index.js#L124-L124'>
+      <span>lib/index.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns a transform stream (in object mode) with a simple API. This is a wrapper of
+<a href="https://www.npmjs.com/package/through2">through2</a> by
+<a href="https://github.com/rvagg">rvagg</a>.</p>
+
+
+  <div class='pre p1 fill-light mt0'>through.obj(options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?, transform: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?, flush: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?): <a href="https://nodejs.org/api/stream.html">Stream</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
+	    Optional and passed directly to 
+<code>stream.Transform</code>
+.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?)</code>
+	    A function that takes a stream chunk, encoding and callback
+to transform the data in a stream. Additional items can
+be appended to the stream by calling 
+<code>this.push(chunk)</code>
+.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>flush</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>?)</code>
+	    A function called at the end of the stream that can be
+used to finish up any processing. Additional items can be
+appended to the stream by calling 
+<code>this.push(chunk)</code>
+.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html">Stream</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='intersperse'>
+      intersperse
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/intersperse.js#L22-L37'>
+      <span>lib/modifiers/intersperse.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with the <code>value</code> emitted between every item in the source
+stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>intersperse(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.3.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>value</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    Value that should be emitted between every existing item.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// Log some values to the console with new lines interspersed</span>
+shoppingList <span class="hljs-comment">// =&gt; ['banana', 'apple', 'orange']</span>
+  .pipe(nodeStream.intersperse(<span class="hljs-string">'\n'</span>))
+  .pipe(process.stdout)
+  <span class="hljs-comment">// =&gt; ['banana', '\n', 'apple', '\n', 'orange']</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='map'>
+      map
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/map.js#L46-L52'>
+      <span>lib/modifiers/map.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with the results of calling the provided function on
+every item in the stream. Similar to Array.map... but on a stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>map(transform: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    Function that returns a new element on the
+stream. Takes one argument, the value of the
+item at this position in the stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        A transform stream with the modified values.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// For a simple find/replace, you could do something like the following. Assuming</span>
+<span class="hljs-comment">// "example.txt" is a file with the text "the text has periods. because, english.",</span>
+<span class="hljs-comment">// you could replace each period with a comma like so:</span>
+fs.createReadStream(<span class="hljs-string">'example.txt'</span>)
+  .pipe(nodeStream.map(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value.toString().replace(<span class="hljs-string">'.'</span>, <span class="hljs-string">','</span>)));
+
+<span class="hljs-comment">// The resulting stream will have the value "the text has periods, because, english,".</span></pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// It is also possible to transform a stream asynchronously for more complex actions.</span>
+<span class="hljs-comment">// Note: The signature of the function that you pass as the callback is important. It</span>
+<span class="hljs-comment">// MUST have *two* parameters.</span>
+
+<span class="hljs-comment">// Assuming "filenames.txt" is a newline-separated list of file names, you could</span>
+<span class="hljs-comment">// create a new stream with their contents by doing something like the following:</span>
+fs.createReadStream(<span class="hljs-string">'filenames.txt'</span>)
+  .pipe(nodeStream.split()) <span class="hljs-comment">// split on new lines</span>
+  .pipe(nodeStream.map(<span class="hljs-function">(<span class="hljs-params">value, next</span>) =&gt;</span> {
+    fs.readFile(value, next);
+  }));
+
+<span class="hljs-comment">// The resulting stream will contain the text of each file. Note: If `next` is called</span>
+<span class="hljs-comment">// with an error as the first argument, the stream will error. This is typical behavior</span>
+<span class="hljs-comment">// for node callbacks.</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='parse'>
+      parse
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/parse.js#L34-L55'>
+      <span>lib/modifiers/parse.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream where every element in the source stream
+is parsed as JSON.</p>
+
+
+  <div class='pre p1 fill-light mt0'>parse(options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.1.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
+	    Options to use when parsing items in the stream.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>options.error</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>true</code>)
+                  </td>
+                  <td class='break-word'><span>If true, an error caught when parsing JSON
+will be emitted on the stream. If false, the
+unparseable item will be removed from the stream
+without error.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// parse a newline-separated JSON file</span>
+fs.createReadStream(<span class="hljs-string">'example.log'</span>)
+  .pipe(nodeStream.split())
+  .pipe(nodeStream.parse());</pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// parse a large JSON file</span>
+fs.createReadStream(<span class="hljs-string">'warandpeace.json'</span>)
+  .pipe(nodeStream.wait())
+  .pipe(nodeStream.parse());</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='pick'>
+      pick
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/pick.js#L24-L34'>
+      <span>lib/modifiers/pick.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with the output composed of the picked properties from the source stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>pick(properties: ...<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.3.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>properties</span> <code class='quiet'>(...<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    A collection of properties that will
+be picked from the source object.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// get some properties from each item in the stream</span>
+<span class="hljs-comment">// (e.g.: [{ name: 'pam', age: 24 }, { name: 'joe', age: 30 }])</span>
+objStream
+  .pipe(nodeStream.pick(<span class="hljs-string">'age'</span>))
+  <span class="hljs-comment">// =&gt; [{ age: 24 }, { age: 30 }]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='pipeline'>
+      pipeline
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/pipeline.js#L39-L48'>
+      <span>lib/modifiers/pipeline.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns a new stream that writes to the first given stream and reads from
+the last given stream. All errors are routed to the new output stream. This is a
+wrapper of <a href="https://www.npmjs.com/package/stream-combiner2">stream-combiner2</a>
+by <a href="https://github.com/substack">substack</a>.</p>
+
+
+  <div class='pre p1 fill-light mt0'>pipeline(streams: ...(<a href="https://nodejs.org/api/stream.html">Stream</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://nodejs.org/api/stream.html">Stream</a>>)): <a href="https://nodejs.org/api/stream.html">Stream</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>streams</span> <code class='quiet'>(...(<a href="https://nodejs.org/api/stream.html">Stream</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://nodejs.org/api/stream.html">Stream</a>>))</code>
+	    A series of streams that will be combined
+into a single output stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html">Stream</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// emit the largest line in a file</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getLargestLine</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> nodeStream.pipeline(
+    nodeStream.split(),
+    nodeStream.sort(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> {
+      <span class="hljs-keyword">return</span> a.length &lt; b.length;
+    }),
+    nodeStream.take(<span class="hljs-number">1</span>)
+  );
+}
+
+<span class="hljs-comment">// find the longest line of a haiku</span>
+process.stdin <span class="hljs-comment">// =&gt; ['refreshing and cool\nlove is ', 'a sweet summer ', 'rain\nthat washes the world']</span>
+  .pipe(getLargestLine())
+  <span class="hljs-comment">// =&gt; ['love is a sweet summer rain']</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='pipelineobj'>
+      pipeline.obj
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/pipeline.js#L81-L90'>
+      <span>lib/modifiers/pipeline.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Object mode of <code>pipeline</code>. Returns a new stream that writes to the first given stream and
+reads from the last given stream. All errors are routed to the new output stream. This is a
+wrapper of <a href="https://www.npmjs.com/package/stream-combiner2">stream-combiner2</a>
+by <a href="https://github.com/substack">substack</a>.</p>
+
+
+  <div class='pre p1 fill-light mt0'>pipeline.obj(streams: ...(<a href="https://nodejs.org/api/stream.html">Stream</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://nodejs.org/api/stream.html">Stream</a>>)): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>streams</span> <code class='quiet'>(...(<a href="https://nodejs.org/api/stream.html">Stream</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://nodejs.org/api/stream.html">Stream</a>>))</code>
+	    A series of streams that will be combined
+into a single output stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// read the contents of a file and parse json</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readJson</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> nodeStream.pipeline.obj(
+    nodeStream.wait(),
+    nodeStream.parse()
+  );
+}
+
+<span class="hljs-comment">// parse stdin as JSON in a single step</span>
+process.stdin <span class="hljs-comment">// =&gt; ['{"', 'banana":', '"appl', 'e"}']</span>
+  .pipe(readJson())
+  <span class="hljs-comment">// =&gt; { 'banana': 'apple' }</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='pluck'>
+      pluck
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/pluck.js#L24-L35'>
+      <span>lib/modifiers/pluck.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with the output composed of the plucked property
+from each item in the source stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>pluck(property: (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.3.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>property</span> <code class='quiet'>((<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>))</code>
+	    A property name that will be plucked from
+each item in the source stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// get the value of the "age" property for every item in the stream</span>
+objStream <span class="hljs-comment">// =&gt; [{ name: 'pam', age: 24 }, { name: 'joe', age: 30 }])</span>
+  .pipe(nodeStream.pluck(<span class="hljs-string">'age'</span>))
+  <span class="hljs-comment">// =&gt; [24, 30]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='reduce'>
+      reduce
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/reduce.js#L68-L85'>
+      <span>lib/modifiers/reduce.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with a single item that's produced by calling a reducer with
+each item of the original stream. Similar to Array.reduce... but on a stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>reduce(reducer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>, initialValue: any?): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>reducer</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    Function that reduces items in the stream. Takes
+two arguments: the current value of the reduction,
+and the value of the item at this position in the
+stream.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>initialValue</span> <code class='quiet'>(any?)</code>
+	    Value to use as the first argument to the first
+call of the 
+<code>reducer</code>
+.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        A transform stream that results from the reduction.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// If you wanted to determine the content-length of a stream, you could do something like</span>
+<span class="hljs-comment">// the following. Assuming "example.txt" is a large file, you could determine it's length</span>
+<span class="hljs-comment">// by doing the following:</span>
+fs.createReadStream(<span class="hljs-string">'example.txt'</span>)
+  .pipe(nodeStream.reduce(<span class="hljs-function">(<span class="hljs-params">length, value</span>) =&gt;</span> length + value.length), <span class="hljs-number">0</span>);
+
+<span class="hljs-comment">// The resulting stream will have an integer value representing the length of "example.txt".</span></pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// It is also possible to reduce a stream asynchronously for more complex actions.</span>
+<span class="hljs-comment">// Note: The signature of the function that you pass as the callback is important. It</span>
+<span class="hljs-comment">// MUST have *three* parameters.</span>
+
+<span class="hljs-comment">// Assuming "twitterers.txt" is a newline-separated list of your favorite tweeters, you</span>
+<span class="hljs-comment">// could identify which is the most recently active by using the Twitter API:</span>
+fs.createReadStream(<span class="hljs-string">'twitterers.txt'</span>)
+  .pipe(nodeStream.split()) <span class="hljs-comment">// split on new lines</span>
+  .pipe(nodeStream.reduce(<span class="hljs-function">(<span class="hljs-params">memo, user, next</span>) =&gt;</span> {
+    twit.get(<span class="hljs-string">'search/tweets'</span>, { <span class="hljs-attr">q</span>: <span class="hljs-string">`from:<span class="hljs-subst">${user}</span>`</span>, <span class="hljs-attr">count</span>: <span class="hljs-number">1</span> }, (err, data) =&gt; {
+
+      <span class="hljs-comment">// Error the stream since this request failed</span>
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> next(err);
+      }
+
+      <span class="hljs-comment">// This is the first iteration of the reduction, so we automatically save the tweet</span>
+      <span class="hljs-keyword">if</span> (!memo) {
+        <span class="hljs-keyword">return</span> next(<span class="hljs-literal">null</span>, data);
+      }
+
+      <span class="hljs-comment">// This tweet is the most recent so far, save it for later</span>
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(data.statuses.created_at) &gt; <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(memo.statuses.created_at)) {
+        <span class="hljs-keyword">return</span> next(<span class="hljs-literal">null</span>, data);
+      }
+
+      <span class="hljs-comment">// The tweet we have saved is still the most recent</span>
+      next(<span class="hljs-literal">null</span>, memo);
+    });
+  }));
+
+<span class="hljs-comment">// The resulting stream will contain the most recent tweet of the users in the list.</span>
+<span class="hljs-comment">// Note: If `next` is called with an error as the first argument, the stream will error.</span>
+<span class="hljs-comment">// This is typical behavior for node callbacks.</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='sort'>
+      sort
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/sort.js#L31-L73'>
+      <span>lib/modifiers/sort.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream where all elements of the source stream have been
+sorted by the Array.sort method. Each value will be emitted individually.</p>
+<p><em>Note:</em> This method will buffer all contents of the source stream before
+sending it. You should not use this method if your source stream is large
+as it could consume large amounts of memory.</p>
+
+
+  <div class='pre p1 fill-light mt0'>sort(compareFunction: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.3.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>compareFunction</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    A function that will be passed directly
+to Array.sort for item comparison.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// sort a stream of numbers</span>
+objStream <span class="hljs-comment">// =&gt; [10, 3, 9, 2, 4, 1]</span>
+  .pipe(nodeStream.sort())
+  <span class="hljs-comment">// =&gt; [1, 2, 3, 4, 9, 10]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='stringify'>
+      stringify
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/stringify.js#L21-L34'>
+      <span>lib/modifiers/stringify.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream where every element in the source stream
+is converted to a string by using <code>JSON.stringify</code>.</p>
+
+
+  <div class='pre p1 fill-light mt0'>stringify(): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.1.0</div>
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// stringify every element in an object stream so it can be</span>
+<span class="hljs-comment">// piped to a non-object stream.</span>
+objStream
+  .pipe(nodeStream.stringify())
+  .pipe(process.stdout);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='take'>
+      take
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/take.js#L23-L41'>
+      <span>lib/modifiers/take.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new Stream with the first <code>n</code> values from the source stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>take(n: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.4.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>n</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)</code>
+	    Number of items to take from the source stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// take the first 3 items from a stream</span>
+inStream <span class="hljs-comment">// =&gt; ['b', 'a', 'n', 'a', 'n', 'a']</span>
+  .pipe(nodeStream.take(<span class="hljs-number">3</span>))
+  .pipe(process.stdout)
+  <span class="hljs-comment">// =&gt; ['b', 'a', 'n']</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='wait'>
+      wait
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/consumers/v2/wait.js#L93-L104'>
+      <span>lib/consumers/v2/wait.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with a single value that's a Buffer of the entire
+contents of the stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>wait(callback: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    A function to be called with the contents
+of the stream. This is a convenience to
+avoid listening to the data/end events of
+the stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// get the entire contents of a file</span>
+fs.createReadStream(<span class="hljs-string">'example.txt'</span>)
+  .pipe(nodeStream.wait());
+  <span class="hljs-comment">// =&gt; Buffer</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='waitjson'>
+      wait.json
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/consumers/v2/wait.js#L128-L135'>
+      <span>lib/consumers/v2/wait.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with a single value that's an object created
+by JSON parsing the contents of the entire stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>wait.json(callback: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    A function to be called with the contents
+of the stream. This is a convenience to
+avoid listening to the data/end events of
+the stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// parse the JSON contents of a file</span>
+fs.createReadStream(<span class="hljs-string">'example.json'</span>)
+  .pipe(nodeStream.wait.json());
+  <span class="hljs-comment">// =&gt; { 'nanananananananananana': 'batman' }</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='waitobj'>
+      wait.obj
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/consumers/v2/wait.js#L52-L70'>
+      <span>lib/consumers/v2/wait.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates a new stream with a single value that's an array of every item
+in the stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>wait.obj(callback: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.0.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    A function to be called with the contents
+of the stream. This is a convenience to
+avoid listening to the data/end events of
+the stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// get all of the items in an object stream</span>
+objStream
+  .pipe(nodeStream.wait.obj());
+  <span class="hljs-comment">// =&gt; [{ 'name': 'paul' }, { 'name': 'lisa' }, { 'name': 'mary' }]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='where'>
+      where
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/stezu/node-stream/blob/a2a06882a0e41ec26a7e6abd81b391b19824b4bd/lib/modifiers/where.js#L25-L36'>
+      <span>lib/modifiers/where.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>A convenient form of filter which performs a deep comparison between a given <code>query</code>
+and items in the source stream. Items that match the <code>query</code> are forwarded to the output
+stream.</p>
+
+
+  <div class='pre p1 fill-light mt0'>where(query: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 1.3.0</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>query</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    An object of properties to compare against all items in
+the source stream.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html#stream_class_stream_transform">Stream.Transform</a></code>:
+        Transform stream.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-comment">// Get all users from a given zip code</span>
+users <span class="hljs-comment">// =&gt; [{ name: 'Bill', zip: 90210 }, { name: 'Tracy', zip: 33193 }, { name: 'Paul', zip: 90210 }]</span>
+  .pipe(nodeStream.where({ <span class="hljs-attr">zip</span>: <span class="hljs-number">90210</span> }))
+  <span class="hljs-comment">// =&gt; [{ name: 'Bill', zip: 90210 }, { name: 'Paul', zip: 90210 }]</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>
