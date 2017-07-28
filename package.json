@@ -39,19 +39,19 @@
     "beeper": "^1.1.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.16",
-    "eslint-config-stezu": "^1.0.2",
+    "eslint-config-stezu": "^1.0.5",
     "gulp": "^3.9.1",
     "gulp-documentation": "^3.2.0",
     "gulp-eslint": "^3.0.1",
     "gulp-if": "^2.0.1",
-    "gulp-istanbul": "^1.0.0",
+    "gulp-istanbul": "^1.1.2",
     "gulp-mocha": "^3.0.1",
     "gulp-sequence": "^0.4.5",
     "sinon": "^1.17.7"
   },
   "dependencies": {
     "lodash": "^4.17.2",
-    "readable-stream": "^2.2.9",
+    "readable-stream": "^2.3.3",
     "split2": "^2.1.0",
     "stream-combiner2": "^1.1.1",
     "through2": "^2.0.1"
