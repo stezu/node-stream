@@ -1,15 +1,18 @@
 # Node-Stream
 
-[![Build Status][1]][2] [![bitHound Score][3]][4] [![Test Coverage][5]][6]
+[![npm version][npm-version.svg]][npm] [![Build Status][build-status.svg]][travis] [![bitHound Score][bithound-score.svg]][bithound] [![Test Coverage][coveralls.svg]][coveralls]
 
-[1]: https://travis-ci.org/stezu/node-stream.svg?branch=master
-[2]: https://travis-ci.org/stezu/node-stream
+[npm-version.svg]: https://img.shields.io/npm/v/node-stream.svg
+[npm]: https://www.npmjs.com/package/node-stream
 
-[3]: https://www.bithound.io/github/stezu/node-stream/badges/score.svg
-[4]: https://www.bithound.io/github/stezu/node-stream
+[build-status.svg]: https://travis-ci.org/stezu/node-stream.svg?branch=master
+[travis]: https://travis-ci.org/stezu/node-stream
 
-[5]: https://coveralls.io/repos/github/stezu/node-stream/badge.svg?branch=master
-[6]: https://coveralls.io/github/stezu/node-stream?branch=master
+[bithound-score.svg]: https://www.bithound.io/github/stezu/node-stream/badges/score.svg
+[bithound]: https://www.bithound.io/github/stezu/node-stream
+
+[coveralls.svg]: https://coveralls.io/repos/github/stezu/node-stream/badge.svg?branch=master
+[coveralls]: https://coveralls.io/github/stezu/node-stream?branch=master
 
 A [Stream](https://nodejs.org/api/stream.html) is a core interface in Node which is generally misunderstood. Since Node doesn't provide a simple API for them, they are very often misused. This library aims to resolve those problems by exposing a collection of array-like methods for working with Node Streams.
 
