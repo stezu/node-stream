@@ -40,7 +40,10 @@ describe('[v1-waitJson]', function () {
     waitJson(readableStream, function (err) {
       expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
-      expect(err.message).to.equal('Invalid non-string/buffer chunk');
+      expect(err.message).to.be.oneOf([
+        'Invalid non-string/buffer chunk',
+        'The "chunk" argument must be one of type string, Buffer, or Uint8Array'
+      ]);
       done();
     });
   });
@@ -62,7 +65,10 @@ describe('[v1-waitJson]', function () {
     waitJson(duplexStream, function (err) {
       expect(arguments).to.have.lengthOf(1);
       expect(err).to.be.an.instanceof(Error);
-      expect(err.message).to.equal('Invalid non-string/buffer chunk');
+      expect(err.message).to.be.oneOf([
+        'Invalid non-string/buffer chunk',
+        'The "chunk" argument must be one of type string, Buffer, or Uint8Array'
+      ]);
       done();
     });
   });

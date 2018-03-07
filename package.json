@@ -4,10 +4,12 @@
   "description": "Utilities for consuming, creating and manipulating node streams.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "gulp test",
-    "coverage": "gulp coverage",
-    "docs": "gulp docs",
-    "build": "gulp build"
+    "build": "npm run lint && npm run test",
+    "coverage": "nyc --check-coverage --lines 98 npm test",
+    "ci": "npm run lint && npm run coverage",
+    "lint": "eslint --ignore-path .gitignore .",
+    "test": "mocha --recursive",
+    "docs": "documentation build lib/** --format html --github --sort-order alpha --output docs"
   },
   "repository": {
     "type": "git",
@@ -36,17 +38,14 @@
   },
   "homepage": "https://github.com/stezu/node-stream#readme",
   "devDependencies": {
-    "beeper": "^1.1.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.16",
-    "eslint-config-stezu": "^1.0.5",
-    "gulp": "^3.9.1",
-    "gulp-documentation": "^3.2.0",
-    "gulp-eslint": "^3.0.1",
-    "gulp-if": "^2.0.1",
-    "gulp-istanbul": "^1.1.2",
-    "gulp-mocha": "^3.0.1",
-    "gulp-sequence": "^0.4.5",
+    "documentation": "^6.0.0",
+    "eslint": "^4.18.2",
+    "eslint-config-stezu": "^2.0.0",
+    "mocha": "^5.0.2",
+    "mock-fs": "^4.3.0",
+    "nyc": "^11.4.1",
     "sinon": "^1.17.7"
   },
   "dependencies": {
@@ -57,6 +56,6 @@
     "through2": "^2.0.1"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">= 4.0"
   }
 }
