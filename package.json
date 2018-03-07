@@ -49,9 +49,8 @@
     "sinon": "^4.4.2"
   },
   "dependencies": {
-    "duplexer2": "^0.1.4",
     "lodash": "^4.17.2",
-    "pump": "^1.0.2",
+    "pumpify": "^1.4.0",
     "readable-stream": "^2.3.3",
     "split2": "^2.1.0",
     "through2": "^2.0.1"
