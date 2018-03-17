@@ -183,7 +183,7 @@ describe('[pipelineObj]', function () {
       });
   });
 
-  describe('when the duplex stream is destroyed', function () {
+  describe('when the duplex stream containing an fs read stream is destroyed', function () {
     var inputStreams, outputStream;
 
     before(function (done) {
@@ -193,10 +193,7 @@ describe('[pipelineObj]', function () {
 
       inputStreams = {
         'fsRead': fs.createReadStream('read-file.txt'),
-        'fsWrite': fs.createWriteStream('write-file.txt'),
-        'request': getMockRequest(),
-        'through': through(),
-        'readableStream': getReadableStream(['this stream', 'has', 'content in', 'it'])
+        'through': through()
       };
       outputStream = pipelineObj(_.values(inputStreams));
 
@@ -213,18 +210,12 @@ describe('[pipelineObj]', function () {
       mockFs.restore();
     });
 
-    it('child file descriptors are closed', function () {
+    it('the file descriptor is closed', function () {
       expect(inputStreams.fsRead).to.have.property('closed').and.to.equal(true);
-      expect(inputStreams.fsWrite).to.have.property('closed').and.to.equal(true);
     });
 
-    it('child requests are aborted', function () {
-      expect(inputStreams.request).to.have.property('aborted').and.to.be.a('number');
-    });
-
-    it('child streams are destroyed', function () {
-      expect(inputStreams.through).to.have.property('destroyed').and.to.equal(true);
-      expect(inputStreams.readableStream).to.have.property('destroyed').and.to.equal(true);
+    it('through streams are destroyed', function () {
+      expect(inputStreams.through).to.have.property('_destroyed').and.to.equal(true);
     });
 
     it('the duplex stream is destroyed', function () {
@@ -232,25 +223,18 @@ describe('[pipelineObj]', function () {
     });
   });
 
-  describe('when a child stream is destroyed', function () {
+  describe('when the duplex stream containing a request stream is destroyed', function () {
     var inputStreams, outputStream;
 
     before(function (done) {
-      mockFs({
-        'read-file.txt': 'this is a test file. it has some content in it.'
-      });
-
       inputStreams = {
-        'fsRead': fs.createReadStream('read-file.txt'),
-        'fsWrite': fs.createWriteStream('write-file.txt'),
         'request': getMockRequest(),
-        'through': through(),
-        'readableStream': getReadableStream(['this stream', 'has', 'content in', 'it'])
+        'through': through()
       };
       outputStream = pipelineObj(_.values(inputStreams));
 
       setImmediate(function () {
-        inputStreams.through.destroy();
+        outputStream.destroy();
         done();
       });
     });
@@ -262,18 +246,12 @@ describe('[pipelineObj]', function () {
       mockFs.restore();
     });
 
-    it('other child file descriptors are closed', function () {
-      expect(inputStreams.fsRead).to.have.property('closed').and.to.equal(true);
-      expect(inputStreams.fsWrite).to.have.property('closed').and.to.equal(true);
+    it('the request is aborted', function () {
+      expect(inputStreams.request.abort.calledOnce).to.equal(true);
     });
 
-    it('other child requests are aborted', function () {
-      expect(inputStreams.request).to.have.property('aborted').and.to.be.a('number');
-    });
-
-    it('other child streams are destroyed', function () {
-      expect(inputStreams.through).to.have.property('destroyed').and.to.equal(true);
-      expect(inputStreams.readableStream).to.have.property('destroyed').and.to.equal(true);
+    it('through streams are destroyed', function () {
+      expect(inputStreams.through).to.have.property('_destroyed').and.to.equal(true);
     });
 
     it('the duplex stream is destroyed', function () {
