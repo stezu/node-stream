@@ -50,9 +50,9 @@
   },
   "dependencies": {
     "lodash": "^4.17.2",
+    "pumpify": "^1.4.0",
     "readable-stream": "^2.3.3",
     "split2": "^2.1.0",
-    "stream-combiner2": "^1.1.1",
     "through2": "^2.0.1"
   },
   "engines": {
