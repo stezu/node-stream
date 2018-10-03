@@ -1,15 +1,12 @@
 # Node-Stream
 
-[![npm version][npm-version.svg]][npm] [![Build Status][build-status.svg]][travis] [![bitHound Score][bithound-score.svg]][bithound] [![Test Coverage][coveralls.svg]][coveralls]
+[![npm version][npm-version.svg]][npm] [![Build Status][build-status.svg]][travis] [![Test Coverage][coveralls.svg]][coveralls]
 
 [npm-version.svg]: https://img.shields.io/npm/v/node-stream.svg
 [npm]: https://www.npmjs.com/package/node-stream
 
 [build-status.svg]: https://travis-ci.org/stezu/node-stream.svg?branch=master
 [travis]: https://travis-ci.org/stezu/node-stream
-
-[bithound-score.svg]: https://www.bithound.io/github/stezu/node-stream/badges/score.svg
-[bithound]: https://www.bithound.io/github/stezu/node-stream
 
 [coveralls.svg]: https://coveralls.io/repos/github/stezu/node-stream/badge.svg?branch=master
 [coveralls]: https://coveralls.io/github/stezu/node-stream?branch=master
