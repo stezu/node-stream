@@ -1,33 +1,31 @@
-var expect = require('chai').expect;
-var _ = require('lodash');
+const expect = require('chai').expect;
+const _ = require('lodash');
 
-var getReadableStream = require('../../_testHelpers/getReadableStream.js');
-var runBasicStreamTests = require('../../_testHelpers/runBasicStreamTests.js');
-var waitObj = require('../../../').wait.obj;
+const getReadableStream = require('../_testHelpers/getReadableStream.js');
+const runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
+const waitObj = require('../../').wait.obj;
 
-describe('[v2-waitObj]', function () {
-  var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
-  var expected = ['item1', 'item2', 'item3', 'item4'];
-  var objData = [true, 'item', 5, { obj: 'mode' }, [1, 2, 3]];
+describe('[v2-waitObj]', () => {
+  const data = ['item1', new Buffer('item2'), 'item3', 'item4'];
+  const expected = ['item1', 'item2', 'item3', 'item4'];
+  const objData = [true, 'item', 5, { obj: 'mode' }, [1, 2, 3]];
 
   function runTest(stream, objectMode, done) {
-    var actual = [];
+    const actual = [];
 
     stream
       .pipe(waitObj())
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
       .on('error', done)
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.have.lengthOf(1);
 
         if (objectMode) {
           expect(actual[0]).to.deep.equal(objData);
         } else {
-          expect(actual[0]).to.deep.equal(expected.map(function (item) {
-            return new Buffer(item);
-          }));
+          expect(actual[0]).to.deep.equal(expected.map((item) => new Buffer(item)));
         }
 
         done();
@@ -36,15 +34,15 @@ describe('[v2-waitObj]', function () {
 
   runBasicStreamTests(data, objData, runTest);
 
-  it('optionally provides data to a callback', function (done) {
-    var stream = getReadableStream(objData, {
+  it('optionally provides data to a callback', (done) => {
+    const stream = getReadableStream(objData, {
       objectMode: true
     });
-    var actual = {
+    const actual = {
       callback: [],
       event: []
     };
-    var doneCount = 0;
+    let doneCount = 0;
 
     function onDone() {
       doneCount += 1;
@@ -63,27 +61,27 @@ describe('[v2-waitObj]', function () {
     }
 
     stream
-      .pipe(waitObj(function (err, chunk) {
+      .pipe(waitObj((err, chunk) => {
         expect(err).to.equal(null);
         actual.callback.push(chunk);
 
         onDone();
       }))
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.event.push(chunk);
       })
       .on('error', done)
       .on('end', onDone);
   });
 
-  it('reads the entire stream when given a callback', function (done) {
-    var testData = _.times(100);
-    var stream = getReadableStream(testData, {
+  it('reads the entire stream when given a callback', (done) => {
+    const testData = _.times(100);
+    const stream = getReadableStream(testData, {
       objectMode: true
     });
 
     stream
-      .pipe(waitObj(function (err, chunk) {
+      .pipe(waitObj((err, chunk) => {
         expect(err).to.equal(null);
         expect(chunk).to.deep.equal(testData);
 

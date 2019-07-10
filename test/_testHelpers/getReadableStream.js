@@ -1,19 +1,19 @@
-var stream = require('stream');
+const stream = require('stream');
 
 function getReadableStream(data, options) {
-  var readableStream = new stream.Readable(options);
+  const readableStream = new stream.Readable(options);
 
-  readableStream._read = (function () { // eslint-disable-line no-underscore-dangle
-    var d = data.slice();
+  readableStream._read = (() => { // eslint-disable-line no-underscore-dangle
+    const d = data.slice();
 
-    return function () {
+    return function Read() {
       if (d.length > 0) {
         this.push(d.shift());
       } else {
         this.push(null);
       }
     };
-  }());
+  })();
 
   return readableStream;
 }

@@ -1,19 +1,19 @@
-var getReadableStream = require('./getReadableStream.js');
-var getDuplexStream = require('./getDuplexStream.js');
+const getReadableStream = require('./getReadableStream.js');
+const getDuplexStream = require('./getDuplexStream.js');
 
 function runBasicStreamTests(data, objData, runTest) {
 
   if (data) {
 
-    it('works with a Readable stream', function (done) {
-      var readableStream = getReadableStream(data);
+    it('works with a Readable stream', (done) => {
+      const readableStream = getReadableStream(data);
 
       runTest(readableStream, false, done);
     });
   }
 
-  it('works with a Readable object stream', function (done) {
-    var readableStream = getReadableStream(objData, {
+  it('works with a Readable object stream', (done) => {
+    const readableStream = getReadableStream(objData, {
       objectMode: true
     });
 
@@ -22,15 +22,15 @@ function runBasicStreamTests(data, objData, runTest) {
 
   if (data) {
 
-    it('works with a Duplex stream', function (done) {
-      var duplexStream = getDuplexStream(data);
+    it('works with a Duplex stream', (done) => {
+      const duplexStream = getDuplexStream(data);
 
       runTest(duplexStream, false, done);
     });
   }
 
-  it('works with a Duplex object stream', function (done) {
-    var duplexStream = getDuplexStream(objData, {
+  it('works with a Duplex object stream', (done) => {
+    const duplexStream = getDuplexStream(objData, {
       objectMode: true
     });
 

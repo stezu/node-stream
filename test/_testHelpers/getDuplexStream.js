@@ -1,19 +1,19 @@
-var stream = require('stream');
+const stream = require('stream');
 
 function getDuplexStream(data, options) {
-  var duplexStream = new stream.Duplex(options);
+  const duplexStream = new stream.Duplex(options);
 
-  duplexStream._read = (function () { // eslint-disable-line no-underscore-dangle
-    var d = data.slice();
+  duplexStream._read = (() => { // eslint-disable-line no-underscore-dangle
+    const d = data.slice();
 
-    return function () {
+    return function Read() {
       if (d.length > 0) {
         this.push(d.shift());
       } else {
         this.push(null);
       }
     };
-  }());
+  })();
 
   return duplexStream;
 }

@@ -1,12 +1,14 @@
-var expect = require('chai').expect;
 
-var getReadableStream = require('../_testHelpers/getReadableStream.js');
-var getDuplexStream = require('../_testHelpers/getDuplexStream.js');
-var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
-var pick = require('../../').pick;
 
-describe('[pick]', function () {
-  var data = [{
+const expect = require('chai').expect;
+
+const getReadableStream = require('../_testHelpers/getReadableStream.js');
+const getDuplexStream = require('../_testHelpers/getDuplexStream.js');
+const runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
+const pick = require('../../').pick;
+
+describe('[pick]', () => {
+  const data = [{
     name: 'bill',
     age: '24'
   }, {
@@ -16,20 +18,20 @@ describe('[pick]', function () {
   }];
 
   function runTest(stream, objectMode, done) {
-    var expected = [{
+    const expected = [{
       age: '24'
     }, {}, {
       age: 12
     }];
-    var actual = [];
+    const actual = [];
 
     stream
       .pipe(pick('age'))
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
       .on('error', done)
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.deep.equal(expected);
 
         done();
@@ -38,46 +40,46 @@ describe('[pick]', function () {
 
   runBasicStreamTests(null, data, runTest);
 
-  it('emits an error for a non-object on a Readable stream', function (done) {
-    var readableStream = getReadableStream(data.concat(['string']), {
+  it('emits an error for a non-object on a Readable stream', (done) => {
+    const readableStream = getReadableStream(data.concat(['string']), {
       objectMode: true
     });
 
     readableStream
       .pipe(pick('age'))
-      .on('error', function (err) {
+      .on('error', (err) => {
         expect(err).to.be.an.instanceof(TypeError);
         expect(err.message).to.match(/^Expected object, got string$/);
 
         done();
       })
-      .on('end', function () {
+      .on('end', () => {
         done(new Error('end should not be called'));
       })
       .resume();
   });
 
-  it('emits an error for a non-object on a Duplex stream', function (done) {
-    var duplexStream = getDuplexStream(data.concat([true]), {
+  it('emits an error for a non-object on a Duplex stream', (done) => {
+    const duplexStream = getDuplexStream(data.concat([true]), {
       objectMode: true
     });
 
     duplexStream
       .pipe(pick('age'))
-      .on('error', function (err) {
+      .on('error', (err) => {
         expect(err).to.be.an.instanceof(TypeError);
         expect(err.message).to.match(/^Expected object, got boolean$/);
 
         done();
       })
-      .on('end', function () {
+      .on('end', () => {
         done(new Error('end should not be called'));
       })
       .resume();
   });
 
-  it('works with dot notation', function (done) {
-    var readableStream = getReadableStream([{
+  it('works with dot notation', (done) => {
+    const readableStream = getReadableStream([{
       a: {
         b: ['c', 'd']
       },
@@ -93,24 +95,24 @@ describe('[pick]', function () {
     }], {
       objectMode: true
     });
-    var expected = [{ a: { b: ['c', 'd'] } }, { a: { b: { c: ['d'] } } }];
-    var actual = [];
+    const expected = [{ a: { b: ['c', 'd'] } }, { a: { b: { c: ['d'] } } }];
+    const actual = [];
 
     readableStream
       .pipe(pick('a.b'))
       .on('error', done)
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.deep.equal(expected);
 
         done();
       });
   });
 
-  it('can pick multiple properties at a time', function (done) {
-    var readableStream = getReadableStream([{
+  it('can pick multiple properties at a time', (done) => {
+    const readableStream = getReadableStream([{
       name: 'Pam',
       age: 24,
       location: 'Florida'
@@ -125,7 +127,7 @@ describe('[pick]', function () {
     }], {
       objectMode: true
     });
-    var expected = [{
+    const expected = [{
       name: 'Pam',
       age: 24
     }, {
@@ -135,15 +137,15 @@ describe('[pick]', function () {
       name: 'Jessica',
       age: 32
     }];
-    var actual = [];
+    const actual = [];
 
     readableStream
       .pipe(pick('name', 'age'))
       .on('error', done)
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.deep.equal(expected);
 
         done();

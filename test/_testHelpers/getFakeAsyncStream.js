@@ -1,13 +1,13 @@
-var stream = require('stream');
+const stream = require('stream');
 
-var sinon = require('sinon');
+const sinon = require('sinon');
 
 function asyncStream(Constructor, data, options) {
-  var instance = new Constructor(options);
-  var dataCopy = data.slice();
-  var clock = sinon.useFakeTimers(Date.now());
+  const instance = new Constructor(options);
+  const dataCopy = data.slice();
+  const clock = sinon.useFakeTimers(Date.now());
 
-  instance._read = function () { // eslint-disable-line no-underscore-dangle
+  instance._read = function Read() { // eslint-disable-line no-underscore-dangle
     clock.tick(1);
 
     if (dataCopy.length > 0) {

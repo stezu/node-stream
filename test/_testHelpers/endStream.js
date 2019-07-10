@@ -1,5 +1,5 @@
-var fs = require('fs');
-var _ = require('lodash');
+const fs = require('fs');
+const _ = require('lodash');
 
 // Determine if the given stream is a filesystem stream
 function isFS(stream) {

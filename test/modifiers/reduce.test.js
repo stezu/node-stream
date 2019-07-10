@@ -1,21 +1,23 @@
-var _ = require('lodash');
-var expect = require('chai').expect;
 
-var getReadableStream = require('../_testHelpers/getReadableStream.js');
-var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
-var reduce = require('../../').reduce;
 
-describe('[reduce]', function () {
-  var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
-  var objData = [true, false, [1, 2, 3], 'string', '11', 95.23, { obj: true }, _.noop];
+const _ = require('lodash');
+const expect = require('chai').expect;
+
+const getReadableStream = require('../_testHelpers/getReadableStream.js');
+const runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
+const reduce = require('../../').reduce;
+
+describe('[reduce]', () => {
+  const data = ['item1', new Buffer('item2'), 'item3', 'item4'];
+  const objData = [true, false, [1, 2, 3], 'string', '11', 95.23, { obj: true }, _.noop];
 
   function runTest(stream, objectMode, done) {
-    var expected = ['4'];
-    var objExpected = [8];
-    var actual = [];
+    const expected = ['4'];
+    const objExpected = [8];
+    const actual = [];
 
     stream
-      .pipe(reduce(function (memo, chunk, next) {
+      .pipe(reduce((memo, chunk, next) => {
 
         if (objectMode) {
           return next(null, memo + 1);
@@ -23,11 +25,11 @@ describe('[reduce]', function () {
 
         return next(null, (parseFloat(memo) + 1).toString());
       }, 0))
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
       .on('error', done)
-      .on('end', function () {
+      .on('end', () => {
 
         if (objectMode) {
           expect(actual).to.deep.equal(objExpected);
@@ -41,87 +43,81 @@ describe('[reduce]', function () {
 
   runBasicStreamTests(data, objData, runTest);
 
-  it('stops streaming if an error is passed', function (done) {
-    var readableStream = getReadableStream(data);
-    var returnedError = new Error('error handling test');
+  it('stops streaming if an error is passed', (done) => {
+    const readableStream = getReadableStream(data);
+    const returnedError = new Error('error handling test');
 
     readableStream
-      .pipe(reduce(function (memo, chunk, next) {
+      .pipe(reduce((memo, chunk, next) => {
         next(returnedError);
       }))
-      .on('error', function (err) {
+      .on('error', (err) => {
         expect(err).to.equal(returnedError);
         done();
       })
-      .on('end', function () {
+      .on('end', () => {
         done(new Error('end should not be called'));
       })
       .resume();
   });
 
-  it('works with a sync reducer', function (done) {
-    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
-    var expected = 'maryhadalittlelamb';
-    var actual = '';
+  it('works with a sync reducer', (done) => {
+    const readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    const expected = 'maryhadalittlelamb';
+    let actual = '';
 
     readableStream
-      .pipe(reduce(function (memo, chunk) {
-        return memo + chunk;
-      }, ''))
-      .on('error', function () {
+      .pipe(reduce((memo, chunk) => memo + chunk, ''))
+      .on('error', () => {
         done(new Error('error should not be called'));
       })
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         expect(chunk).to.be.a('string');
 
         actual += chunk;
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.equal(expected);
 
         done();
       });
   });
 
-  it('works with a sync reducer on an object stream', function (done) {
-    var readableStream = getReadableStream([1, 5, 11, 4, 12], {
+  it('works with a sync reducer on an object stream', (done) => {
+    const readableStream = getReadableStream([1, 5, 11, 4, 12], {
       objectMode: true
     });
-    var expected = 33;
-    var actual = 0;
+    const expected = 33;
+    let actual = 0;
 
     readableStream
-      .pipe(reduce(function (memo, chunk) {
-        return memo + chunk;
-      }, 0))
-      .on('error', function () {
+      .pipe(reduce((memo, chunk) => memo + chunk, 0))
+      .on('error', () => {
         done(new Error('error should not be called'));
       })
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         expect(chunk).to.be.a('number');
 
         actual += chunk;
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.equal(expected);
 
         done();
       });
   });
 
-  it('works as a sync reducer when the function has 0 arguments', function (done) {
-    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
-    var expected = 1;
-    var actual = null;
+  it('works as a sync reducer when the function has 0 arguments', (done) => {
+    const readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    const expected = 1;
+    let actual = null;
 
     readableStream
-      .pipe(reduce(function () {
-        return 1;
-      }, 0))
-      .on('error', function () {
+      .pipe(reduce(() => 1, 0))
+      .on('error', () => {
         done(new Error('error should not be called'));
       })
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
 
         if (actual === expected) {
           done(new Error('data should only be called once'));
@@ -131,20 +127,20 @@ describe('[reduce]', function () {
 
         actual = chunk;
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.equal(expected);
 
         done();
       });
   });
 
-  it('works as an async reducer when the function has more than the expected arguments', function (done) {
-    var readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
-    var expected = 'maryhadalittlelamb';
-    var actual = '';
+  it('works as an async reducer when the function has more than the expected arguments', (done) => {
+    const readableStream = getReadableStream(['mary', 'had', new Buffer('a'), 'little', 'lamb']);
+    const expected = 'maryhadalittlelamb';
+    let actual = '';
 
     readableStream
-      .pipe(reduce(function (memo, chunk, next, apple) {
+      .pipe(reduce((memo, chunk, next, apple) => {
 
         if (typeof apple !== 'undefined') {
           done(new Error('this test was expecting only three valid arguments'));
@@ -152,10 +148,10 @@ describe('[reduce]', function () {
 
         next(null, memo + chunk);
       }, ''))
-      .on('error', function () {
+      .on('error', () => {
         done(new Error('error should not be called'));
       })
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
 
         if (actual === expected) {
           done(new Error('data should only be called once'));
@@ -165,7 +161,7 @@ describe('[reduce]', function () {
 
         actual = chunk;
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.equal(expected);
 
         done();

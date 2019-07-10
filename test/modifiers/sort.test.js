@@ -1,23 +1,25 @@
-var expect = require('chai').expect;
 
-var getReadableStream = require('../_testHelpers/getReadableStream.js');
-var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
-var sort = require('../../').sort;
 
-describe('[sort]', function () {
-  var data = [12, 10, 9, 30, 5, 16];
+const expect = require('chai').expect;
+
+const getReadableStream = require('../_testHelpers/getReadableStream.js');
+const runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
+const sort = require('../../').sort;
+
+describe('[sort]', () => {
+  const data = [12, 10, 9, 30, 5, 16];
 
   function runTest(stream, objectMode, done) {
-    var expected = [10, 12, 16, 30, 5, 9];
-    var actual = [];
+    const expected = [10, 12, 16, 30, 5, 9];
+    const actual = [];
 
     stream
       .pipe(sort())
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
       .on('error', done)
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.deep.equal(expected);
 
         done();
@@ -26,41 +28,39 @@ describe('[sort]', function () {
 
   runBasicStreamTests(null, data, runTest);
 
-  it('accepts a custom sorting method', function (done) {
-    var readableStream = getReadableStream(data, {
+  it('accepts a custom sorting method', (done) => {
+    const readableStream = getReadableStream(data, {
       objectMode: true
     });
-    var expected = [5, 9, 10, 12, 16, 30];
-    var actual = [];
+    const expected = [5, 9, 10, 12, 16, 30];
+    const actual = [];
 
     readableStream
-      .pipe(sort(function (a, b) {
-        return a - b;
-      }))
+      .pipe(sort((a, b) => a - b))
       .on('error', done)
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.deep.equal(expected);
         done();
       });
   });
 
-  it('emits an error if the passed in argument is not a function', function (done) {
-    var readableStream = getReadableStream(data, {
+  it('emits an error if the passed in argument is not a function', (done) => {
+    const readableStream = getReadableStream(data, {
       objectMode: true
     });
 
     readableStream
       .pipe(sort('banana'))
-      .on('error', function (err) {
+      .on('error', (err) => {
         expect(err).to.be.an.instanceof(TypeError);
         expect(err.message).to.equal('Expected `compareFunction` to be a function.');
 
         done();
       })
-      .on('end', function () {
+      .on('end', () => {
         done(new Error('end should not be called'));
       })
       .resume();

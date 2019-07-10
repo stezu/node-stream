@@ -1,7 +1,7 @@
 env:
   mocha: true
 rules:
-  func-names: "off"
+  no-undefined: "off"
   require-jsdoc: "off"
   max-statements: "off"
   max-nested-callbacks:

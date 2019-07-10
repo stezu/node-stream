@@ -1,5 +1,5 @@
-var http = require('http');
-var sinon = require('sinon');
+const http = require('http');
+const sinon = require('sinon');
 
 module.exports = function getMockRequest() {
   return sinon.createStubInstance(http.ClientRequest);

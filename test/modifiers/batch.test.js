@@ -1,31 +1,31 @@
-var expect = require('chai').expect;
-var _ = require('lodash');
+const expect = require('chai').expect;
+const _ = require('lodash');
 
-var asyncStream = require('../_testHelpers/getFakeAsyncStream.js');
-var getReadableStream = require('../_testHelpers/getReadableStream.js');
-var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
+const asyncStream = require('../_testHelpers/getFakeAsyncStream.js');
+const getReadableStream = require('../_testHelpers/getReadableStream.js');
+const runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
 
-var batch = require('../../').batch;
+const batch = require('../../').batch;
 
 function buff(str) {
   return new Buffer(str);
 }
 
-describe('[batch]', function () {
-  var data = ['item1', new Buffer('item2'), 'item3', 'item4'];
-  var objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
+describe('[batch]', () => {
+  const data = ['item1', new Buffer('item2'), 'item3', 'item4'];
+  const objData = [true, false, [1, 2, 3], 'string', 0, '11', 95.23, { obj: true }, _.noop];
 
   function basicTests(batchOptions, expected, objExpected) {
-    runBasicStreamTests(data, objData, function (stream, objectMode, done) {
-      var actual = [];
+    runBasicStreamTests(data, objData, (stream, objectMode, done) => {
+      const actual = [];
 
       stream
         .pipe(batch(batchOptions))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           actual.push(chunk);
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           if (objectMode) {
             expect(actual).to.deep.equal(objExpected);
           } else {
@@ -36,41 +36,41 @@ describe('[batch]', function () {
         });
     });
 
-    it('writes all chunks as an array', function (done) {
-      var input = getReadableStream([1, 2, 3], {
+    it('writes all chunks as an array', (done) => {
+      const input = getReadableStream([1, 2, 3], {
         objectMode: true
       });
 
-      var chunksRead = false;
+      let chunksRead = false;
 
       input
         .pipe(batch(batchOptions))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           chunksRead = true;
           expect(chunk).to.be.an('array');
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(chunksRead).to.equal(true);
           done();
         });
     });
 
-    it('successfully ends if there is no data written', function (done) {
-      var input = getReadableStream([], {
+    it('successfully ends if there is no data written', (done) => {
+      const input = getReadableStream([], {
         objectMode: true
       });
 
-      var chunksRead = false;
+      let chunksRead = false;
 
       input
         .pipe(batch(batchOptions))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           chunksRead = true;
           expect(chunk).to.be.an('array');
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(chunksRead).to.equal(false);
           done();
         });
@@ -78,23 +78,23 @@ describe('[batch]', function () {
 
   }
 
-  describe('when "time" is defined in options', function () {
-    var expected = [[buff('item1'), buff('item2'), buff('item3'), buff('item4')]];
-    var objExpected = [objData];
+  describe('when "time" is defined in options', () => {
+    const expected = [[buff('item1'), buff('item2'), buff('item3'), buff('item4')]];
+    const objExpected = [objData];
 
     basicTests({ time: 5 }, expected, objExpected);
 
-    it('combines data written during an interval into one write', function (done) {
-      var actual = [];
-      var input = asyncStream.readable(_.times(22), { objectMode: true });
+    it('combines data written during an interval into one write', (done) => {
+      const actual = [];
+      const input = asyncStream.readable(_.times(22), { objectMode: true });
 
       input
         .pipe(batch({ time: 4 }))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           actual.push(chunk);
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(actual).to.deep.equal([
             [0, 1, 2, 3],
             [4, 5, 6, 7],
@@ -109,10 +109,10 @@ describe('[batch]', function () {
     });
   });
 
-  describe('when "count" is defined in options', function () {
-    var expected = [[buff('item1'), buff('item2')], [buff('item3'), buff('item4')]];
-    var tempObjData = [].concat(objData);
-    var objExpected = [];
+  describe('when "count" is defined in options', () => {
+    const expected = [[buff('item1'), buff('item2')], [buff('item3'), buff('item4')]];
+    const tempObjData = [].concat(objData);
+    const objExpected = [];
 
     while (tempObjData.length) {
       objExpected.push(tempObjData.splice(0, 2));
@@ -120,114 +120,114 @@ describe('[batch]', function () {
 
     basicTests({ count: 2 }, expected, objExpected);
 
-    it('emits chunks of the defined size', function (done) {
-      var COUNT = 3;
-      var CHUNKS = 5;
+    it('emits chunks of the defined size', (done) => {
+      const COUNT = 3;
+      const CHUNKS = 5;
 
-      var input = getReadableStream(_.times(CHUNKS * COUNT), {
+      const input = getReadableStream(_.times(CHUNKS * COUNT), {
         objectMode: true
       });
 
-      var chunks = 0;
+      let chunks = 0;
 
       input
         .pipe(batch({ count: COUNT }))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           chunks += 1;
           expect(chunk).to.be.an('array').and.to.have.lengthOf(COUNT);
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(chunks).to.equal(CHUNKS);
           done();
         });
     });
 
-    it('emits any remaining elements when the stream ends', function (done) {
-      var testData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      var expectedData = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12]];
+    it('emits any remaining elements when the stream ends', (done) => {
+      const testData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      const expectedData = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12]];
 
-      var input = getReadableStream(testData, {
+      const input = getReadableStream(testData, {
         objectMode: true
       });
 
-      var actual = [];
+      const actual = [];
 
       input
         .pipe(batch({ count: 5 }))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           actual.push(chunk);
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(actual).to.deep.equal(expectedData);
           done();
         });
     });
   });
 
-  describe('when both "time" and "count" are defined in options', function () {
-    it('writes chunks if count is met first before the defined time', function (done) {
-      var input = asyncStream.readable(_.times(10), { objectMode: true });
-      var chunks = 0;
-      var CHUNKS = 10;
+  describe('when both "time" and "count" are defined in options', () => {
+    it('writes chunks if count is met first before the defined time', (done) => {
+      const input = asyncStream.readable(_.times(10), { objectMode: true });
+      const CHUNKS = 10;
+      let chunks = 0;
 
       input
         .pipe(batch({
           count: 1,
           time: 5000
         }))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           chunks += 1;
           expect(chunk).to.be.an('array').and.to.have.lengthOf(1);
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(chunks).to.equal(CHUNKS);
           done();
         });
     });
 
-    it('writes chunks if time is met first before the defined count', function (done) {
-      var CHUNKS = 10;
-      var EXPECTED = 5;
-      var reads = 0;
-      var input = asyncStream.readable(_.times(CHUNKS), { objectMode: true });
+    it('writes chunks if time is met first before the defined count', (done) => {
+      const CHUNKS = 10;
+      const EXPECTED = 5;
+      const input = asyncStream.readable(_.times(CHUNKS), { objectMode: true });
+      let reads = 0;
 
       input
         .pipe(batch({
           count: 100,
           time: 2
         }))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           reads += 1;
           expect(chunk).to.be.an('array').and.to.have.length.above(0);
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(reads).to.equal(EXPECTED);
           done();
         });
     });
 
-    it('successfully ends if there is no data written', function (done) {
-      var input = getReadableStream([], {
+    it('successfully ends if there is no data written', (done) => {
+      const input = getReadableStream([], {
         objectMode: true
       });
 
-      var chunksRead = false;
+      let chunksRead = false;
 
       input
         .pipe(batch({
           count: 2,
           time: 1
         }))
-        .on('data', function (chunk) {
+        .on('data', (chunk) => {
           chunksRead = true;
           expect(chunk).to.be.an('array');
         })
         .on('error', done)
-        .on('end', function () {
+        .on('end', () => {
           expect(chunksRead).to.equal(false);
           done();
         });
@@ -235,57 +235,53 @@ describe('[batch]', function () {
   });
 
   function runSimpleTest(opts, done) {
-    var input = getReadableStream([1, 2, 3], {
+    const input = getReadableStream([1, 2, 3], {
       objectMode: true
     });
 
-    var expected = [[1], [2], [3]];
-    var actual = [];
+    const expected = [[1], [2], [3]];
+    const actual = [];
 
     input
       .pipe(batch(opts))
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
       .on('error', done)
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.deep.equal(expected);
         done();
       });
   }
 
-  describe('when neither "time" nor "count" are defined in options', function () {
-    var expected = data.map(function (val) {
-      return [buff(val)];
-    });
-    var objExpected = objData.map(function (val) {
-      return [val];
-    });
+  describe('when neither "time" nor "count" are defined in options', () => {
+    const expected = data.map((val) => [buff(val)]);
+    const objExpected = objData.map((val) => [val]);
 
     basicTests({}, expected, objExpected);
 
-    it('writes chunks immediately when read', function (done) {
+    it('writes chunks immediately when read', (done) => {
       runSimpleTest({}, done);
     });
   });
 
-  describe('emits an error when', function () {
+  describe('emits an error when', () => {
     function invalidOptions(options, constructor, errMessage) {
-      return function (done) {
-        var input = getReadableStream([1], {
+      return (done) => {
+        const input = getReadableStream([1], {
           objectMode: true
         });
 
         input
           .pipe(batch(options))
           .on('data', _.noop)
-          .on('error', function (err) {
+          .on('error', (err) => {
             expect(err).to.be.instanceOf(constructor);
             expect(err.message).to.equal(errMessage);
 
             done();
           })
-          .on('end', function () {
+          .on('end', () => {
             done(new Error('done was not supposed to be called'));
           });
       };
@@ -295,22 +291,22 @@ describe('[batch]', function () {
       return JSON.stringify(val) || typeof val;
     }
 
-    ['string', [1, 2, 3], 42, _.noop].forEach(function (val) {
-      it('options is the invalid value: ' + stringify(val), function (done) {
+    ['string', [1, 2, 3], 42, _.noop].forEach((val) => {
+      it(`options is the invalid value: ${stringify(val)}`, (done) => {
         invalidOptions(val, TypeError, 'Expected `options` to be an object or not defined.')(done);
       });
     });
 
-    ['string', [1, 2, 3], {}, _.noop, -1].forEach(function (val) {
-      it('options.time is the invalid value: ' + stringify(val), invalidOptions(
+    ['string', [1, 2, 3], {}, _.noop, -1].forEach((val) => {
+      it(`options.time is the invalid value: ${stringify(val)}`, invalidOptions(
         { time: val },
         TypeError,
         'Expected `options.time` to be an integer that is 0 or greater.'
       ));
     });
 
-    ['string', [1, 2, 3], {}, _.noop, 0, -1].forEach(function (val) {
-      it('options.count is the invalid value: ' + stringify(val), invalidOptions(
+    ['string', [1, 2, 3], {}, _.noop, 0, -1].forEach((val) => {
+      it(`options.count is the invalid value: ${stringify(val)}`, invalidOptions(
         { count: val },
         TypeError,
         'Expected `options.count` to be an integer greater than 0.'
@@ -318,12 +314,11 @@ describe('[batch]', function () {
     });
   });
 
-  describe('does not emit an error when', function () {
-    var undef;
+  describe('does not emit an error when', () => {
 
     function validOptionsTest(options) {
-      return function (done) {
-        var input = getReadableStream([1], {
+      return (done) => {
+        const input = getReadableStream([1], {
           objectMode: true
         });
 
@@ -331,7 +326,7 @@ describe('[batch]', function () {
           .pipe(batch(options))
           .on('data', _.noop)
           .on('error', done)
-          .on('end', function () {
+          .on('end', () => {
             done();
           });
       };
@@ -343,8 +338,8 @@ describe('[batch]', function () {
 
     it('options is an empty object', validOptionsTest({}));
 
-    it('options.time is set to undefined', validOptionsTest({ time: undef }));
+    it('options.time is set to undefined', validOptionsTest({ time: undefined }));
 
-    it('options.count is set to undefined', validOptionsTest({ count: undef }));
+    it('options.count is set to undefined', validOptionsTest({ count: undefined }));
   });
 });

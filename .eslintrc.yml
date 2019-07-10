@@ -1,7 +1,11 @@
-extends: stezu/es5
-env:
-  es6: false
+extends: stezu
 rules:
+
+  # Reflect is not available in Node 4
+  prefer-reflect: "off"
+
+  # Rest params is not available in Node 4
+  prefer-rest-params: "off"
 
   # Enforce valid JSDoc comments
   # http://eslint.org/docs/rules/valid-jsdoc

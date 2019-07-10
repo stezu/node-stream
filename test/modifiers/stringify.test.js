@@ -1,25 +1,25 @@
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
-var getReadableStream = require('../_testHelpers/getReadableStream.js');
-var getDuplexStream = require('../_testHelpers/getDuplexStream.js');
-var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
-var stringify = require('../../').stringify;
-var parse = require('../../').parse;
+const getReadableStream = require('../_testHelpers/getReadableStream.js');
+const getDuplexStream = require('../_testHelpers/getDuplexStream.js');
+const runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
+const stringify = require('../../').stringify;
+const parse = require('../../').parse;
 
-describe('[stringify]', function () {
-  var data = ['str', true, { a: 'b' }];
-  var expected = ['"str"', 'true', '{"a":"b"}'];
+describe('[stringify]', () => {
+  const data = ['str', true, { a: 'b' }];
+  const expected = ['"str"', 'true', '{"a":"b"}'];
 
   function runTest(stream, objectMode, done) {
-    var actual = [];
+    const actual = [];
 
     stream
       .pipe(stringify())
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         actual.push(chunk);
       })
       .on('error', done)
-      .on('end', function () {
+      .on('end', () => {
         expect(actual).to.deep.equal(expected);
 
         done();
@@ -28,59 +28,57 @@ describe('[stringify]', function () {
 
   runBasicStreamTests(null, data, runTest);
 
-  it('emits an error for circular references on a Readable stream', function (done) {
-    var readableStream;
-    var addlData = {};
+  it('emits an error for circular references on a Readable stream', (done) => {
+    const addlData = {};
 
     addlData.circ = addlData;
 
-    readableStream = getReadableStream(data.concat([addlData]), {
+    const readableStream = getReadableStream(data.concat([addlData]), {
       objectMode: true
     });
 
     readableStream
       .pipe(stringify())
-      .on('error', function (err) {
+      .on('error', (err) => {
         expect(err).to.be.an.instanceof(Error);
-        expect(err.message).to.match(/^Converting circular structure to JSON$/);
+        expect(err.message).to.match(/^Converting circular structure to JSON/);
 
         done();
       })
-      .on('end', function () {
+      .on('end', () => {
         done(new Error('end should not be called'));
       })
       .resume();
   });
 
-  it('emits an error for circular references on a Duplex stream', function (done) {
-    var duplexStream;
-    var addlData = {};
+  it('emits an error for circular references on a Duplex stream', (done) => {
+    const addlData = {};
 
     addlData.circ = addlData;
 
-    duplexStream = getDuplexStream(data.concat([addlData]), {
+    const duplexStream = getDuplexStream(data.concat([addlData]), {
       objectMode: true
     });
 
     duplexStream
       .pipe(stringify())
-      .on('error', function (err) {
+      .on('error', (err) => {
         expect(err).to.be.an.instanceof(Error);
-        expect(err.message).to.match(/^Converting circular structure to JSON$/);
+        expect(err.message).to.match(/^Converting circular structure to JSON/);
 
         done();
       })
-      .on('end', function () {
+      .on('end', () => {
         done(new Error('end should not be called'));
       })
       .resume();
   });
 
-  it('can be parsed and strinigified multiple times without fail', function (done) {
-    var readableStream = getReadableStream(data, {
+  it('can be parsed and strinigified multiple times without fail', (done) => {
+    const readableStream = getReadableStream(data, {
       objectMode: true
     });
-    var finalData = [];
+    const finalData = [];
 
     readableStream
       .pipe(stringify())
@@ -89,10 +87,10 @@ describe('[stringify]', function () {
       .pipe(parse())
       .pipe(stringify())
       .pipe(parse())
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
         finalData.push(chunk);
       })
-      .on('end', function () {
+      .on('end', () => {
         expect(finalData).to.deep.equal(data);
 
         done();

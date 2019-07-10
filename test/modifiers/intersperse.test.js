@@ -1,20 +1,20 @@
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
-var runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
-var intersperse = require('../../').intersperse;
+const runBasicStreamTests = require('../_testHelpers/runBasicStreamTests.js');
+const intersperse = require('../../').intersperse;
 
-describe('[intersperse]', function () {
-  var data = ['banana', 'apple', 'orange'];
-  var dataObj = [true, true, true];
+describe('[intersperse]', () => {
+  const data = ['banana', 'apple', 'orange'];
+  const dataObj = [true, true, true];
 
   function runTest(stream, objectMode, done) {
-    var expected = ['banana', '\n', 'apple', '\n', 'orange'];
-    var expectedObj = [true, false, true, false, true];
-    var actual = [];
+    const expected = ['banana', '\n', 'apple', '\n', 'orange'];
+    const expectedObj = [true, false, true, false, true];
+    const actual = [];
 
     stream
       .pipe(intersperse(objectMode ? false : '\n'))
-      .on('data', function (chunk) {
+      .on('data', (chunk) => {
 
         if (Buffer.isBuffer(chunk)) {
           actual.push(chunk.toString());
@@ -23,7 +23,7 @@ describe('[intersperse]', function () {
         }
       })
       .on('error', done)
-      .on('end', function () {
+      .on('end', () => {
 
         if (objectMode) {
           expect(actual).to.deep.equal(expectedObj);

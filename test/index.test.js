@@ -1,10 +1,10 @@
-var expect = require('chai').expect;
-var _ = require('lodash');
-var index = require('../');
+const expect = require('chai').expect;
+const _ = require('lodash');
+const index = require('../');
 
-describe('[index]', function () {
+describe('[index]', () => {
 
-  it('exposes the correct public api', function () {
+  it('exposes the correct public api', () => {
     expect(index).to.be.an('object')
       .and.to.have.all.keys([
         'fromArray',
@@ -29,8 +29,6 @@ describe('[index]', function () {
         'take',
         'batch',
         'flatten',
-        'first',
-        'forEach',
         'wait'
       ]);
 
@@ -105,24 +103,6 @@ describe('[index]', function () {
 
     expect(index.flatten).to.be.a('function')
       .and.to.have.lengthOf(0);
-
-    expect(index.first).to.be.a('function')
-      .and.to.have.all.keys('obj', 'json');
-
-    expect(index.first.obj).to.be.a('function');
-    expect(_.keys(index.first.obj)).to.have.lengthOf(0);
-
-    expect(index.first.json).to.be.a('function');
-    expect(_.keys(index.first.json)).to.have.lengthOf(0);
-
-    expect(index.forEach).to.be.a('function')
-      .and.to.have.all.keys('obj', 'json');
-
-    expect(index.forEach.obj).to.be.a('function');
-    expect(_.keys(index.forEach.obj)).to.have.lengthOf(0);
-
-    expect(index.forEach.json).to.be.a('function');
-    expect(_.keys(index.forEach.json)).to.have.lengthOf(0);
 
     expect(index.wait).to.be.a('function')
       .and.to.have.all.keys('obj', 'json');
