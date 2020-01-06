@@ -43,7 +43,7 @@
     "documentation": "^12.0.2",
     "eslint": "^6.0.1",
     "eslint-config-stezu": "^2.0.0",
-    "mocha": "^6.2.0",
+    "mocha": "^7.0.0",
     "mock-fs": "^4.10.1",
     "mocka": "0.0.1",
     "nyc": "^15.0.0",
