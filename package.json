@@ -47,7 +47,7 @@
     "mock-fs": "^4.10.1",
     "mocka": "0.0.1",
     "nyc": "^15.0.0",
-    "sinon": "^8.0.2"
+    "sinon": "^9.0.1"
   },
   "dependencies": {
     "lodash": "^4.17.13",
