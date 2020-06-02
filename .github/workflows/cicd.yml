@@ -36,7 +36,7 @@ jobs:
           parallel: true
 
       - name: Deploy Package
-        if: github.ref == 'refs/heads/master' && matrix.node-version == 12
+        if: contains(github.ref, 'refs/tags/') && matrix.node-version == 12
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
           npm publish
@@ -45,7 +45,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Deploy Docs
-        if: github.ref == 'refs/heads/master'
+        if: contains(github.ref, 'refs/tags/')
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
