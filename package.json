@@ -4,9 +4,7 @@
   "description": "Utilities for consuming, creating and manipulating node streams.",
   "main": "lib/index.js",
   "scripts": {
-    "build": "npm run lint && npm run test",
-    "coverage": "nyc --check-coverage --lines 98 npm test",
-    "ci": "npm run lint && npm run coverage",
+    "coverage": "nyc --reporter=lcov --reporter=text --check-coverage --lines 98 npm test",
     "lint": "eslint --ignore-path .gitignore .",
     "test": "mocha --recursive",
     "docs": "documentation build lib/** --format html --github --sort-order alpha --output docs"
@@ -39,13 +37,11 @@
   "homepage": "https://github.com/stezu/node-stream#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "coveralls": "^3.0.4",
     "documentation": "^12.0.2",
     "eslint": "^6.0.1",
     "eslint-config-stezu": "^2.0.0",
     "mocha": "^7.0.0",
     "mock-fs": "^4.10.1",
-    "mocka": "0.0.1",
     "nyc": "^15.0.0",
     "sinon": "^9.0.1"
   },

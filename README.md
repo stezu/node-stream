@@ -1,12 +1,12 @@
 # Node-Stream
 
-[![npm version][npm-version.svg]][npm] [![Build Status][build-status.svg]][travis] [![Test Coverage][coveralls.svg]][coveralls]
+[![npm version][npm-version.svg]][npm] [![Build Status][build-status.svg]][build-status] [![Test Coverage][coveralls.svg]][coveralls]
 
 [npm-version.svg]: https://img.shields.io/npm/v/node-stream.svg
 [npm]: https://www.npmjs.com/package/node-stream
 
-[build-status.svg]: https://travis-ci.org/stezu/node-stream.svg?branch=master
-[travis]: https://travis-ci.org/stezu/node-stream
+[build-status.svg]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fstezu%2Fnode-stream%2Fbadge&style=flat-square
+[build-status]: https://actions-badge.atrox.dev/stezu/node-stream/goto
 
 [coveralls.svg]: https://coveralls.io/repos/github/stezu/node-stream/badge.svg?branch=master
 [coveralls]: https://coveralls.io/github/stezu/node-stream?branch=master
