@@ -37,7 +37,7 @@
   "homepage": "https://github.com/stezu/node-stream#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "documentation": "^12.0.2",
+    "documentation": "^13.2.1",
     "eslint": "^6.0.1",
     "eslint-config-stezu": "^2.0.0",
     "mocha": "^7.0.0",
