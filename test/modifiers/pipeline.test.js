@@ -184,7 +184,7 @@ describe('[pipeline]', () => {
     });
 
     it('through streams are destroyed', () => {
-      expect(inputStreams.through).to.have.property('_destroyed').and.to.equal(true);
+      expect(inputStreams.through).to.have.property('destroyed').and.to.equal(true);
     });
 
     it('the duplex stream is destroyed', () => {
@@ -220,7 +220,7 @@ describe('[pipeline]', () => {
     });
 
     it('through streams are destroyed', () => {
-      expect(inputStreams.through).to.have.property('_destroyed').and.to.equal(true);
+      expect(inputStreams.through).to.have.property('destroyed').and.to.equal(true);
     });
 
     it('the duplex stream is destroyed', () => {

@@ -36,23 +36,26 @@
   },
   "homepage": "https://github.com/stezu/node-stream#readme",
   "devDependencies": {
-    "chai": "^4.2.0",
-    "documentation": "^12.0.2",
-    "eslint": "^6.0.1",
+    "chai": "^4.3.4",
+    "documentation": "^13.2.1",
+    "eslint": "^7.24.0",
     "eslint-config-stezu": "^2.0.0",
-    "mocha": "^7.0.0",
-    "mock-fs": "^4.10.1",
+    "mocha": "^8.3.2",
+    "mock-fs": "^4.13.0",
     "nyc": "^15.0.0",
-    "sinon": "^9.0.1"
+    "sinon": "^10.0.0"
   },
   "dependencies": {
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "pumpify": "^2.0.0",
     "readable-stream": "^3.4.0",
-    "split2": "^3.1.1",
-    "through2": "^3.0.1"
+    "split2": "^3.2.2",
+    "through2": "^4.0.2"
   },
   "engines": {
     "node": ">= 4.0"
+  },
+  "volta": {
+    "node": "14.16.1"
   }
 }
